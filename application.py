@@ -30,7 +30,7 @@ class Application:
         "Store",
         "Rev",
         "OS",
-        "Series",
+        "Base",
         "Message",
         "Notes",
     ]
@@ -55,51 +55,33 @@ class Application:
         self.model = model
         if "charm" in appinfo:
             self.charm = appinfo["charm"]
-        if "series" in appinfo:
-            self.series = appinfo["series"]
+
+        base = appinfo.get("base")
+        if isinstance(base, dict):
+            self.base = f"{base.get('name','')}@{base.get('channel','')}"
         else:
-            self.series = "NA"
+            self.base = base if base else "NA"
+
 
         if "os" in appinfo:
             self.os = appinfo["os"]
         else:
             self.os = "NA"
 
-        isv1 = False
         if "charm-origin" in appinfo:
             self.charmorigin = appinfo["charm-origin"]
         else:
             self.charmorigin = "NA"
-            isv1 = True
 
         if "charm-name" in appinfo:
             self.charmname = appinfo["charm-name"]
         else:
             self.charmname = "NA"
-            isv1 = True
 
         if "charm-rev" in appinfo:
             self.charmrev = int(appinfo["charm-rev"])
         else:
             self.charmrev = -1
-            isv1 = True
-
-        # Handle v1 Charm info:
-        if isv1 and "charm" in appinfo:
-            match = re.match(r"(.*):(.*)-(\d+)", self.charm)
-            if match:
-                charmsource = match.group(1)
-                if charmsource == "cs":
-                    self.charmorigin = "jujucharms"
-                else:
-                    self.charmorigin = match.group(1)
-                self.charmname = match.group(2)
-                self.charmrev = int(match.group(3))
-                seriesmatch = re.match(
-                    r"^(~[^/]+/)*([^/]+)/[^/]+", match.group(2)
-                )
-                if seriesmatch:
-                    self.series = seriesmatch.group(2)
 
         if "exposed" in appinfo:
             self.exposed = appinfo["exposed"]
@@ -155,12 +137,12 @@ class Application:
             match = re.match(r"(cs:~[^/]+)\/([^/]+/)*([^/]+)-\d+$", self.charm)
             if match:
                 self.charmid = (
-                    match.group(1) + "/" + self.series + "/" + match.group(3)
+                    match.group(1) + "/" + self.base + "/" + match.group(3)
                 )
             else:
                 match = re.match(r"cs:(.*)-\d+$", self.charm)
                 if match:
-                    self.charmid = "cs:" + self.series + "/" + match.group(1)
+                    self.charmid = "cs:" + self.base + "/" + match.group(1)
             if self.charmorigin != "jujucharms":
                 self.notes.append("Not from Charm Store")
 
@@ -245,7 +227,7 @@ class Application:
                 self.get_charmorigin_color(),
                 self.get_charmrev_color(),
                 self.os,
-                self.series,
+                self.base,
                 self.message,
                 ", ".join(self.notes),
             ]
@@ -259,7 +241,7 @@ class Application:
                 self.charmorigin,
                 str(self.charmrev),
                 self.os,
-                self.series,
+                self.base,
                 self.message,
                 ", ".join(self.notes),
             ]

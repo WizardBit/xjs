@@ -33,7 +33,8 @@ class SubordinateUnit(BasicUnit):
 
         # Required Variables
         self.unit = unit
-        self.upgradingfrom = subunitinfo["upgrading-from"]
+        # Not sure if required anymore but causes error
+        #self.upgradingfrom = subunitinfo["upgrading-from"]
         self.machine = unit.machine
 
     def create_application_relation(self):
