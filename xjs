@@ -277,7 +277,7 @@ def console_print_object(
     include_controller_name=False,
     include_model_name=False,
 ):
-    """Print a table formatted for the console and always fit terminal width."""
+    """Print a table formatted for the console and fit terminal width."""
     table = PrettyTable()
     table.field_names = print_what[0].get_column_names(
         include_controller_name, include_model_name
