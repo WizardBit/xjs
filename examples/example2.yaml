@@ -1,0 +1,200 @@
+model:
+  name: k8s
+  type: iaas
+  controller: controller
+  cloud: prodstack
+  region: prodstack6
+  version: 3.6.14
+  model-status:
+    current: available
+    since: 04 Feb 2026 16:15:11Z
+  sla: unsupported
+machines:
+  "0":
+    juju-status:
+      current: started
+      since: 27 Feb 2026 14:32:50Z
+      version: 3.6.14
+    hostname: juju-6bb4d2-k8s-0
+    dns-name: 10.149.12.56
+    ip-addresses:
+    - 10.149.12.56
+    - 10.1.0.124
+    instance-id: a865d771-af17-4fba-8f98-5ccf41d1d17b
+    machine-status:
+      current: running
+      message: ACTIVE
+      since: 04 Feb 2026 16:16:34Z
+    modification-status:
+      current: idle
+      since: 04 Feb 2026 16:15:47Z
+    base:
+      name: ubuntu
+      channel: "24.04"
+    network-interfaces:
+      cilium_host:
+        ip-addresses:
+        - 10.1.0.124
+        mac-address: 0a:33:a0:15:5e:8c
+        is-up: true
+      ens3:
+        ip-addresses:
+        - 10.149.12.56
+        mac-address: fa:16:3e:ea:9c:6f
+        gateway: 10.149.12.1
+        space: alpha
+        is-up: true
+    constraints: arch=amd64 instance-type=staging-cpu2-ram4-disk50
+    hardware: arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-1
+  "3":
+    juju-status:
+      current: started
+      since: 27 Feb 2026 00:01:16Z
+      version: 3.6.14
+    hostname: juju-6bb4d2-k8s-3
+    dns-name: 10.149.12.82
+    ip-addresses:
+    - 10.149.12.82
+    instance-id: 25f818cb-e043-4028-a627-5ceffd874970
+    machine-status:
+      current: running
+      message: ACTIVE
+      since: 26 Feb 2026 23:59:51Z
+    modification-status:
+      current: idle
+      since: 26 Feb 2026 23:59:03Z
+    base:
+      name: ubuntu
+      channel: "24.04"
+    network-interfaces:
+      ens3:
+        ip-addresses:
+        - 10.149.12.82
+        mac-address: fa:16:3e:f2:a1:ad
+        gateway: 10.149.12.1
+        space: alpha
+        is-up: true
+    constraints: arch=amd64 instance-type=staging-cpu2-ram4-disk50
+    hardware: arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-2
+  "4":
+    juju-status:
+      current: started
+      since: 27 Feb 2026 00:01:24Z
+      version: 3.6.14
+    hostname: juju-6bb4d2-k8s-4
+    dns-name: 10.149.12.95
+    ip-addresses:
+    - 10.149.12.95
+    instance-id: d5e6ad57-21b8-493b-b9e8-4690b777cb9a
+    machine-status:
+      current: running
+      message: ACTIVE
+      since: 27 Feb 2026 00:00:46Z
+    modification-status:
+      current: idle
+      since: 26 Feb 2026 23:59:03Z
+    base:
+      name: ubuntu
+      channel: "24.04"
+    network-interfaces:
+      ens3:
+        ip-addresses:
+        - 10.149.12.95
+        mac-address: fa:16:3e:8a:b4:47
+        gateway: 10.149.12.1
+        space: alpha
+        is-up: true
+    constraints: arch=amd64 instance-type=staging-cpu2-ram4-disk50
+    hardware: arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-3
+applications:
+  k8s:
+    charm: k8s
+    base:
+      name: ubuntu
+      channel: "24.04"
+    charm-origin: charmhub
+    charm-name: k8s
+    charm-rev: 1724
+    charm-channel: 1.35/stable
+    can-upgrade-to: ch:amd64/k8s-1846
+    exposed: false
+    application-status:
+      current: waiting
+      message: Waiting to verify features
+      since: 17 Mar 2026 01:42:13Z
+    relations:
+      cluster:
+      - related-application: k8s
+        interface: k8s-cluster
+        scope: global
+      cos-tokens:
+      - related-application: k8s
+        interface: cos-k8s-tokens
+        scope: global
+      upgrade:
+      - related-application: k8s
+        interface: upgrade
+        scope: global
+    units:
+      k8s/0:
+        workload-status:
+          current: waiting
+          message: Waiting to verify features
+          since: 17 Mar 2026 01:42:13Z
+        juju-status:
+          current: executing
+          message: running commands
+          since: 17 Mar 2026 00:53:34Z
+          version: 3.6.14
+        machine: "0"
+        open-ports:
+        - 6443/tcp
+        public-address: 10.149.12.56
+      k8s/3:
+        workload-status:
+          current: active
+          message: Ready
+          since: 27 Feb 2026 14:35:45Z
+        juju-status:
+          current: idle
+          since: 27 Feb 2026 14:35:45Z
+          version: 3.6.14
+        machine: "3"
+        open-ports:
+        - 6443/tcp
+        public-address: 10.149.12.82
+      k8s/4:
+        workload-status:
+          current: active
+          message: Ready
+          since: 27 Feb 2026 14:36:28Z
+        juju-status:
+          current: idle
+          since: 27 Feb 2026 14:36:28Z
+          version: 3.6.14
+        leader: true
+        machine: "4"
+        open-ports:
+        - 6443/tcp
+        public-address: 10.149.12.95
+    version: 1.35.0
+    endpoint-bindings:
+      "": alpha
+      aws: alpha
+      azure: alpha
+      ceph-k8s-info: alpha
+      cluster: alpha
+      containerd: alpha
+      cos-agent: alpha
+      cos-tokens: alpha
+      cos-worker-tokens: alpha
+      etcd: alpha
+      external-cloud-provider: alpha
+      external-load-balancer: alpha
+      gcp: alpha
+      k8s-cluster: alpha
+      kube-control: alpha
+      upgrade: alpha
+storage: {}
+controller:
+  timestamp: 14:52:48Z
