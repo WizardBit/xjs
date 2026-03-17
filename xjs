@@ -17,6 +17,7 @@
 
 import json
 import sys
+import shutil
 from application import Application
 import click
 from colors import Color
@@ -276,9 +277,8 @@ def console_print_object(
     include_controller_name=False,
     include_model_name=False,
 ):
-    """Print a table formatted for the console"""
+    """Print a table formatted for the console and always fit terminal width."""
     table = PrettyTable()
-    # table.set_style(12)
     table.field_names = print_what[0].get_column_names(
         include_controller_name, include_model_name
     )
@@ -287,6 +287,19 @@ def console_print_object(
             row.get_row(color, include_controller_name, include_model_name)
         )
     table.align = "l"
+
+    # Always fit width
+    try:
+        width = shutil.get_terminal_size().columns
+    except Exception:
+        width = 80  # fallback
+
+    num_cols = len(table.field_names)
+    # Ensure at least a min column width of 5
+    max_col_width = max(5, width // num_cols - 1)
+    for field in table.field_names:
+        table.max_width[field] = max_col_width
+
     print(table)
 
 

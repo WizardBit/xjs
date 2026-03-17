@@ -145,7 +145,7 @@ class Application:
                 match = re.match(r"cs:(.*)-\d+$", self.charm)
                 if match:
                     self.charmid = "cs:" + self.base + "/" + match.group(1)
-            if self.charmorigin != "jujucharms":
+            if self.charmorigin != "charmhub":
                 self.notes.append("Not from Charm Store")
 
         # Handle Units
