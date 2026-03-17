@@ -99,7 +99,7 @@ class Controller:
         """
         Connect to the Juju Charms API and get the latest version of charms
         """
-        url = "https://api.jujucharms.com/v4/meta/id?"
+        url = "https://api.charmhub.com/v4/meta/id?"
         data = {}
 
         for modelname, model in self.models.items():
@@ -113,7 +113,7 @@ class Controller:
             if response.status_code == 200:
                 data = response.json()
         except:
-            print("WARNING: Unable to reach jujucharms.com")
+            print("WARNING: Unable to reach charmhub.com")
 
         for modelname, model in self.models.items():
             for appname, app in model.applications.items():

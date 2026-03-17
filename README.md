@@ -49,7 +49,7 @@ Options:
                                   name
   --model <model name>            Show only the model with the specified name
   --no-color                      Remove color from output
-  --offline                       Don't query jujucharms.com for version
+  --offline                       Don't query charmhub.com for version
                                   information
   -a, --show-apps                 Show application information
   -m, --show-machines             Show machine information

@@ -448,7 +448,7 @@ def filter_results(
     "--offline",
     default=False,
     is_flag=True,
-    help="Don't query jujucharms.com for version information",
+    help="Don't query charmhub.com for version information",
 )
 @click.option(
     "--show-apps",
