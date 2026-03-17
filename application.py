@@ -35,11 +35,13 @@ class Application:
         "Notes",
     ]
 
-    def __init__(self, appname, appinfo="", model=""):
+    def __init__(self, appname, appinfo=None, model=""):
         """
         Create an Application object with basic information from an application
         object from a juju status output
         """
+        appinfo = appinfo if isinstance(appinfo, dict) else {}
+        
         # Default Values
         self.notes = []
         self.units = {}
@@ -60,7 +62,7 @@ class Application:
         if isinstance(base, dict):
             self.base = f"{base.get('name','')}@{base.get('channel','')}"
         else:
-            self.base = base if base else "NA"
+            self.base = base or "NA"
 
 
         if "os" in appinfo:
