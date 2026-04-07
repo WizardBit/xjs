@@ -1,5 +1,7 @@
 # 🪄 XJS
 
+[![xjs](https://snapcraft.io/xjs/badge.svg)](https://snapcraft.io/xjs)
+
 > [!NOTE]
 > An updated fork of [xjs](https://github.com/nniehoff/xjs)
 
@@ -9,7 +11,7 @@ This eliminates the hassle of waiting for `juju status` in large environments.
 ## 👨‍💻 Installation
 
 ```bash
-sudo snap install --edge xjs
+sudo snap install xjs
 ```
 
 ## ⌨️ Usage
