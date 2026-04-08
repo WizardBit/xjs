@@ -95,38 +95,6 @@ class Controller:
         """Add a model to a controller"""
         self.models[model.name] = model
 
-    def update_app_version_info(self):
-        """
-        Connect to the Juju Charms API and get the latest version of charms
-        """
-        url = "https://api.charmhub.com/v4/meta/id?"
-        data = {}
-
-        for modelname, model in self.models.items():
-            for appname, app in model.applications.items():
-                if app.charmorigin == "jujucharms":
-                    url += "id=" + app.charmid + "&"
-
-        response = None
-        try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                data = response.json()
-        except:
-            print("WARNING: Unable to reach charmhub.com")
-
-        for modelname, model in self.models.items():
-            for appname, app in model.applications.items():
-                if app.charmorigin == "jujucharms":
-                    if app.charmid in data and "Revision" in data[app.charmid]:
-                        app.charmlatestrev = data[app.charmid]["Revision"]
-                        if app.charmrev < app.charmlatestrev:
-                            app.notes.append(
-                                "Stable Rev (" + str(app.charmlatestrev) + ")"
-                            )
-                        elif app.charmrev > app.charmlatestrev:
-                            app.notes.append("Using Non-Stable Rev")
-
     def filter_dictionary(self, dictionary, key_filter):
         return {
             key: value

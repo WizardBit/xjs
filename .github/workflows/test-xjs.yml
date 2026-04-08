@@ -30,13 +30,13 @@ jobs:
     - name: Run xjs tests
       run: |
         python3 xjs examples/example.json
-        python3 xjs --offline examples/example.json
-        python3 xjs --offline examples/example.yaml
-        python3 xjs --offline examples/example2.yaml
-        python3 xjs --offline examples/example.json examples/example2.json
-        python3 xjs --offline --application glance examples/example.json
-        python3 xjs --offline --application rabbitmq-server examples/example.json
-        python3 xjs --offline --model k8s examples/example2.json
-        python3 xjs --offline --controller controller examples/example.json examples/example2.json
-        python3 xjs --offline --unit k8s/0 examples/example2.json
-        python3 xjs --offline --subordinate ovn-chassis/0 examples/example.json
+        python3 xjs examples/example.json
+        python3 xjs examples/example.yaml
+        python3 xjs examples/example2.yaml
+        python3 xjs examples/example.json examples/example2.json
+        python3 xjs --application glance examples/example.json
+        python3 xjs --application rabbitmq-server examples/example.json
+        python3 xjs --model k8s examples/example2.json
+        python3 xjs --controller controller examples/example.json examples/example2.json
+        python3 xjs --unit k8s/0 examples/example2.json
+        python3 xjs --subordinate ovn-chassis/0 examples/example.json
