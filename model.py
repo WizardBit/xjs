@@ -22,7 +22,7 @@ import pendulum
 
 class Model:
     # TODO get latest juju version dynamically
-    latest_juju_version = version.parse("2.6.8")
+    latest_juju_version = version.parse("3.6.20")
     column_names = [
         "Model",
         "Controller",
@@ -170,7 +170,7 @@ class Model:
         """Return a version string with correct colors based on version"""
         model_version = version.parse(self.version)
         if (
-            model_version < version.parse("2.0.0")
+            model_version < version.parse("3.0.0")
             or model_version > Model.latest_juju_version
         ):
             return Color.Fg.Red + self.version + Color.Reset
