@@ -31,7 +31,6 @@ class Model:
         "SLA",
         "Timestamp",
         "Model-Status",
-        "Meter-Status",
         "Message",
         "Notes",
     ]
@@ -47,7 +46,6 @@ class Model:
         self.relations = {}
         self.machines = {}
         self.containers = {}
-        self.meterstatus = ""
         self.message = ""
         self.upgradeavailable = ""
 
@@ -104,9 +102,6 @@ class Model:
             controller.update_timestamp(self.since)
 
         # Optional Variables
-        if "meter-status" in modelinfo:
-            self.meterstatus = modelinfo["meter-status"]["color"]
-            self.message = modelinfo["meter-status"]["message"]
         if "upgrade-available" in modelinfo:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
@@ -192,22 +187,6 @@ class Model:
         else:
             return Color.Fg.Red + self.modelstatus + Color.Reset
 
-    def get_meterstatus_color(self):
-        """
-        Return a meter status string with correct colors based on meter
-        status
-        """
-        if not self.meterstatus:
-            return ""
-        if self.meterstatus == "green":
-            return Color.Fg.Green + self.meterstatus + Color.Reset
-        elif self.meterstatus == "red":
-            return Color.Fg.Red + self.meterstatus + Color.Reset
-        elif self.meterstatus == "amber":
-            return Color.Fg.Orange + self.meterstatus + Color.Reset
-        else:
-            return Color.Fg.Yellow + self.meterstatus + Color.Reset
-
     def get_row(
         self, color, include_controller_name=True, include_model_name=True
     ):
@@ -230,7 +209,6 @@ class Model:
                 self.sla,
                 timestampstr,
                 self.get_modelstatus_color(),
-                self.get_meterstatus_color(),
                 self.message,
                 notesstr,
             ]
@@ -243,7 +221,6 @@ class Model:
                 self.sla,
                 timestampstr,
                 self.modelstatus,
-                self.meterstatus,
                 self.message,
                 notesstr,
             ]
