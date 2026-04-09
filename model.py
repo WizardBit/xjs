@@ -18,11 +18,9 @@ import re
 from colors import Color
 from packaging import version
 import pendulum
-
+import subprocess
 
 class Model:
-    # TODO get latest juju version dynamically
-    latest_juju_version = version.parse("2.6.8")
     column_names = [
         "Model",
         "Controller",
@@ -31,7 +29,6 @@ class Model:
         "SLA",
         "Timestamp",
         "Model-Status",
-        "Meter-Status",
         "Message",
         "Notes",
     ]
@@ -47,7 +44,6 @@ class Model:
         self.relations = {}
         self.machines = {}
         self.containers = {}
-        self.meterstatus = ""
         self.message = ""
         self.upgradeavailable = ""
 
@@ -104,9 +100,6 @@ class Model:
             controller.update_timestamp(self.since)
 
         # Optional Variables
-        if "meter-status" in modelinfo:
-            self.meterstatus = modelinfo["meter-status"]["color"]
-            self.message = modelinfo["meter-status"]["message"]
         if "upgrade-available" in modelinfo:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
@@ -174,12 +167,26 @@ class Model:
     def get_version_color(self):
         """Return a version string with correct colors based on version"""
         model_version = version.parse(self.version)
-        if (
-            model_version < version.parse("2.0.0")
-            or model_version > Model.latest_juju_version
-        ):
+
+        # Get the latest Juju versions directly
+        latest_juju_versions = self.get_latest_stable_versions()
+
+        # Find the track that matches version
+        major_track = None
+        for track in latest_juju_versions:
+            if self.version.startswith(track):
+                major_track = track
+                break
+
+        if major_track is None:
+            # Unknown track → mark as Red
             return Color.Fg.Red + self.version + Color.Reset
-        elif model_version < Model.latest_juju_version:
+
+        latest_version = latest_juju_versions[major_track]
+
+        if model_version > latest_version:
+            return Color.Fg.Red + self.version + Color.Reset
+        elif model_version < latest_version:
             return Color.Fg.Yellow + self.version + Color.Reset
         else:
             return Color.Fg.Green + self.version + Color.Reset
@@ -191,22 +198,6 @@ class Model:
             return Color.Fg.Green + self.modelstatus + Color.Reset
         else:
             return Color.Fg.Red + self.modelstatus + Color.Reset
-
-    def get_meterstatus_color(self):
-        """
-        Return a meter status string with correct colors based on meter
-        status
-        """
-        if not self.meterstatus:
-            return ""
-        if self.meterstatus == "green":
-            return Color.Fg.Green + self.meterstatus + Color.Reset
-        elif self.meterstatus == "red":
-            return Color.Fg.Red + self.meterstatus + Color.Reset
-        elif self.meterstatus == "amber":
-            return Color.Fg.Orange + self.meterstatus + Color.Reset
-        else:
-            return Color.Fg.Yellow + self.meterstatus + Color.Reset
 
     def get_row(
         self, color, include_controller_name=True, include_model_name=True
@@ -230,7 +221,6 @@ class Model:
                 self.sla,
                 timestampstr,
                 self.get_modelstatus_color(),
-                self.get_meterstatus_color(),
                 self.message,
                 notesstr,
             ]
@@ -243,7 +233,6 @@ class Model:
                 self.sla,
                 timestampstr,
                 self.modelstatus,
-                self.meterstatus,
                 self.message,
                 notesstr,
             ]
@@ -298,3 +287,29 @@ class Model:
                 del machine.containers[containername]
         self.machines = machines
         self.containers = containers
+
+    @staticmethod
+    def get_latest_stable_versions():
+        import subprocess
+        from packaging import version
+
+        result = subprocess.run(
+            ["snap", "info", "juju"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
+        latest_versions = {}
+        for line in result.stdout.splitlines():
+            line = line.strip()
+            if "/stable:" in line:
+                track_part, ver_str = line.split("/stable:")
+                track = track_part.strip()
+                ver_str = ver_str.strip().split()[0]
+
+                # Skip placeholders and non-PEP 440 versions
+                if ver_str in ("–", "↑") or not re.match(r"^\d+(\.\d+)*$", ver_str):
+                    continue
+
+                latest_versions[track] = version.parse(ver_str)  # conforms to PEP 440
+        return latest_versions

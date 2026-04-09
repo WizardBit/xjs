@@ -1,34 +1,42 @@
 name: xjs
-base: core20
+title: xjs
+base: core24
 version: 'git'
 summary: A tool to parse juju status yaml/json
-architectures:
-  - amd64
+
 description: |
-  XJS Provides a way to parse complex juju status yaml/json files in a simple
-  way.
+  XJS Provides a way to parse complex juju status yaml/json files in a simple way.
+source-code:
+  - https://github.com/WizardBit/xjs/
+website:
+  - https://github.com/WizardBit/xjs/
+issues:
+  - https://github.com/WizardBit/xjs/issues
+contact:
+  - brandon.castillo@canonical.com
+donation:
+  - https://ubuntu.com/community/docs/contribute/donation
+
 
 license: GPL-3.0
-
 confinement: strict
 
 parts:
   xjs:
     override-prime: |
-      snapcraftctl prime
+      craftctl default
       cd bin
       _XJS_COMPLETE=source ./xjs > ../xjs.bash-completion || echo "Built Bash Completion"
     source: .
     plugin: python
-    python-version: python3
-    requirements: [ ./requirements.txt ]
+    python-requirements: [ ./requirements.txt ]
 
 apps:
   xjs:
-    command: xjs
+    command: bin/xjs
     plugs:
-     - home
-     - network
+      - home
+      - network
     environment:
       LC_ALL: C.UTF-8
       LANG: C.UTF-8

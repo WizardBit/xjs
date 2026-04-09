@@ -32,7 +32,7 @@ class BasicMachine:
         "Status",
         "DNS",
         "Inst id",
-        "Series",
+        "Base",
         "AZ",
         "Arch",
         "Cores",
@@ -79,7 +79,12 @@ class BasicMachine:
         else:
             self.machinestatus = "NA"
             self.machinemessage = ""
-        self.series = info["series"]
+        
+        base = info.get("base")
+        if isinstance(base, dict):
+            self.base = f"{base.get('name','')}@{base.get('channel','')}"
+        else:
+            self.base = base if base else "NA"
         self.model = model
 
         # Required Dates

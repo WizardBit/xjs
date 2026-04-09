@@ -1,0 +1,2585 @@
+{
+  "model": {
+    "name": "openstack",
+    "type": "iaas",
+    "controller": "controller",
+    "cloud": "prodstack",
+    "region": "prodstack6",
+    "version": "3.6.14",
+    "model-status": {
+      "current": "available",
+      "since": "10 Mar 2026 16:52:51-05:00"
+    },
+    "sla": "unsupported"
+  },
+  "machines": {
+    "0": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:57:03-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-0",
+      "dns-name": "10.149.12.118",
+      "ip-addresses": [
+        "10.149.12.118",
+        "252.236.0.1"
+      ],
+      "instance-id": "dce9eac0-f523-4fbd-88c3-480110da441d",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:35-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.118"
+          ],
+          "mac-address": "fa:16:3e:21:4f:77",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.236.0.1"
+          ],
+          "mac-address": "c6:5a:72:b5:14:75",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-2"
+    },
+    "1": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:29-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-1",
+      "dns-name": "10.149.12.16",
+      "ip-addresses": [
+        "10.149.12.16",
+        "252.32.0.1"
+      ],
+      "instance-id": "7853ad38-994c-49e8-849e-f199286cd577",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:35-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.16"
+          ],
+          "mac-address": "fa:16:3e:48:33:82",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.32.0.1"
+          ],
+          "mac-address": "e6:b2:6e:36:2a:8f",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=1024M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-2"
+    },
+    "10": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:16-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-10",
+      "dns-name": "10.149.12.19",
+      "ip-addresses": [
+        "10.149.12.19",
+        "252.38.0.1"
+      ],
+      "instance-id": "3462687e-e413-44da-8886-59d9f6a474c0",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:38-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.19"
+          ],
+          "mac-address": "fa:16:3e:f6:a0:97",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.38.0.1"
+          ],
+          "mac-address": "12:86:26:13:b0:da",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-3"
+    },
+    "11": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:07-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-11",
+      "dns-name": "10.149.12.20",
+      "ip-addresses": [
+        "10.149.12.20",
+        "252.40.0.1"
+      ],
+      "instance-id": "cbdfdd1e-040b-4b16-aa1d-f19c82a76842",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:38-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.20"
+          ],
+          "mac-address": "fa:16:3e:58:a2:67",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.40.0.1"
+          ],
+          "mac-address": "d2:14:ea:83:e6:dc",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-1"
+    },
+    "12": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:08-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-12",
+      "dns-name": "10.149.12.112",
+      "ip-addresses": [
+        "10.149.12.112",
+        "252.224.0.1"
+      ],
+      "instance-id": "a57379f6-9f5c-494b-9eb4-18040b6ec135",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:38-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.112"
+          ],
+          "mac-address": "fa:16:3e:ca:79:7c",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.224.0.1"
+          ],
+          "mac-address": "62:f9:fd:6b:88:e7",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=1024M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-1"
+    },
+    "13": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:33-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-13",
+      "dns-name": "10.149.12.71",
+      "ip-addresses": [
+        "10.149.12.71",
+        "252.142.0.1"
+      ],
+      "instance-id": "cdfc72f1-20fc-4fc8-bf02-a777524f8800",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:39-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.71"
+          ],
+          "mac-address": "fa:16:3e:bd:f0:e0",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.142.0.1"
+          ],
+          "mac-address": "e2:31:61:96:a0:f4",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=1024M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-3"
+    },
+    "14": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:45-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-14",
+      "dns-name": "10.149.12.67",
+      "ip-addresses": [
+        "10.149.12.67",
+        "252.134.0.1"
+      ],
+      "instance-id": "75a1f0e4-8816-42e7-b1de-e6fd85942b27",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:39-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.67"
+          ],
+          "mac-address": "fa:16:3e:d1:f4:2c",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.134.0.1"
+          ],
+          "mac-address": "b2:29:5b:13:25:0b",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-2"
+    },
+    "2": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:55:58-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-2",
+      "dns-name": "10.149.12.9",
+      "ip-addresses": [
+        "10.149.12.9",
+        "252.18.0.1"
+      ],
+      "instance-id": "75aff977-cc4c-4a30-957a-b60979ecd23a",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:35-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.9"
+          ],
+          "mac-address": "fa:16:3e:b7:6a:e7",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.18.0.1"
+          ],
+          "mac-address": "26:65:6b:9e:3d:b8",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=1024M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-1"
+    },
+    "3": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:37-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-3",
+      "dns-name": "10.149.12.124",
+      "ip-addresses": [
+        "10.149.12.124",
+        "252.248.0.1"
+      ],
+      "instance-id": "76637f40-4574-43fe-b5a5-d0486bdbfda7",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:36-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.124"
+          ],
+          "mac-address": "fa:16:3e:9b:05:58",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.248.0.1"
+          ],
+          "mac-address": "2a:f9:4a:4d:87:6d",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=4096M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=4096M root-disk=20480M availability-zone=availability-zone-2"
+    },
+    "4": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:13-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-4",
+      "dns-name": "10.149.12.73",
+      "ip-addresses": [
+        "10.149.12.73",
+        "252.146.0.1"
+      ],
+      "instance-id": "9e994ad5-9462-4ea0-acba-25bfe74d38f0",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:36-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.73"
+          ],
+          "mac-address": "fa:16:3e:db:92:74",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.146.0.1"
+          ],
+          "mac-address": "76:34:a7:5f:f1:46",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=4096M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=4096M root-disk=20480M availability-zone=availability-zone-3"
+    },
+    "5": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:59-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-5",
+      "dns-name": "10.149.12.68",
+      "ip-addresses": [
+        "10.149.12.68",
+        "252.136.0.1"
+      ],
+      "instance-id": "57b6015e-5687-46b3-98e1-6b450b53a294",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:36-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.68"
+          ],
+          "mac-address": "fa:16:3e:a0:c7:20",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.136.0.1"
+          ],
+          "mac-address": "0a:c1:67:e8:ec:7a",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=4096M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=4096M root-disk=20480M availability-zone=availability-zone-1"
+    },
+    "6": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:55:59-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-6",
+      "dns-name": "10.149.12.13",
+      "ip-addresses": [
+        "10.149.12.13",
+        "252.26.0.1"
+      ],
+      "instance-id": "fb19ed31-8f9a-4cee-936a-bdd595ecff14",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:36-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.13"
+          ],
+          "mac-address": "fa:16:3e:3b:69:36",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.26.0.1"
+          ],
+          "mac-address": "26:71:a8:70:fa:d5",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-1"
+    },
+    "7": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:35-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-7",
+      "dns-name": "10.149.12.119",
+      "ip-addresses": [
+        "10.149.12.119",
+        "252.238.0.1"
+      ],
+      "instance-id": "53f025ae-64bf-4652-a23e-ed8e5f445b0b",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:14-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:36-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.119"
+          ],
+          "mac-address": "fa:16:3e:a7:97:07",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.238.0.1"
+          ],
+          "mac-address": "d6:da:de:a3:d8:28",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-3"
+    },
+    "8": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 16:56:47-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-8",
+      "dns-name": "10.149.12.96",
+      "ip-addresses": [
+        "10.149.12.96",
+        "252.192.0.1"
+      ],
+      "instance-id": "cdcd135f-00bd-4fe1-b04a-1879861bd290",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 16:55:19-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:37-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.96"
+          ],
+          "mac-address": "fa:16:3e:7b:87:9f",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.192.0.1"
+          ],
+          "mac-address": "a6:95:6b:64:92:f3",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 cores=2 mem=4096M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=20480M availability-zone=availability-zone-3"
+    },
+    "9": {
+      "juju-status": {
+        "current": "started",
+        "since": "10 Mar 2026 17:01:35-05:00",
+        "version": "3.6.14"
+      },
+      "hostname": "juju-6e0bca-openstack-9",
+      "dns-name": "10.149.12.107",
+      "ip-addresses": [
+        "10.149.12.107",
+        "252.214.0.1"
+      ],
+      "instance-id": "998c2017-5652-4dd8-84be-3d526e32de5b",
+      "machine-status": {
+        "current": "running",
+        "message": "ACTIVE",
+        "since": "10 Mar 2026 17:00:21-05:00"
+      },
+      "modification-status": {
+        "current": "idle",
+        "since": "10 Mar 2026 16:53:38-05:00"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "network-interfaces": {
+        "ens3": {
+          "ip-addresses": [
+            "10.149.12.107"
+          ],
+          "mac-address": "fa:16:3e:0f:01:67",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
+          "is-up": true
+        },
+        "fan-252": {
+          "ip-addresses": [
+            "252.214.0.1"
+          ],
+          "mac-address": "02:0a:3c:71:59:15",
+          "space": "alpha",
+          "is-up": true
+        }
+      },
+      "constraints": "arch=amd64 mem=2048M root-disk=20480M root-disk-source=volume",
+      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=availability-zone-2"
+    }
+  },
+  "applications": {
+    "cinder": {
+      "charm": "cinder",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "cinder",
+      "charm-rev": 690,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:19:07-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cinder-volume-service": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "cinder",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "cinder",
+            "interface": "cinder-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "image-service": [
+          {
+            "related-application": "glance",
+            "interface": "glance",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "cinder-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "cinder/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:19:07-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:06:03-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "0",
+          "open-ports": [
+            "8776/tcp"
+          ],
+          "public-address": "10.149.12.118",
+          "subordinates": {
+            "cinder-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "12 Mar 2026 18:12:05-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:06:06-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.118"
+            }
+          }
+        }
+      },
+      "version": "24.2.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "amqp": "alpha",
+        "backup-backend": "alpha",
+        "ceph": "alpha",
+        "certificates": "alpha",
+        "cinder-volume-service": "alpha",
+        "cluster": "alpha",
+        "ha": "alpha",
+        "identity-credentials": "alpha",
+        "identity-service": "alpha",
+        "image-service": "alpha",
+        "internal": "alpha",
+        "nrpe-external-master": "alpha",
+        "public": "alpha",
+        "shared-db": "alpha",
+        "storage-backend": "alpha"
+      }
+    },
+    "cinder-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "12 Mar 2026 18:12:05-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "cinder",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "cinder"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "glance": {
+      "charm": "glance",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "glance",
+      "charm-rev": 637,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:11:16-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "glance",
+            "interface": "glance-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "image-service": [
+          {
+            "related-application": "cinder",
+            "interface": "glance",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "glance",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-compute",
+            "interface": "glance",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "glance-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "glance/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:11:16-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:06:45-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "1",
+          "open-ports": [
+            "9292/tcp"
+          ],
+          "public-address": "10.149.12.16",
+          "subordinates": {
+            "glance-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "12 Mar 2026 18:08:01-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:06:49-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.16"
+            }
+          }
+        }
+      },
+      "version": "28.1.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "amqp": "alpha",
+        "ceph": "alpha",
+        "certificates": "alpha",
+        "cinder-volume-service": "alpha",
+        "cluster": "alpha",
+        "ha": "alpha",
+        "identity-service": "alpha",
+        "image-service": "alpha",
+        "internal": "alpha",
+        "nrpe-external-master": "alpha",
+        "object-store": "alpha",
+        "public": "alpha",
+        "shared-db": "alpha",
+        "storage-backend": "alpha"
+      }
+    },
+    "glance-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "12 Mar 2026 18:08:01-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "glance",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "glance"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "keystone": {
+      "charm": "keystone",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "keystone",
+      "charm-rev": 778,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Application Ready",
+        "since": "10 Mar 2026 17:10:46-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "cinder",
+            "interface": "keystone",
+            "scope": "global"
+          },
+          {
+            "related-application": "glance",
+            "interface": "keystone",
+            "scope": "global"
+          },
+          {
+            "related-application": "neutron-api",
+            "interface": "keystone",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "keystone",
+            "scope": "global"
+          },
+          {
+            "related-application": "placement",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "keystone-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "keystone/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:36:29-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 14:10:05-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "2",
+          "open-ports": [
+            "5000/tcp"
+          ],
+          "public-address": "10.149.12.9",
+          "subordinates": {
+            "keystone-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "13 Mar 2026 12:01:59-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:02:10-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.9"
+            }
+          }
+        }
+      },
+      "version": "25.0.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "domain-backend": "alpha",
+        "ha": "alpha",
+        "identity-admin": "alpha",
+        "identity-credentials": "alpha",
+        "identity-notifications": "alpha",
+        "identity-service": "alpha",
+        "internal": "alpha",
+        "keystone-fid-service-provider": "alpha",
+        "keystone-middleware": "alpha",
+        "nrpe-external-master": "alpha",
+        "public": "alpha",
+        "shared-db": "alpha",
+        "websso-trusted-dashboard": "alpha"
+      }
+    },
+    "keystone-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "13 Mar 2026 12:01:59-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "keystone",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "keystone"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "mysql": {
+      "charm": "mysql-innodb-cluster",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-innodb-cluster",
+      "charm-rev": 159,
+      "charm-channel": "8.0/stable",
+      "charm-version": "15e34e6",
+      "exposed": false,
+      "application-status": {
+        "current": "blocked",
+        "message": "Cluster is inaccessible from this instance. Please check logs for details.",
+        "since": "13 Mar 2026 12:07:20-05:00"
+      },
+      "relations": {
+        "cluster": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-innodb-cluster",
+            "scope": "global"
+          }
+        ],
+        "coordinator": [
+          {
+            "related-application": "mysql",
+            "interface": "coordinator",
+            "scope": "global"
+          }
+        ],
+        "db-router": [
+          {
+            "related-application": "cinder-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "glance-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "keystone-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "neutron-api-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-cloud-controller-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "placement-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          },
+          {
+            "related-application": "vault-mysql-router",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ]
+      },
+      "units": {
+        "mysql/0": {
+          "workload-status": {
+            "current": "blocked",
+            "message": "Cluster is inaccessible from this instance. Please check logs for details.",
+            "since": "13 Mar 2026 12:07:20-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:12:34-05:00",
+            "version": "3.6.14"
+          },
+          "machine": "3",
+          "public-address": "10.149.12.124"
+        },
+        "mysql/1": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready: Mode: R/O, Cluster is NOT tolerant to any failures. 1 member is not active.",
+            "since": "13 Mar 2026 12:16:24-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:12:21-05:00",
+            "version": "3.6.14"
+          },
+          "machine": "4",
+          "public-address": "10.149.12.73"
+        },
+        "mysql/2": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready: Mode: R/W, Cluster is NOT tolerant to any failures. 1 member is not active.",
+            "since": "13 Mar 2026 12:15:25-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:43:00-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "5",
+          "public-address": "10.149.12.68"
+        }
+      },
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "coordinator": "alpha",
+        "db-monitor": "alpha",
+        "db-router": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "neutron-api": {
+      "charm": "neutron-api",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "neutron-api",
+      "charm-rev": 645,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:13:45-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "neutron-api",
+            "interface": "neutron-api-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "neutron-api": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "neutron-api",
+            "scope": "global"
+          }
+        ],
+        "neutron-plugin-api-subordinate": [
+          {
+            "related-application": "neutron-api-plugin-ovn",
+            "interface": "neutron-plugin-api-subordinate",
+            "scope": "container"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "neutron-api-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "neutron-api/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:13:45-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:40-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "6",
+          "open-ports": [
+            "9696/tcp"
+          ],
+          "public-address": "10.149.12.13",
+          "subordinates": {
+            "neutron-api-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "13 Mar 2026 12:02:10-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:02:11-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.13"
+            },
+            "neutron-api-plugin-ovn/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "10 Mar 2026 17:31:39-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 11:57:33-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.13"
+            }
+          }
+        }
+      },
+      "version": "24.1.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "amqp": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "etcd-proxy": "alpha",
+        "external-dns": "alpha",
+        "ha": "alpha",
+        "identity-service": "alpha",
+        "infoblox-neutron": "alpha",
+        "internal": "alpha",
+        "midonet": "alpha",
+        "neutron-api": "alpha",
+        "neutron-load-balancer": "alpha",
+        "neutron-plugin-api": "alpha",
+        "neutron-plugin-api-subordinate": "alpha",
+        "nrpe-external-master": "alpha",
+        "public": "alpha",
+        "shared-db": "alpha",
+        "vsd-rest-api": "alpha"
+      }
+    },
+    "neutron-api-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "13 Mar 2026 12:02:10-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "neutron-api",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "neutron-api"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "neutron-api-plugin-ovn": {
+      "charm": "neutron-api-plugin-ovn",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "neutron-api-plugin-ovn",
+      "charm-rev": 166,
+      "charm-channel": "2024.1/stable",
+      "charm-version": "d4d01e9",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:31:39-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "neutron-plugin": [
+          {
+            "related-application": "neutron-api",
+            "interface": "neutron-plugin-api-subordinate",
+            "scope": "container"
+          }
+        ],
+        "ovsdb-cms": [
+          {
+            "related-application": "ovn-central",
+            "interface": "ovsdb-cms",
+            "scope": "global"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "neutron-api"
+      ],
+      "version": "24.1.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "container": "alpha",
+        "neutron-plugin": "alpha",
+        "ovsdb-cms": "alpha"
+      }
+    },
+    "nova-cloud-controller": {
+      "charm": "nova-cloud-controller",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "nova-cloud-controller",
+      "charm-rev": 791,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:39:03-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cinder-volume-service": [
+          {
+            "related-application": "cinder",
+            "interface": "cinder",
+            "scope": "global"
+          }
+        ],
+        "cloud-compute": [
+          {
+            "related-application": "nova-compute",
+            "interface": "nova-compute",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "nova-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "image-service": [
+          {
+            "related-application": "glance",
+            "interface": "glance",
+            "scope": "global"
+          }
+        ],
+        "neutron-api": [
+          {
+            "related-application": "neutron-api",
+            "interface": "neutron-api",
+            "scope": "global"
+          }
+        ],
+        "placement": [
+          {
+            "related-application": "placement",
+            "interface": "placement",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "nova-cloud-controller-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "nova-cloud-controller/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:39:03-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "10 Mar 2026 17:39:21-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "7",
+          "open-ports": [
+            "8774/tcp",
+            "8775/tcp"
+          ],
+          "public-address": "10.149.12.119",
+          "subordinates": {
+            "nova-cloud-controller-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "13 Mar 2026 12:02:11-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:02:11-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.119"
+            }
+          }
+        }
+      },
+      "version": "29.2.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "amqp": "alpha",
+        "amqp-cell": "alpha",
+        "certificates": "alpha",
+        "cinder-volume-service": "alpha",
+        "cloud-compute": "alpha",
+        "cloud-controller": "alpha",
+        "cluster": "alpha",
+        "dashboard": "alpha",
+        "ha": "alpha",
+        "identity-service": "alpha",
+        "image-service": "alpha",
+        "internal": "alpha",
+        "memcache": "alpha",
+        "neutron-api": "alpha",
+        "nova-cell-api": "alpha",
+        "nova-vmware": "alpha",
+        "nrpe-external-master": "alpha",
+        "placement": "alpha",
+        "public": "alpha",
+        "quantum-network-service": "alpha",
+        "shared-db": "alpha",
+        "shared-db-cell": "alpha"
+      }
+    },
+    "nova-cloud-controller-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "13 Mar 2026 12:02:11-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "nova-cloud-controller"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "nova-compute": {
+      "charm": "nova-compute",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "nova-compute",
+      "charm-rev": 827,
+      "charm-channel": "2024.1/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "error",
+        "message": "hook failed: \"start\"",
+        "since": "13 Mar 2026 14:10:53-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "cloud-compute": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "nova-compute",
+            "scope": "global"
+          }
+        ],
+        "compute-peer": [
+          {
+            "related-application": "nova-compute",
+            "interface": "nova",
+            "scope": "global"
+          }
+        ],
+        "image-service": [
+          {
+            "related-application": "glance",
+            "interface": "glance",
+            "scope": "global"
+          }
+        ],
+        "neutron-plugin": [
+          {
+            "related-application": "ovn-chassis",
+            "interface": "neutron-plugin",
+            "scope": "container"
+          }
+        ],
+        "secrets-storage": [
+          {
+            "related-application": "vault",
+            "interface": "vault-kv",
+            "scope": "global"
+          }
+        ]
+      },
+      "units": {
+        "nova-compute/0": {
+          "workload-status": {
+            "current": "error",
+            "message": "hook failed: \"start\"",
+            "since": "13 Mar 2026 14:10:53-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 14:10:53-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "8",
+          "public-address": "10.149.12.96",
+          "subordinates": {
+            "ovn-chassis/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "10 Mar 2026 17:32:34-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:12:19-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.96"
+            }
+          }
+        }
+      },
+      "version": "29.2.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "amqp": "alpha",
+        "ceph": "alpha",
+        "ceph-access": "alpha",
+        "cloud-compute": "alpha",
+        "cloud-credentials": "alpha",
+        "compute-peer": "alpha",
+        "ephemeral-backend": "alpha",
+        "image-service": "alpha",
+        "internal": "alpha",
+        "ironic-api": "alpha",
+        "lxd": "alpha",
+        "migration": "alpha",
+        "neutron-plugin": "alpha",
+        "nova-ceilometer": "alpha",
+        "nova-vgpu": "alpha",
+        "nrpe-external-master": "alpha",
+        "secrets-storage": "alpha",
+        "storage-backend": "alpha"
+      }
+    },
+    "ovn-central": {
+      "charm": "ovn-central",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "ovn-central",
+      "charm-rev": 291,
+      "charm-channel": "24.03/stable",
+      "charm-version": "b953d0b",
+      "charm-profile": "juju-openstack-a86fda-ovn-central-291",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready (leader: ovnnb_db, ovnsb_db)",
+        "since": "13 Mar 2026 11:57:18-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "coordinator": [
+          {
+            "related-application": "ovn-central",
+            "interface": "coordinator",
+            "scope": "global"
+          }
+        ],
+        "ovsdb": [
+          {
+            "related-application": "ovn-chassis",
+            "interface": "ovsdb",
+            "scope": "global"
+          }
+        ],
+        "ovsdb-cms": [
+          {
+            "related-application": "neutron-api-plugin-ovn",
+            "interface": "ovsdb-cms",
+            "scope": "global"
+          }
+        ],
+        "ovsdb-peer": [
+          {
+            "related-application": "ovn-central",
+            "interface": "ovsdb-cluster",
+            "scope": "global"
+          }
+        ]
+      },
+      "units": {
+        "ovn-central/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready (leader: ovnnb_db, ovnsb_db)",
+            "since": "13 Mar 2026 11:57:18-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:18-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "9",
+          "open-ports": [
+            "6641/tcp",
+            "6642/tcp"
+          ],
+          "public-address": "10.149.12.107"
+        },
+        "ovn-central/1": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "13 Mar 2026 11:57:19-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:24-05:00",
+            "version": "3.6.14"
+          },
+          "machine": "10",
+          "open-ports": [
+            "6641/tcp",
+            "6642/tcp"
+          ],
+          "public-address": "10.149.12.19"
+        },
+        "ovn-central/2": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready (northd: active)",
+            "since": "13 Mar 2026 11:57:23-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:29-05:00",
+            "version": "3.6.14"
+          },
+          "machine": "11",
+          "open-ports": [
+            "6641/tcp",
+            "6642/tcp"
+          ],
+          "public-address": "10.149.12.20"
+        }
+      },
+      "version": "24.03.2",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "coordinator": "alpha",
+        "cos-agent": "alpha",
+        "metrics-endpoint": "alpha",
+        "nrpe-external-master": "alpha",
+        "ovsdb": "alpha",
+        "ovsdb-cms": "alpha",
+        "ovsdb-peer": "alpha",
+        "ovsdb-server": "alpha"
+      }
+    },
+    "ovn-chassis": {
+      "charm": "ovn-chassis",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "ovn-chassis",
+      "charm-rev": 368,
+      "charm-channel": "24.03/stable",
+      "charm-version": "7531279",
+      "charm-profile": "juju-openstack-a86fda-ovn-chassis-368",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:32:34-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "nova-compute": [
+          {
+            "related-application": "nova-compute",
+            "interface": "neutron-plugin",
+            "scope": "container"
+          }
+        ],
+        "ovsdb": [
+          {
+            "related-application": "ovn-central",
+            "interface": "ovsdb",
+            "scope": "global"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "nova-compute"
+      ],
+      "version": "24.03.2",
+      "endpoint-bindings": {
+        "": "alpha",
+        "amqp": "alpha",
+        "certificates": "alpha",
+        "cos-agent": "alpha",
+        "data": "alpha",
+        "juju-info": "alpha",
+        "metrics-endpoint": "alpha",
+        "nova-compute": "alpha",
+        "nrpe-external-master": "alpha",
+        "ovsdb": "alpha",
+        "ovsdb-subordinate": "alpha"
+      }
+    },
+    "placement": {
+      "charm": "placement",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "placement",
+      "charm-rev": 120,
+      "charm-channel": "2024.1/stable",
+      "charm-version": "8d575b1",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 17:13:24-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "vault",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "placement",
+            "interface": "openstack-ha",
+            "scope": "global"
+          }
+        ],
+        "identity-service": [
+          {
+            "related-application": "keystone",
+            "interface": "keystone",
+            "scope": "global"
+          }
+        ],
+        "placement": [
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "placement",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "placement-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "placement/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 17:13:24-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:37-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "12",
+          "open-ports": [
+            "8778/tcp"
+          ],
+          "public-address": "10.149.12.112",
+          "subordinates": {
+            "placement-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "13 Mar 2026 12:02:10-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:02:10-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.112"
+            }
+          }
+        }
+      },
+      "version": "11.0.0",
+      "endpoint-bindings": {
+        "": "alpha",
+        "admin": "alpha",
+        "amqp": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "ha": "alpha",
+        "identity-service": "alpha",
+        "internal": "alpha",
+        "placement": "alpha",
+        "public": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "placement-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "13 Mar 2026 12:02:10-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "placement",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "placement"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "rabbitmq-server": {
+      "charm": "rabbitmq-server",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "rabbitmq-server",
+      "charm-rev": 246,
+      "charm-channel": "3.9/stable",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "10 Mar 2026 16:58:34-05:00"
+      },
+      "relations": {
+        "amqp": [
+          {
+            "related-application": "cinder",
+            "interface": "rabbitmq",
+            "scope": "global"
+          },
+          {
+            "related-application": "glance",
+            "interface": "rabbitmq",
+            "scope": "global"
+          },
+          {
+            "related-application": "neutron-api",
+            "interface": "rabbitmq",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "rabbitmq",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-compute",
+            "interface": "rabbitmq",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "rabbitmq-server",
+            "interface": "rabbitmq-ha",
+            "scope": "global"
+          }
+        ]
+      },
+      "units": {
+        "rabbitmq-server/0": {
+          "workload-status": {
+            "current": "active",
+            "message": "Unit is ready",
+            "since": "10 Mar 2026 16:58:34-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 11:57:58-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "13",
+          "open-ports": [
+            "5672/tcp",
+            "15672/tcp"
+          ],
+          "public-address": "10.149.12.71"
+        }
+      },
+      "version": "3.9.27",
+      "endpoint-bindings": {
+        "": "alpha",
+        "amqp": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "dashboards": "alpha",
+        "ha": "alpha",
+        "nrpe-external-master": "alpha",
+        "prometheus-rules": "alpha",
+        "scrape": "alpha"
+      }
+    },
+    "vault": {
+      "charm": "vault",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "vault",
+      "charm-rev": 371,
+      "charm-channel": "1.7/stable",
+      "charm-version": "5ef2d18",
+      "exposed": false,
+      "application-status": {
+        "current": "blocked",
+        "message": "Unit is sealed",
+        "since": "13 Mar 2026 12:12:09-05:00"
+      },
+      "relations": {
+        "certificates": [
+          {
+            "related-application": "cinder",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "glance",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "keystone",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "neutron-api",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "neutron-api-plugin-ovn",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "nova-cloud-controller",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "ovn-central",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "ovn-chassis",
+            "interface": "tls-certificates",
+            "scope": "global"
+          },
+          {
+            "related-application": "placement",
+            "interface": "tls-certificates",
+            "scope": "global"
+          }
+        ],
+        "cluster": [
+          {
+            "related-application": "vault",
+            "interface": "vault-ha",
+            "scope": "global"
+          }
+        ],
+        "secrets": [
+          {
+            "related-application": "nova-compute",
+            "interface": "vault-kv",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "vault-mysql-router",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "units": {
+        "vault/0": {
+          "workload-status": {
+            "current": "blocked",
+            "message": "Unit is sealed",
+            "since": "13 Mar 2026 12:12:09-05:00"
+          },
+          "juju-status": {
+            "current": "idle",
+            "since": "13 Mar 2026 12:12:12-05:00",
+            "version": "3.6.14"
+          },
+          "leader": true,
+          "machine": "14",
+          "open-ports": [
+            "8200/tcp"
+          ],
+          "public-address": "10.149.12.67",
+          "subordinates": {
+            "vault-mysql-router/0": {
+              "workload-status": {
+                "current": "active",
+                "message": "Unit is ready",
+                "since": "13 Mar 2026 12:01:52-05:00"
+              },
+              "juju-status": {
+                "current": "idle",
+                "since": "13 Mar 2026 12:12:07-05:00",
+                "version": "3.6.14"
+              },
+              "leader": true,
+              "public-address": "10.149.12.67"
+            }
+          }
+        }
+      },
+      "version": "1.7.9",
+      "endpoint-bindings": {
+        "": "alpha",
+        "access": "alpha",
+        "certificates": "alpha",
+        "cluster": "alpha",
+        "db": "alpha",
+        "etcd": "alpha",
+        "external": "alpha",
+        "ha": "alpha",
+        "lb-provider": "alpha",
+        "nrpe-external-master": "alpha",
+        "secrets": "alpha",
+        "shared-db": "alpha"
+      }
+    },
+    "vault-mysql-router": {
+      "charm": "mysql-router",
+      "base": {
+        "name": "ubuntu",
+        "channel": "22.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "mysql-router",
+      "charm-rev": 257,
+      "charm-channel": "8.0/stable",
+      "charm-version": "9998e1e",
+      "exposed": false,
+      "application-status": {
+        "current": "active",
+        "message": "Unit is ready",
+        "since": "13 Mar 2026 12:01:52-05:00"
+      },
+      "relations": {
+        "db-router": [
+          {
+            "related-application": "mysql",
+            "interface": "mysql-router",
+            "scope": "global"
+          }
+        ],
+        "shared-db": [
+          {
+            "related-application": "vault",
+            "interface": "mysql-shared",
+            "scope": "container"
+          }
+        ]
+      },
+      "subordinate-to": [
+        "vault"
+      ],
+      "version": "8.0.45",
+      "endpoint-bindings": {
+        "": "alpha",
+        "certificates": "alpha",
+        "db-router": "alpha",
+        "juju-info": "alpha",
+        "shared-db": "alpha"
+      }
+    }
+  },
+  "storage": {
+    "storage": {
+      "ephemeral-device/0": {
+        "kind": "block",
+        "life": "alive",
+        "status": {
+          "current": "attached",
+          "since": "10 Mar 2026 16:54:52-05:00"
+        },
+        "persistent": true,
+        "attachments": {
+          "units": {
+            "nova-compute/0": {
+              "machine": "8",
+              "location": "/dev/disk/by-uuid/9fff4234-5328-4906-9a14-0818a4abb272",
+              "life": "alive"
+            }
+          }
+        }
+      }
+    },
+    "volumes": {
+      "0": {
+        "provider-id": "6b2b6bd3-5c12-4b08-92c0-500433525abb",
+        "storage": "ephemeral-device/0",
+        "attachments": {
+          "machines": {
+            "8": {
+              "device": "sdb",
+              "read-only": false,
+              "life": "alive"
+            }
+          },
+          "units": {
+            "nova-compute/0": {
+              "machine": "8",
+              "location": "/dev/disk/by-uuid/9fff4234-5328-4906-9a14-0818a4abb272",
+              "life": "alive"
+            }
+          }
+        },
+        "pool": "cinder",
+        "size": 51200,
+        "persistent": true,
+        "life": "alive",
+        "status": {
+          "current": "attached",
+          "since": "10 Mar 2026 16:54:52-05:00"
+        }
+      }
+    }
+  },
+  "controller": {
+    "timestamp": "14:12:39-05:00"
+  }
+}

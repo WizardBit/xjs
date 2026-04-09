@@ -30,8 +30,12 @@ class Relation:
 
     def __init__(self, model, name, partnername, applicationname):
         """
-        Create a Relation object from a juju status output
-        """
+        Create a Relation object from a juju status output        """
+
+        # Handle new Juju relation format
+        if isinstance(partnername, dict):
+            partnername = partnername.get("related-application")
+
         # Default Values
         self.name = name
         self.application = model.get_application(applicationname)
@@ -39,9 +43,6 @@ class Relation:
             self.partner = model.get_application(partnername)
         else:
             self.partner = Application(partnername)
-        # self.partner = self.application.model.get_application(partner)
-        # if not self.partner:
-        #     self.partner = partner
 
     def __dict__(self):
         return {self.name: self}
@@ -50,17 +51,9 @@ class Relation:
         self, color, include_controller_name=False, include_model_name=False
     ):
         """Return a list which can be used for a row in a table."""
-
-        row = []
-        if color:
-            row = [
-                self.application.name + ':' + self.name,
-                self.partner.name + ':' + self.name,
-            ]
-        else:
-            row = [
-                self.application.name + ':' + self.name,
-                self.partner.name + ':' + self.name,
+        row = [
+            f"{self.application.name}:{self.name}",
+            f"{self.partner.name}:{self.name}",
             ]
         if include_model_name:
             row.insert(0, self.application.model.name)

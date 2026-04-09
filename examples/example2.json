@@ -1,14 +1,14 @@
 {
   "model": {
-    "name": "k8s-tigera",
+    "name": "k8s",
     "type": "iaas",
-    "controller": "nniehoff",
-    "cloud": "stsstack",
-    "region": "stsstack",
-    "version": "2.5.0",
+    "controller": "controller",
+    "cloud": "prodstack",
+    "region": "prodstack6",
+    "version": "3.6.14",
     "model-status": {
       "current": "available",
-      "since": "14 Feb 2019 15:22:42Z"
+      "since": "04 Feb 2026 16:15:11Z"
     },
     "sla": "unsupported"
   },
@@ -16,964 +16,248 @@
     "0": {
       "juju-status": {
         "current": "started",
-        "since": "15 Feb 2019 18:07:23Z",
-        "version": "2.5.0"
+        "since": "27 Feb 2026 14:32:50Z",
+        "version": "3.6.14"
       },
-      "dns-name": "10.5.0.12",
+      "hostname": "juju-6bb4d2-k8s-0",
+      "dns-name": "10.149.12.56",
       "ip-addresses": [
-        "10.5.0.12",
-        "252.0.12.1"
+        "10.149.12.56",
+        "10.1.0.124"
       ],
-      "instance-id": "e67cd602-75ec-4ce3-924e-897d06308d97",
+      "instance-id": "a865d771-af17-4fba-8f98-5ccf41d1d17b",
       "machine-status": {
         "current": "running",
         "message": "ACTIVE",
-        "since": "15 Feb 2019 17:58:56Z"
+        "since": "04 Feb 2026 16:16:34Z"
       },
-      "series": "bionic",
+      "modification-status": {
+        "current": "idle",
+        "since": "04 Feb 2026 16:15:47Z"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "24.04"
+      },
       "network-interfaces": {
-        "ens3": {
+        "cilium_host": {
           "ip-addresses": [
-            "10.5.0.12"
+            "10.1.0.124"
           ],
-          "mac-address": "fa:16:3e:17:c9:2a",
-          "gateway": "10.5.0.1",
+          "mac-address": "0a:33:a0:15:5e:8c",
           "is-up": true
         },
-        "fan-252": {
+        "ens3": {
           "ip-addresses": [
-            "252.0.12.1"
+            "10.149.12.56"
           ],
-          "mac-address": "5a:5a:3b:7b:46:cc",
+          "mac-address": "fa:16:3e:ea:9c:6f",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
           "is-up": true
         }
       },
-      "constraints": "mem=1024M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
-    },
-    "1": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:03Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.17",
-      "ip-addresses": [
-        "10.5.0.17",
-        "252.0.17.1"
-      ],
-      "instance-id": "11ca8f27-b10d-4d9d-8ff6-843f5311b5b1",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 17:59:43Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.17"
-          ],
-          "mac-address": "fa:16:3e:ee:9f:ee",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.17.1"
-          ],
-          "mac-address": "5e:31:23:5a:f5:cf",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=1024M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
-    },
-    "2": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:04Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.32",
-      "ip-addresses": [
-        "10.5.0.32",
-        "252.0.32.1"
-      ],
-      "instance-id": "736f1a27-56ac-448e-9ec7-40e8673a9f33",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:00:26Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.32"
-          ],
-          "mac-address": "fa:16:3e:e6:d8:36",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.32.1"
-          ],
-          "mac-address": "8a:b1:b2:65:9a:3d",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=1024M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
+      "constraints": "arch=amd64 instance-type=staging-cpu2-ram4-disk50",
+      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-1"
     },
     "3": {
       "juju-status": {
         "current": "started",
-        "since": "15 Feb 2019 18:08:23Z",
-        "version": "2.5.0"
+        "since": "27 Feb 2026 00:01:16Z",
+        "version": "3.6.14"
       },
-      "dns-name": "10.5.0.8",
+      "hostname": "juju-6bb4d2-k8s-3",
+      "dns-name": "10.149.12.82",
       "ip-addresses": [
-        "10.5.0.8",
-        "252.0.8.1"
+        "10.149.12.82"
       ],
-      "instance-id": "7c8b01b8-3850-4731-b4b2-23924d4cc646",
+      "instance-id": "25f818cb-e043-4028-a627-5ceffd874970",
       "machine-status": {
         "current": "running",
         "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:17Z"
+        "since": "26 Feb 2026 23:59:51Z"
       },
-      "series": "bionic",
+      "modification-status": {
+        "current": "idle",
+        "since": "26 Feb 2026 23:59:03Z"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "24.04"
+      },
       "network-interfaces": {
         "ens3": {
           "ip-addresses": [
-            "10.5.0.8"
+            "10.149.12.82"
           ],
-          "mac-address": "fa:16:3e:1b:bd:3b",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.8.1"
-          ],
-          "mac-address": "66:f7:dd:cb:1e:8e",
+          "mac-address": "fa:16:3e:f2:a1:ad",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
           "is-up": true
         }
       },
-      "constraints": "mem=1024M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
+      "constraints": "arch=amd64 instance-type=staging-cpu2-ram4-disk50",
+      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-2"
     },
     "4": {
       "juju-status": {
         "current": "started",
-        "since": "15 Feb 2019 18:07:19Z",
-        "version": "2.5.0"
+        "since": "27 Feb 2026 00:01:24Z",
+        "version": "3.6.14"
       },
-      "dns-name": "10.5.0.7",
+      "hostname": "juju-6bb4d2-k8s-4",
+      "dns-name": "10.149.12.95",
       "ip-addresses": [
-        "10.5.0.7",
-        "252.0.7.1"
+        "10.149.12.95"
       ],
-      "instance-id": "c8e46f9a-7d2d-4ed1-b15e-dc1dd19e9629",
+      "instance-id": "d5e6ad57-21b8-493b-b9e8-4690b777cb9a",
       "machine-status": {
         "current": "running",
         "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:06Z"
+        "since": "27 Feb 2026 00:00:46Z"
       },
-      "series": "bionic",
+      "modification-status": {
+        "current": "idle",
+        "since": "26 Feb 2026 23:59:03Z"
+      },
+      "base": {
+        "name": "ubuntu",
+        "channel": "24.04"
+      },
       "network-interfaces": {
         "ens3": {
           "ip-addresses": [
-            "10.5.0.7"
+            "10.149.12.95"
           ],
-          "mac-address": "fa:16:3e:14:1e:ea",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.7.1"
-          ],
-          "mac-address": "06:55:6d:79:3b:7f",
+          "mac-address": "fa:16:3e:8a:b4:47",
+          "gateway": "10.149.12.1",
+          "space": "alpha",
           "is-up": true
         }
       },
-      "constraints": "mem=1024M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
-    },
-    "5": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:18Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.20",
-      "ip-addresses": [
-        "10.5.0.20",
-        "10.1.3.0",
-        "172.17.0.1",
-        "252.0.20.1"
-      ],
-      "instance-id": "e99b0f83-cce8-4367-8d64-0cdf80afa817",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:17Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "docker0": {
-          "ip-addresses": [
-            "172.17.0.1"
-          ],
-          "mac-address": "02:42:fa:04:68:ce",
-          "is-up": true
-        },
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.20"
-          ],
-          "mac-address": "fa:16:3e:d4:4f:fd",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.20.1"
-          ],
-          "mac-address": "66:68:f3:79:3f:8a",
-          "is-up": true
-        },
-        "flannel.1": {
-          "ip-addresses": [
-            "10.1.3.0"
-          ],
-          "mac-address": "e2:cc:b4:a7:38:d2",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=2048M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
-    },
-    "6": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:33Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.11",
-      "ip-addresses": [
-        "10.5.0.11",
-        "10.1.88.0",
-        "172.17.0.1",
-        "252.0.11.1"
-      ],
-      "instance-id": "5598ccf6-0a92-452b-bb84-6813b03bc8f9",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:17Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "docker0": {
-          "ip-addresses": [
-            "172.17.0.1"
-          ],
-          "mac-address": "02:42:a2:cb:3a:51",
-          "is-up": true
-        },
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.11"
-          ],
-          "mac-address": "fa:16:3e:3d:89:68",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.11.1"
-          ],
-          "mac-address": "6e:ac:e9:a0:fa:60",
-          "is-up": true
-        },
-        "flannel.1": {
-          "ip-addresses": [
-            "10.1.88.0"
-          ],
-          "mac-address": "ae:e4:13:09:3a:1f",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=2048M",
-      "hardware": "arch=amd64 cores=1 mem=2048M root-disk=20480M availability-zone=nova"
-    },
-    "7": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:13Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.16",
-      "ip-addresses": [
-        "10.5.0.16",
-        "10.1.80.0",
-        "172.17.0.1",
-        "252.0.16.1"
-      ],
-      "instance-id": "9cb2c571-8831-4069-8e36-b3d41169b99b",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:06Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "docker0": {
-          "ip-addresses": [
-            "172.17.0.1"
-          ],
-          "mac-address": "02:42:2c:31:77:47",
-          "is-up": true
-        },
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.16"
-          ],
-          "mac-address": "fa:16:3e:27:57:e4",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.16.1"
-          ],
-          "mac-address": "7e:68:45:51:99:79",
-          "is-up": true
-        },
-        "flannel.1": {
-          "ip-addresses": [
-            "10.1.80.0"
-          ],
-          "mac-address": "d6:33:21:d1:30:7f",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=4096M",
-      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=40960M availability-zone=nova"
-    },
-    "8": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:07:56Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.26",
-      "ip-addresses": [
-        "10.5.0.26",
-        "10.1.35.0",
-        "172.17.0.1",
-        "252.0.26.1"
-      ],
-      "instance-id": "cd168ffa-eba0-4383-adbc-4ccdee895901",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:06Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "docker0": {
-          "ip-addresses": [
-            "172.17.0.1"
-          ],
-          "mac-address": "02:42:8f:f4:36:d5",
-          "is-up": true
-        },
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.26"
-          ],
-          "mac-address": "fa:16:3e:9e:4d:8b",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.26.1"
-          ],
-          "mac-address": "ae:82:98:88:bb:c9",
-          "is-up": true
-        },
-        "flannel.1": {
-          "ip-addresses": [
-            "10.1.35.0"
-          ],
-          "mac-address": "b6:ea:b9:a3:36:28",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=4096M",
-      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=40960M availability-zone=nova"
-    },
-    "9": {
-      "juju-status": {
-        "current": "started",
-        "since": "15 Feb 2019 18:08:17Z",
-        "version": "2.5.0"
-      },
-      "dns-name": "10.5.0.10",
-      "ip-addresses": [
-        "10.5.0.10",
-        "10.1.41.0",
-        "172.17.0.1",
-        "252.0.10.1"
-      ],
-      "instance-id": "2c81219e-139e-4ebd-9ad7-e5d654553572",
-      "machine-status": {
-        "current": "running",
-        "message": "ACTIVE",
-        "since": "15 Feb 2019 18:01:06Z"
-      },
-      "series": "bionic",
-      "network-interfaces": {
-        "docker0": {
-          "ip-addresses": [
-            "172.17.0.1"
-          ],
-          "mac-address": "02:42:e9:9b:b2:79",
-          "is-up": true
-        },
-        "ens3": {
-          "ip-addresses": [
-            "10.5.0.10"
-          ],
-          "mac-address": "fa:16:3e:ad:ff:a1",
-          "gateway": "10.5.0.1",
-          "is-up": true
-        },
-        "fan-252": {
-          "ip-addresses": [
-            "252.0.10.1"
-          ],
-          "mac-address": "02:13:80:63:10:f0",
-          "is-up": true
-        },
-        "flannel.1": {
-          "ip-addresses": [
-            "10.1.41.0"
-          ],
-          "mac-address": "fe:d6:db:d7:d0:73",
-          "is-up": true
-        }
-      },
-      "constraints": "mem=4096M",
-      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=40960M availability-zone=nova"
+      "constraints": "arch=amd64 instance-type=staging-cpu2-ram4-disk50",
+      "hardware": "arch=amd64 cores=2 mem=4096M root-disk=51200M availability-zone=availability-zone-3"
     }
   },
   "applications": {
-    "canal": {
-      "charm": "cs:~containers/canal-524",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "canal",
-      "charm-rev": 524,
+    "k8s": {
+      "charm": "k8s",
+      "base": {
+        "name": "ubuntu",
+        "channel": "24.04"
+      },
+      "charm-origin": "charmhub",
+      "charm-name": "k8s",
+      "charm-rev": 1724,
+      "charm-channel": "1.35/stable",
+      "can-upgrade-to": "ch:amd64/k8s-1846",
       "exposed": false,
       "application-status": {
-        "current": "active",
-        "message": "Flannel subnet 10.1.88.1/24",
-        "since": "15 Feb 2019 18:25:10Z"
+        "current": "waiting",
+        "message": "Waiting to verify features",
+        "since": "17 Mar 2026 01:42:13Z"
       },
       "relations": {
-        "cni": [
-          "kubernetes-master",
-          "kubernetes-worker"
-        ],
-        "etcd": [
-          "etcd"
-        ]
-      },
-      "subordinate-to": [
-        "kubernetes-master",
-        "kubernetes-worker"
-      ],
-      "version": "0.10.0/2.6.12",
-      "endpoint-bindings": {
-        "cni": "",
-        "dockerhost": "",
-        "etcd": "",
-        "nrpe-external-master": "",
-        "sdn-plugin": ""
-      }
-    },
-    "easyrsa": {
-      "charm": "cs:~containers/easyrsa-195",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "easyrsa",
-      "charm-rev": 195,
-      "exposed": false,
-      "application-status": {
-        "current": "active",
-        "message": "Certificate Authority connected.",
-        "since": "15 Feb 2019 18:12:07Z"
-      },
-      "relations": {
-        "client": [
-          "etcd",
-          "kubeapi-load-balancer",
-          "kubernetes-master",
-          "kubernetes-worker"
-        ]
-      },
-      "units": {
-        "easyrsa/0": {
-          "workload-status": {
-            "current": "active",
-            "message": "Certificate Authority connected.",
-            "since": "15 Feb 2019 18:12:07Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "15 Feb 2019 23:54:03Z",
-            "version": "2.5.0"
-          },
-          "leader": true,
-          "machine": "0",
-          "public-address": "10.5.0.12"
-        }
-      },
-      "version": "3.0.1",
-      "endpoint-bindings": {
-        "client": ""
-      }
-    },
-    "etcd": {
-      "charm": "cs:~containers/etcd-378",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "etcd",
-      "charm-rev": 378,
-      "exposed": false,
-      "application-status": {
-        "current": "active",
-        "message": "Healthy with 3 known peers",
-        "since": "16 Feb 2019 06:30:22Z"
-      },
-      "relations": {
-        "certificates": [
-          "easyrsa"
-        ],
         "cluster": [
-          "etcd"
+          {
+            "related-application": "k8s",
+            "interface": "k8s-cluster",
+            "scope": "global"
+          }
         ],
-        "db": [
-          "canal",
-          "kubernetes-master"
+        "cos-tokens": [
+          {
+            "related-application": "k8s",
+            "interface": "cos-k8s-tokens",
+            "scope": "global"
+          }
+        ],
+        "upgrade": [
+          {
+            "related-application": "k8s",
+            "interface": "upgrade",
+            "scope": "global"
+          }
         ]
       },
       "units": {
-        "etcd/0": {
+        "k8s/0": {
           "workload-status": {
-            "current": "active",
-            "message": "Healthy with 3 known peers",
-            "since": "16 Feb 2019 06:30:22Z"
+            "current": "waiting",
+            "message": "Waiting to verify features",
+            "since": "17 Mar 2026 01:42:13Z"
           },
           "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 07:55:42Z",
-            "version": "2.5.0"
+            "current": "executing",
+            "message": "running commands",
+            "since": "17 Mar 2026 00:53:34Z",
+            "version": "3.6.14"
           },
-          "leader": true,
-          "machine": "1",
+          "machine": "0",
           "open-ports": [
-            "2379/tcp"
+            "6443/tcp"
           ],
-          "public-address": "10.5.0.17"
+          "public-address": "10.149.12.56"
         },
-        "etcd/1": {
+        "k8s/3": {
           "workload-status": {
             "current": "active",
-            "message": "Healthy with 3 known peers",
-            "since": "16 Feb 2019 06:30:22Z"
+            "message": "Ready",
+            "since": "27 Feb 2026 14:35:45Z"
           },
           "juju-status": {
             "current": "idle",
-            "since": "16 Feb 2019 15:57:06Z",
-            "version": "2.5.0"
-          },
-          "machine": "2",
-          "open-ports": [
-            "2379/tcp"
-          ],
-          "public-address": "10.5.0.32"
-        },
-        "etcd/2": {
-          "workload-status": {
-            "current": "active",
-            "message": "Healthy with 3 known peers",
-            "since": "16 Feb 2019 06:30:22Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 15:57:07Z",
-            "version": "2.5.0"
+            "since": "27 Feb 2026 14:35:45Z",
+            "version": "3.6.14"
           },
           "machine": "3",
           "open-ports": [
-            "2379/tcp"
+            "6443/tcp"
           ],
-          "public-address": "10.5.0.8"
-        }
-      },
-      "version": "3.2.10",
-      "endpoint-bindings": {
-        "certificates": "",
-        "cluster": "",
-        "db": "",
-        "nrpe-external-master": "",
-        "proxy": ""
-      }
-    },
-    "kubeapi-load-balancer": {
-      "charm": "cs:~containers/kubeapi-load-balancer-525",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "kubeapi-load-balancer",
-      "charm-rev": 525,
-      "exposed": true,
-      "application-status": {
-        "current": "active",
-        "message": "Loadbalancer ready.",
-        "since": "16 Feb 2019 16:26:00Z"
-      },
-      "relations": {
-        "apiserver": [
-          "kubernetes-master"
-        ],
-        "certificates": [
-          "easyrsa"
-        ],
-        "loadbalancer": [
-          "kubernetes-master"
-        ],
-        "website": [
-          "kubernetes-worker"
-        ]
-      },
-      "units": {
-        "kubeapi-load-balancer/0": {
+          "public-address": "10.149.12.82"
+        },
+        "k8s/4": {
           "workload-status": {
             "current": "active",
-            "message": "Loadbalancer ready.",
-            "since": "16 Feb 2019 16:26:00Z"
+            "message": "Ready",
+            "since": "27 Feb 2026 14:36:28Z"
           },
           "juju-status": {
             "current": "idle",
-            "since": "16 Feb 2019 07:55:39Z",
-            "version": "2.5.0"
+            "since": "27 Feb 2026 14:36:28Z",
+            "version": "3.6.14"
           },
           "leader": true,
           "machine": "4",
           "open-ports": [
-            "443/tcp"
-          ],
-          "public-address": "10.5.0.7"
-        }
-      },
-      "version": "1.14.0",
-      "endpoint-bindings": {
-        "apiserver": "",
-        "certificates": "",
-        "loadbalancer": "",
-        "nrpe-external-master": "",
-        "website": ""
-      }
-    },
-    "kubernetes-master": {
-      "charm": "cs:~containers/kubernetes-master-542",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "kubernetes-master",
-      "charm-rev": 542,
-      "exposed": false,
-      "application-status": {
-        "current": "active",
-        "message": "Kubernetes master running.",
-        "since": "15 Feb 2019 18:46:43Z"
-      },
-      "relations": {
-        "certificates": [
-          "easyrsa"
-        ],
-        "cni": [
-          "canal"
-        ],
-        "etcd": [
-          "etcd"
-        ],
-        "kube-api-endpoint": [
-          "kubeapi-load-balancer"
-        ],
-        "kube-control": [
-          "kubernetes-worker"
-        ],
-        "loadbalancer": [
-          "kubeapi-load-balancer"
-        ]
-      },
-      "units": {
-        "kubernetes-master/0": {
-          "workload-status": {
-            "current": "active",
-            "message": "Kubernetes master running.",
-            "since": "15 Feb 2019 18:46:43Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 12:56:50Z",
-            "version": "2.5.0"
-          },
-          "leader": true,
-          "machine": "5",
-          "open-ports": [
             "6443/tcp"
           ],
-          "public-address": "10.5.0.20",
-          "subordinates": {
-            "canal/1": {
-              "workload-status": {
-                "current": "active",
-                "message": "Flannel subnet 10.1.3.1/24",
-                "since": "15 Feb 2019 18:35:23Z"
-              },
-              "juju-status": {
-                "current": "idle",
-                "since": "16 Feb 2019 15:57:02Z",
-                "version": "2.5.0"
-              },
-              "upgrading-from": "cs:~containers/canal-524",
-              "public-address": "10.5.0.20"
-            }
-          }
-        },
-        "kubernetes-master/1": {
-          "workload-status": {
-            "current": "active",
-            "message": "Kubernetes master running.",
-            "since": "15 Feb 2019 18:44:22Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 15:57:09Z",
-            "version": "2.5.0"
-          },
-          "machine": "6",
-          "open-ports": [
-            "6443/tcp"
-          ],
-          "public-address": "10.5.0.11",
-          "subordinates": {
-            "canal/0": {
-              "workload-status": {
-                "current": "active",
-                "message": "Flannel subnet 10.1.88.1/24",
-                "since": "15 Feb 2019 18:25:10Z"
-              },
-              "juju-status": {
-                "current": "idle",
-                "since": "16 Feb 2019 07:55:40Z",
-                "version": "2.5.0"
-              },
-              "leader": true,
-              "upgrading-from": "cs:~containers/canal-524",
-              "public-address": "10.5.0.11"
-            }
-          }
+          "public-address": "10.149.12.95"
         }
       },
-      "version": "1.13.3",
+      "version": "1.35.0",
       "endpoint-bindings": {
-        "aws": "",
-        "azure": "",
-        "ceph-storage": "",
-        "certificates": "",
-        "cluster-dns": "",
-        "cni": "",
-        "etcd": "",
-        "gcp": "",
-        "keystone-credentials": "",
-        "kube-api-endpoint": "",
-        "kube-control": "",
-        "loadbalancer": "",
-        "nrpe-external-master": "",
-        "openstack": "",
-        "vault-kv": "",
-        "vsphere": ""
-      }
-    },
-    "kubernetes-worker": {
-      "charm": "cs:~containers/kubernetes-worker-398",
-      "series": "bionic",
-      "os": "ubuntu",
-      "charm-origin": "jujucharms",
-      "charm-name": "kubernetes-worker",
-      "charm-rev": 398,
-      "exposed": true,
-      "application-status": {
-        "current": "active",
-        "message": "Kubernetes worker running.",
-        "since": "15 Feb 2019 18:37:43Z"
-      },
-      "relations": {
-        "certificates": [
-          "easyrsa"
-        ],
-        "cni": [
-          "canal"
-        ],
-        "kube-api-endpoint": [
-          "kubeapi-load-balancer"
-        ],
-        "kube-control": [
-          "kubernetes-master"
-        ]
-      },
-      "units": {
-        "kubernetes-worker/0": {
-          "workload-status": {
-            "current": "active",
-            "message": "Kubernetes worker running.",
-            "since": "15 Feb 2019 18:37:43Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "15 Feb 2019 18:53:04Z",
-            "version": "2.5.0"
-          },
-          "leader": true,
-          "machine": "7",
-          "open-ports": [
-            "80/tcp",
-            "443/tcp"
-          ],
-          "public-address": "10.5.0.16",
-          "subordinates": {
-            "canal/2": {
-              "workload-status": {
-                "current": "active",
-                "message": "Flannel subnet 10.1.80.1/24",
-                "since": "15 Feb 2019 18:46:47Z"
-              },
-              "juju-status": {
-                "current": "idle",
-                "since": "16 Feb 2019 15:57:03Z",
-                "version": "2.5.0"
-              },
-              "upgrading-from": "cs:~containers/canal-524",
-              "public-address": "10.5.0.16"
-            }
-          }
-        },
-        "kubernetes-worker/1": {
-          "workload-status": {
-            "current": "active",
-            "message": "Kubernetes worker running.",
-            "since": "15 Feb 2019 18:37:43Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 15:57:07Z",
-            "version": "2.5.0"
-          },
-          "machine": "8",
-          "open-ports": [
-            "80/tcp",
-            "443/tcp"
-          ],
-          "public-address": "10.5.0.26",
-          "subordinates": {
-            "canal/3": {
-              "workload-status": {
-                "current": "active",
-                "message": "Flannel subnet 10.1.35.1/24",
-                "since": "15 Feb 2019 18:44:21Z"
-              },
-              "juju-status": {
-                "current": "idle",
-                "since": "16 Feb 2019 15:57:09Z",
-                "version": "2.5.0"
-              },
-              "upgrading-from": "cs:~containers/canal-524",
-              "public-address": "10.5.0.26"
-            }
-          }
-        },
-        "kubernetes-worker/2": {
-          "workload-status": {
-            "current": "active",
-            "message": "Kubernetes worker running.",
-            "since": "15 Feb 2019 18:37:43Z"
-          },
-          "juju-status": {
-            "current": "idle",
-            "since": "16 Feb 2019 15:57:10Z",
-            "version": "2.5.0"
-          },
-          "machine": "9",
-          "open-ports": [
-            "80/tcp",
-            "443/tcp"
-          ],
-          "public-address": "10.5.0.10",
-          "subordinates": {
-            "canal/4": {
-              "workload-status": {
-                "current": "active",
-                "message": "Flannel subnet 10.1.41.1/24",
-                "since": "15 Feb 2019 18:43:45Z"
-              },
-              "juju-status": {
-                "current": "idle",
-                "since": "16 Feb 2019 15:57:03Z",
-                "version": "2.5.0"
-              },
-              "upgrading-from": "cs:~containers/canal-524",
-              "public-address": "10.5.0.10"
-            }
-          }
-        }
-      },
-      "version": "1.13.3",
-      "endpoint-bindings": {
-        "aws": "",
-        "azure": "",
-        "certificates": "",
-        "cni": "",
-        "docker-registry": "",
-        "dockerhost": "",
-        "gcp": "",
-        "kube-api-endpoint": "",
-        "kube-control": "",
-        "kube-dns": "",
-        "nfs": "",
-        "nrpe-external-master": "",
-        "openstack": "",
-        "sdn-plugin": "",
-        "vsphere": ""
+        "": "alpha",
+        "aws": "alpha",
+        "azure": "alpha",
+        "ceph-k8s-info": "alpha",
+        "cluster": "alpha",
+        "containerd": "alpha",
+        "cos-agent": "alpha",
+        "cos-tokens": "alpha",
+        "cos-worker-tokens": "alpha",
+        "etcd": "alpha",
+        "external-cloud-provider": "alpha",
+        "external-load-balancer": "alpha",
+        "gcp": "alpha",
+        "k8s-cluster": "alpha",
+        "kube-control": "alpha",
+        "upgrade": "alpha"
       }
     }
   },
   "storage": {},
   "controller": {
-    "timestamp": "16:28:38Z"
+    "timestamp": "14:50:40Z"
   }
 }
