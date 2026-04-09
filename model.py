@@ -18,9 +18,10 @@ import re
 from colors import Color
 from packaging import version
 import pendulum
-import subprocess
 
 class Model:
+    # TODO get latest juju version dynamically
+    latest_juju_version = version.parse("3.6.20")
     column_names = [
         "Model",
         "Controller",
@@ -167,26 +168,12 @@ class Model:
     def get_version_color(self):
         """Return a version string with correct colors based on version"""
         model_version = version.parse(self.version)
-
-        # Get the latest Juju versions directly
-        latest_juju_versions = self.get_latest_stable_versions()
-
-        # Find the track that matches version
-        major_track = None
-        for track in latest_juju_versions:
-            if self.version.startswith(track):
-                major_track = track
-                break
-
-        if major_track is None:
-            # Unknown track → mark as Red
+        if (
+            model_version < version.parse("3.0.0")
+            or model_version > Model.latest_juju_version
+        ):
             return Color.Fg.Red + self.version + Color.Reset
-
-        latest_version = latest_juju_versions[major_track]
-
-        if model_version > latest_version:
-            return Color.Fg.Red + self.version + Color.Reset
-        elif model_version < latest_version:
+        elif model_version < Model.latest_juju_version:
             return Color.Fg.Yellow + self.version + Color.Reset
         else:
             return Color.Fg.Green + self.version + Color.Reset
@@ -287,29 +274,3 @@ class Model:
                 del machine.containers[containername]
         self.machines = machines
         self.containers = containers
-
-    @staticmethod
-    def get_latest_stable_versions():
-        import subprocess
-        from packaging import version
-
-        result = subprocess.run(
-            ["snap", "info", "juju"],
-            capture_output=True,
-            text=True,
-            check=True
-        )
-        latest_versions = {}
-        for line in result.stdout.splitlines():
-            line = line.strip()
-            if "/stable:" in line:
-                track_part, ver_str = line.split("/stable:")
-                track = track_part.strip()
-                ver_str = ver_str.strip().split()[0]
-
-                # Skip placeholders and non-PEP 440 versions
-                if ver_str in ("–", "↑") or not re.match(r"^\d+(\.\d+)*$", ver_str):
-                    continue
-
-                latest_versions[track] = version.parse(ver_str)  # conforms to PEP 440
-        return latest_versions
