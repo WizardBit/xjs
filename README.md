@@ -4,6 +4,7 @@
 
 > [!NOTE]
 > An updated fork of [xjs](https://github.com/nniehoff/xjs)
+> To use with Juju 2.x use the legacy/stable channel
 
 A tool for parsing seemingly complex juju 3.x status yaml/json files offline.
 This eliminates the hassle of waiting for `juju status` in large environments.
