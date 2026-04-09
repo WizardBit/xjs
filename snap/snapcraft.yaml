@@ -4,13 +4,6 @@ base: core24
 version: 'git'
 summary: A tool to parse juju status yaml/json
 
-platforms:
-  amd64:
-    build-on:
-      - amd64
-    build-for:
-      - amd64
-
 description: |
   XJS Provides a way to parse complex juju status yaml/json files in a simple way.
 source-code:
