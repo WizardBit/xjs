@@ -53,7 +53,7 @@ class NetworkInterface:
         if "gateway" in interfaceinfo:
             self.gateway = interfaceinfo["gateway"]
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def get_isup_color(self):
@@ -103,8 +103,9 @@ class NetworkInterface:
         self, include_controller_name=False, include_model_name=False
     ):
         """Append the controller name and/or model name as necessary"""
+        fields = list(self.column_names)
         if include_model_name:
-            self.column_names.insert(0, "Model")
+            fields.insert(0, "Model")
         if include_controller_name:
-            self.column_names.insert(0, "Controller")
-        return self.column_names
+            fields.insert(0, "Controller")
+        return fields

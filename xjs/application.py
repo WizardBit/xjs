@@ -154,7 +154,7 @@ class Application:
                 unit = Unit(unitname, unitinfo, self)
                 self.units[unitname] = unit
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def add_subordinate(self, subunit):
@@ -257,11 +257,12 @@ class Application:
         self, include_controller_name=False, include_model_name=False
     ):
         """Append the controller name and/or model name as necessary"""
+        fields = list(self.column_names)
         if include_model_name:
-            self.column_names.insert(0, "Model")
+            fields.insert(0, "Model")
         if include_controller_name:
-            self.column_names.insert(0, "Controller")
-        return self.column_names
+            fields.insert(0, "Controller")
+        return fields
 
     def filter_dictionary(self, dictionary, key_filter):
         return {

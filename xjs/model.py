@@ -105,7 +105,7 @@ class Model:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def add_application(self, application):

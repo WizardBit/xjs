@@ -124,7 +124,7 @@ class BasicMachine:
                     interfacename, interfaceinfo, self, model
                 )
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def get_jujustatus_color(self):
@@ -155,8 +155,9 @@ class BasicMachine:
         self, include_controller_name=False, include_model_name=False
     ):
         """Append the controller name and/or model name as necessary"""
+        fields = list(self.column_names)
         if include_model_name:
-            self.column_names.insert(0, "Model")
+            fields.insert(0, "Model")
         if include_controller_name:
-            self.column_names.insert(0, "Controller")
-        return self.column_names
+            fields.insert(0, "Controller")
+        return fields

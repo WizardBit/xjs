@@ -61,7 +61,7 @@ class Controller:
                     "DD MMM YYYY HH:mm:ss",
                 )
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def update_timestamp(self, date):
