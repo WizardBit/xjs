@@ -15,7 +15,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from application import Application
+from .application import Application
 
 class Relation:
     """

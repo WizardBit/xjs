@@ -18,13 +18,13 @@
 import json
 import sys
 import shutil
-from application import Application
+from .application import Application
 import click
-from colors import Color
-from controller import Controller
-from machine import Machine
-from model import Model
-from relation import Relation
+from .colors import Color
+from .controller import Controller
+from .machine import Machine
+from .model import Model
+from .relation import Relation
 from prettytable import PrettyTable
 import yaml
 

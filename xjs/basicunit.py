@@ -15,7 +15,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-from colors import Color
+from .colors import Color
 import pendulum
 
 

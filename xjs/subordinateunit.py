@@ -15,7 +15,7 @@
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import re
-from basicunit import BasicUnit
+from .basicunit import BasicUnit
 
 
 class SubordinateUnit(BasicUnit):

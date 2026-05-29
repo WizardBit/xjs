@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from basicmachine import BasicMachine
-from colors import Color
+from .basicmachine import BasicMachine
+from .colors import Color
 
 
 class Container(BasicMachine):
