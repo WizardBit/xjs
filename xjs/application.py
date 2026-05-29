@@ -29,7 +29,10 @@ class Application:
         "Notes",
     ]
 
-    def __init__(self, app_name: str, app_info: dict[str, Any] | None = None, model: Model = "") -> None:
+    def __init__(
+        self, app_name: str, app_info: dict[str, Any] | None = None,
+        model: Model = "",
+    ) -> None:
         app_info = app_info if isinstance(app_info, dict) else {}
 
         self.notes: list[str | Text] = []
@@ -48,7 +51,9 @@ class Application:
 
         base = app_info.get("base")
         if isinstance(base, dict):
-            self.base: str = f"{base.get('name', '')}@{base.get('channel', '')}"
+            self.base: str = (
+                f"{base.get('name', '')}@{base.get('channel', '')}"
+            )
         else:
             self.base = base or "NA"
 
@@ -91,9 +96,14 @@ class Application:
             since_str = app_info[statuskey]["since"]
             if since_str.endswith("Z"):
                 since_str = since_str[:-1]
-                self.since: datetime = datetime.strptime(since_str, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+                self.since: datetime = (
+                    datetime.strptime(since_str, "%d %b %Y %H:%M:%S")
+                    .replace(tzinfo=timezone.utc)
+                )
             else:
-                self.since = datetime.strptime(since_str, "%d %b %Y %H:%M:%S%z")
+                self.since = datetime.strptime(
+                    since_str, "%d %b %Y %H:%M:%S%z",
+                )
             model.controller.update_timestamp(self.since)
 
         if statuskey in app_info:
@@ -116,7 +126,9 @@ class Application:
         if "charm" in app_info:
             match = re.match(r"(cs:~[^/]+)\/([^/]+/)*([^/]+)-\d+$", self.charm)
             if match:
-                self.charm_id = match.group(1) + "/" + self.base + "/" + match.group(3)
+                self.charm_id = (
+                    match.group(1) + "/" + self.base + "/" + match.group(3)
+                )
             else:
                 match = re.match(r"cs:(.*)-\d+$", self.charm)
                 if match:
@@ -171,7 +183,9 @@ class Application:
             return Text(self.charm_origin)
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str | Text]:
         row: list[str | Text] = []
         if color:
@@ -209,7 +223,8 @@ class Application:
         return row
 
     def get_column_names(
-        self, include_controller_name: bool = False, include_model_name: bool = False
+        self, include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
@@ -218,7 +233,9 @@ class Application:
             fields.insert(0, "Controller")
         return fields
 
-    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
+    def filter_dictionary(
+        self, dictionary: dict[str, Any], key_filter: str,
+    ) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()

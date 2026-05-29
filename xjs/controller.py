@@ -14,7 +14,10 @@ if TYPE_CHECKING:
 class Controller:
     zerodate: datetime = datetime.fromtimestamp(0, tz=timezone.utc)
 
-    def __init__(self, controller_name: str, controller_info: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, controller_name: str,
+        controller_info: dict[str, Any] | None = None,
+    ) -> None:
         if controller_info is None:
             controller_info = {}
 
@@ -32,7 +35,10 @@ class Controller:
                 ts = "01 Jan 1970 " + ts
             if ts.endswith("Z"):
                 ts = ts[:-1]
-                self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+                self.timestamp = (
+                    datetime.strptime(ts, "%d %b %Y %H:%M:%S")
+                    .replace(tzinfo=timezone.utc)
+                )
             elif re.match(r".*[+-]\d\d:\d\d$", ts):
                 self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S%z")
             else:
@@ -42,7 +48,9 @@ class Controller:
         if self.timestamp_provided:
             str_time = self.timestamp.strftime("%H:%M:%S%z")
             str_date = date.strftime("%d %b %Y")
-            temp_date = datetime.strptime(str_date + " " + str_time, "%d %b %Y %H:%M:%S%z")
+            temp_date = datetime.strptime(
+                str_date + " " + str_time, "%d %b %Y %H:%M:%S%z",
+            )
             if temp_date > self.timestamp:
                 self.timestamp = temp_date
         else:
@@ -52,7 +60,9 @@ class Controller:
     def add_model(self, model: Model) -> None:
         self.models[model.name] = model
 
-    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
+    def filter_dictionary(
+        self, dictionary: dict[str, Any], key_filter: str,
+    ) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()

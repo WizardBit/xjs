@@ -17,12 +17,13 @@ from .container import Container
 from .networkinterface import NetworkInterface
 from rich.console import Console
 from rich.table import Table
-from rich.text import Text
 import yaml
 from typing import Any, TextIO
 
 
-def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> None:
+def load_status_file(
+    inputfile: TextIO, controllers: dict[str, Controller],
+) -> None:
     """Load a juju status file, inputfile is a yaml or json file"""
     rawstatus: dict[str, Any] = {}
     content: str = inputfile.read()
@@ -58,9 +59,11 @@ def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> N
     model = Model(rawstatus[model_key], controller)
     if model.name in controller.models:
         console = Console()
-        console.print(
-            f"[red]Error model {model.name} already exists for controller {controller_name}[/red]"
+        msg = (
+            f"[red]Error model {model.name} already exists"
+            f" for controller {controller_name}[/red]"
         )
+        console.print(msg)
         sys.exit(1)
     controller.add_model(model)
     for machine_name, machine_info in rawstatus["machines"].items():
@@ -78,11 +81,15 @@ def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> N
         if "relations" in app_info:
             for relation_name, partner_apps in app_info["relations"].items():
                 for partner_app in partner_apps:
-                    relation = Relation(model, relation_name, partner_app, app_name)
+                    relation = Relation(
+                        model, relation_name, partner_app, app_name,
+                    )
                     model.add_relation(relation)
 
 
-def console_print_model_info(controllers: dict[str, Controller], color: bool = True) -> None:
+def console_print_model_info(
+    controllers: dict[str, Controller], color: bool = True,
+) -> None:
     models: list[Model] = []
     for controller_name, controller in controllers.items():
         for modelname, model in controller.models.items():
@@ -92,7 +99,8 @@ def console_print_model_info(controllers: dict[str, Controller], color: bool = T
 
 
 def console_print_application_info(
-    controllers: dict[str, Controller], color: bool = True, hide_scale_zero: bool = False
+    controllers: dict[str, Controller], color: bool = True,
+    hide_scale_zero: bool = False,
 ) -> None:
     apps: list[Application] = []
     include_controller_name = False
@@ -118,7 +126,8 @@ def console_print_application_info(
 
 
 def console_print_unit_info(
-    controllers: dict[str, Controller], color: bool = True, hide_subordinate_units: bool = False
+    controllers: dict[str, Controller], color: bool = True,
+    hide_subordinate_units: bool = False,
 ) -> None:
     units: list[BasicUnit] = []
     include_controller_name = False
@@ -147,7 +156,8 @@ def console_print_unit_info(
 
 
 def console_print_networkinterface_info(
-    controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
+    controllers: dict[str, Controller], color: bool = True,
+    include_containers: bool = True,
 ) -> None:
     nics: list[NetworkInterface] = []
     include_controller_name = False
@@ -164,8 +174,12 @@ def console_print_networkinterface_info(
                 for nicname, nic in machine.network_interfaces.items():
                     nics.append(nic)
                 if include_containers:
-                    for containername, container in machine.containers.items():
-                        for nicname, nic in container.network_interfaces.items():
+                    for containername, container in (
+                        machine.containers.items()
+                    ):
+                        for nicname, nic in (
+                            container.network_interfaces.items()
+                        ):
                             nics.append(nic)
     if len(nics) > 0:
         console_print_object(
@@ -177,7 +191,8 @@ def console_print_networkinterface_info(
 
 
 def console_print_machine_info(
-    controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
+    controllers: dict[str, Controller], color: bool = True,
+    include_containers: bool = True,
 ) -> None:
     machines: list[Machine | Container] = []
     include_controller_name = False
@@ -204,7 +219,9 @@ def console_print_machine_info(
         )
 
 
-def console_print_relations(controllers: dict[str, Controller], color: bool = True) -> None:
+def console_print_relations(
+    controllers: dict[str, Controller], color: bool = True,
+) -> None:
     relations: list[Relation] = []
     include_controller_name = False
     include_model_name = False
@@ -243,13 +260,20 @@ def console_print_object(
         table.add_column(col_name)
 
     for i, row in enumerate(print_what):
-        row_data = row.get_row(color, include_controller_name, include_model_name)
-        table.add_row(*row_data, style="on grey7" if color and i % 2 == 0 else "")
+        row_data = row.get_row(
+            color, include_controller_name, include_model_name,
+        )
+        table.add_row(
+            *row_data,
+            style="on grey7" if color and i % 2 == 0 else "",
+        )
 
     console.print(table)
 
 
-def filter_dictionary(dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
+def filter_dictionary(
+    dictionary: dict[str, Any], key_filter: str,
+) -> dict[str, Any]:
     return {
         key: value for (key, value) in dictionary.items() if key_filter in key
     }
@@ -268,7 +292,9 @@ def filter_results(
     filtered_controllers: dict[str, Controller] = {}
 
     if controller_filter != "":
-        filtered_controllers = filter_dictionary(controllers, controller_filter)
+        filtered_controllers = filter_dictionary(
+            controllers, controller_filter,
+        )
     else:
         filtered_controllers = controllers
 
@@ -366,23 +392,80 @@ def filter_results(
 
 @click.version_option(__version__)
 @click.command()
-@click.option("--application", default="", help="Show only the application with the specified name", metavar="<application name>")
-@click.option("--controller", default="", help="Show only the controller with the specified name", metavar="<controller name>")
-@click.option("--hide-scale-zero", default=False, is_flag=True, help="Hide applications with a scale of 0")
-@click.option("--hide-subordinate-units", "-s", default=False, is_flag=True, help="Hide subordinate units")
-@click.option("--include-containers", "-c", default=False, is_flag=True, help="Include Container information")
-@click.option("--machine", default="", help="Show only the machine with the specified name", metavar="<machine name>")
-@click.option("--model", default="", help="Show only the model with the specified name", metavar="<model name>")
-@click.option("--no-color", default=False, is_flag=True, help="Remove color from output")
-@click.option("--show-apps", "-a", default=False, is_flag=True, help="Show application information")
-@click.option("--show-machines", "-m", default=False, is_flag=True, help="Show machine information")
-@click.option("--show-model", "-d", default=False, is_flag=True, help="Show model information")
-@click.option("--show-net", "-n", default=False, is_flag=True, help="Show network interface information")
-@click.option("--show-units", "-u", default=False, is_flag=True, help="Show unit information")
-@click.option("--show-relations", "-r", default=False, is_flag=True, help="Show relation information")
-@click.option("--subordinate", default="", help="Show only the subordinate unit with the specified name", metavar="<subordinate name>")
-@click.option("--unit", default="", help="Show only the unit with the specified name", metavar="<unit name>")
-@click.argument("statusfiles", required=True, type=click.File("r"), nargs=-1, metavar="<status files>")
+@click.option(
+    "--application", default="",
+    help="Show only the application with the specified name",
+    metavar="<application name>",
+)
+@click.option(
+    "--controller", default="",
+    help="Show only the controller with the specified name",
+    metavar="<controller name>",
+)
+@click.option(
+    "--hide-scale-zero", default=False, is_flag=True,
+    help="Hide applications with a scale of 0",
+)
+@click.option(
+    "--hide-subordinate-units", "-s", default=False,
+    is_flag=True, help="Hide subordinate units",
+)
+@click.option(
+    "--include-containers", "-c", default=False,
+    is_flag=True, help="Include Container information",
+)
+@click.option(
+    "--machine", default="",
+    help="Show only the machine with the specified name",
+    metavar="<machine name>",
+)
+@click.option(
+    "--model", default="",
+    help="Show only the model with the specified name",
+    metavar="<model name>",
+)
+@click.option(
+    "--no-color", default=False, is_flag=True,
+    help="Remove color from output",
+)
+@click.option(
+    "--show-apps", "-a", default=False, is_flag=True,
+    help="Show application information",
+)
+@click.option(
+    "--show-machines", "-m", default=False, is_flag=True,
+    help="Show machine information",
+)
+@click.option(
+    "--show-model", "-d", default=False, is_flag=True,
+    help="Show model information",
+)
+@click.option(
+    "--show-net", "-n", default=False, is_flag=True,
+    help="Show network interface information",
+)
+@click.option(
+    "--show-units", "-u", default=False, is_flag=True,
+    help="Show unit information",
+)
+@click.option(
+    "--show-relations", "-r", default=False, is_flag=True,
+    help="Show relation information",
+)
+@click.option(
+    "--subordinate", default="",
+    help="Show only the subordinate unit with the specified name",
+    metavar="<subordinate name>",
+)
+@click.option(
+    "--unit", default="",
+    help="Show only the unit with the specified name",
+    metavar="<unit name>",
+)
+@click.argument(
+    "statusfiles", required=True, type=click.File("r"),
+    nargs=-1, metavar="<status files>",
+)
 def main(
     statusfiles: tuple[TextIO, ...],
     hide_scale_zero: bool,
@@ -424,7 +507,10 @@ def main(
         show_relations = True
         include_containers = True
 
-    if controller != "" or model != "" or application != "" or unit != "" or machine != "" or subordinate != "":
+    if (
+        controller != "" or model != "" or application != ""
+        or unit != "" or machine != "" or subordinate != ""
+    ):
         filter_results(
             controllers,
             controller_filter=controller,
@@ -448,7 +534,9 @@ def main(
         console_print_machine_info(controllers, color, include_containers)
         print("")
     if show_net:
-        console_print_networkinterface_info(controllers, color, include_containers)
+        console_print_networkinterface_info(
+            controllers, color, include_containers,
+        )
         print("")
     if show_relations:
         console_print_relations(controllers, color)

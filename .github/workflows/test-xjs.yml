@@ -23,7 +23,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pycodestyle
-        pip install -r requirements.txt
+        pip install -e .
         pycodestyle xjs/
         flake8 xjs/
 

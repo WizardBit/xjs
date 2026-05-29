@@ -10,26 +10,34 @@ from rich.text import Text
 
 if TYPE_CHECKING:
     from .unit import Unit
-    from .application import Application
 
 
 class SubordinateUnit(BasicUnit):
     is_subordinate: bool = True
 
-    def __init__(self, subunit_name: str, subunit_info: dict, unit: Unit) -> None:
-        BasicUnit.__init__(self, subunit_name, subunit_info, unit.application.model.controller)
+    def __init__(
+        self, subunit_name: str, subunit_info: dict, unit: Unit,
+    ) -> None:
+        BasicUnit.__init__(
+            self, subunit_name, subunit_info,
+            unit.application.model.controller,
+        )
 
         self.unit = unit
         self.machine = unit.machine
 
     def create_application_relation(self) -> None:
         app_name = re.sub(r"\/\d+$", "", self.name)
-        self.application = self.unit.application.model.get_application(app_name)
+        self.application = (
+            self.unit.application.model.get_application(app_name)
+        )
         if self.application is not None:
             self.application.add_subordinate(self)
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str | Text]:
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)

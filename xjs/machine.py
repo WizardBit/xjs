@@ -13,7 +13,10 @@ from typing import Any
 class Machine(BasicMachine):
     is_container: bool = False
 
-    def __init__(self, machine_name: str, machine_info: dict[str, Any], model: Model) -> None:
+    def __init__(
+        self, machine_name: str, machine_info: dict[str, Any],
+        model: Model,
+    ) -> None:
         BasicMachine.__init__(self, machine_name, machine_info, model)
 
         self.containers: dict[str, Container] = {}
@@ -36,13 +39,19 @@ class Machine(BasicMachine):
                 self.hardware[key] = value
 
         if "containers" in machine_info:
-            for container_name, container_info in machine_info["containers"].items():
-                container = Container(container_name, container_info, self, model)
+            for container_name, container_info in (
+                machine_info["containers"].items()
+            ):
+                container = Container(
+                    container_name, container_info, self, model,
+                )
                 model.add_container(container)
                 self.containers[container.name] = container
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str | Text]:
         notesstr = ", ".join(str(n) for n in self.notes)
         row: list[str | Text] = []

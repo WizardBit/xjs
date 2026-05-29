@@ -23,7 +23,11 @@ class NetworkInterface:
         "Notes",
     ]
 
-    def __init__(self, interface_name: str, interface_info: dict[str, Any], parent: BasicMachine, model: Model) -> None:
+    def __init__(
+        self, interface_name: str,
+        interface_info: dict[str, Any], parent: BasicMachine,
+        model: Model,
+    ) -> None:
         self.space: str = ""
         self.notes: list[str | Text] = []
         self.gateway: str = ""
@@ -47,7 +51,9 @@ class NetworkInterface:
             return Text(str(self.up), style="red")
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str | Text]:
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)
@@ -82,7 +88,8 @@ class NetworkInterface:
         return row
 
     def get_column_names(
-        self, include_controller_name: bool = False, include_model_name: bool = False
+        self, include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
