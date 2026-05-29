@@ -18,15 +18,10 @@ class Relation:
             partnername = partnername.get("related-application", "")
 
         self.name: str = name
-        self.application: Application = model.get_application(applicationname)
+        app = model.get_application(applicationname)
+        self.application: Application = app if app else Application(applicationname)
         partner = model.get_application(partnername)
-        if partner:
-            self.partner: Application = partner
-        else:
-            self.partner = Application(partnername)
-
-    def to_dict(self) -> dict[str, Relation]:
-        return {self.name: self}
+        self.partner: Application = partner if partner else Application(partnername)
 
     def get_row(
         self, color: bool, include_controller_name: bool = False, include_model_name: bool = False

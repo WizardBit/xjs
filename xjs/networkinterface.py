@@ -4,7 +4,11 @@
 from __future__ import annotations
 
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .basicmachine import BasicMachine
+    from .model import Model
 
 
 class NetworkInterface:
@@ -19,7 +23,7 @@ class NetworkInterface:
         "Notes",
     ]
 
-    def __init__(self, interfacename: str, interfaceinfo: dict[str, Any], parent: Any, model: Any) -> None:
+    def __init__(self, interfacename: str, interfaceinfo: dict[str, Any], parent: BasicMachine, model: Model) -> None:
         self.space: str = ""
         self.notes: list[str | Text] = []
         self.gateway: str = ""
@@ -35,9 +39,6 @@ class NetworkInterface:
             self.space = interfaceinfo["space"]
         if "gateway" in interfaceinfo:
             self.gateway = interfaceinfo["gateway"]
-
-    def to_dict(self) -> dict[str, NetworkInterface]:
-        return {self.name: self}
 
     def get_isup_color(self) -> Text:
         if self.up:

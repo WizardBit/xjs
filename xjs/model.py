@@ -7,7 +7,14 @@ from datetime import datetime, timezone
 import re
 from packaging import version
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .application import Application
+    from .container import Container
+    from .machine import Machine
+    from .relation import Relation
+    from .controller import Controller
 
 
 class Model:
@@ -24,12 +31,12 @@ class Model:
         "Notes",
     ]
 
-    def __init__(self, modelinfo: dict[str, Any], controller: Any, juju1env: str | None = None) -> None:
+    def __init__(self, modelinfo: dict[str, Any], controller: Controller, juju1env: str | None = None) -> None:
         self.notes: list[str | Text] = []
-        self.applications: dict[str, Any] = {}
-        self.relations: dict[str, list[Any]] = {}
-        self.machines: dict[str, Any] = {}
-        self.containers: dict[str, Any] = {}
+        self.applications: dict[str, Application] = {}
+        self.relations: dict[str, list[Relation]] = {}
+        self.machines: dict[str, Machine] = {}
+        self.containers: dict[str, Container] = {}
         self.message: str = ""
         self.upgradeavailable: str = ""
 
@@ -82,19 +89,16 @@ class Model:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
 
-    def to_dict(self) -> dict[str, Model]:
-        return {self.name: self}
-
-    def add_application(self, application: Any) -> None:
+    def add_application(self, application: Application) -> None:
         self.applications[application.name] = application
 
-    def add_machine(self, machine: Any) -> None:
+    def add_machine(self, machine: Machine) -> None:
         self.machines[machine.name] = machine
 
-    def add_container(self, container: Any) -> None:
+    def add_container(self, container: Container) -> None:
         self.containers[container.name] = container
 
-    def add_relation(self, relation: Any) -> None:
+    def add_relation(self, relation: Relation) -> None:
         if relation is not None:
             if relation.name not in self.relations:
                 self.relations[relation.name] = []
@@ -104,7 +108,7 @@ class Model:
                 if not self.get_relation(relation.name, relation.application.name, relation.partner.name):
                     self.relations[relation.name].append(relation)
 
-    def get_relation(self, name: str, app_name: str, partner_name: str) -> Any | None:
+    def get_relation(self, name: str, app_name: str, partner_name: str) -> Relation | None:
         if name in self.relations:
             for relation in self.relations[name]:
                 if (
@@ -116,19 +120,19 @@ class Model:
         else:
             return None
 
-    def get_application(self, searchappname: str) -> Any | None:
+    def get_application(self, searchappname: str) -> Application | None:
         for appname, application in self.applications.items():
             if appname == searchappname:
                 return application
         return None
 
-    def get_machine(self, machinename: str) -> Any | None:
+    def get_machine(self, machinename: str) -> Machine | None:
         if machinename in self.machines:
             return self.machines[machinename]
         else:
             return None
 
-    def get_container(self, containername: str) -> Any | None:
+    def get_container(self, containername: str) -> Container | None:
         if containername in self.containers:
             return self.containers[containername]
         else:

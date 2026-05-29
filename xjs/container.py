@@ -5,13 +5,17 @@ from __future__ import annotations
 
 from .basicmachine import BasicMachine
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .machine import Machine
+    from .model import Model
 
 
 class Container(BasicMachine):
     iscontainer: bool = True
 
-    def __init__(self, containername: str, containerinfo: dict[str, Any], machine: Any, model: Any) -> None:
+    def __init__(self, containername: str, containerinfo: dict[str, Any], machine: Machine, model: Model) -> None:
         BasicMachine.__init__(self, containername, containerinfo, model)
         self.machine = machine
 

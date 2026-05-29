@@ -12,6 +12,9 @@ from .controller import Controller
 from .machine import Machine
 from .model import Model
 from .relation import Relation
+from .basicunit import BasicUnit
+from .container import Container
+from .networkinterface import NetworkInterface
 from rich.console import Console
 from rich.table import Table
 from rich.text import Text
@@ -22,12 +25,13 @@ from typing import Any, TextIO
 def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> None:
     """Load a juju status file, inputfile is a yaml or json file"""
     rawstatus: dict[str, Any] = {}
+    content: str = inputfile.read()
 
     try:
-        rawstatus = json.loads(inputfile)
+        rawstatus = json.loads(content)
     except Exception:
         try:
-            rawstatus = yaml.safe_load(inputfile)
+            rawstatus = yaml.safe_load(content) or {}
         except Exception:
             console = Console()
             console.print("[red]Error trying to load status file[/red]")
@@ -116,7 +120,7 @@ def console_print_application_info(
 def console_print_unit_info(
     controllers: dict[str, Controller], color: bool = True, hide_subordinate_units: bool = False
 ) -> None:
-    units: list[Any] = []
+    units: list[BasicUnit] = []
     include_controller_name = False
     include_model_name = False
 
@@ -145,7 +149,7 @@ def console_print_unit_info(
 def console_print_networkinterface_info(
     controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
 ) -> None:
-    nics: list[Any] = []
+    nics: list[NetworkInterface] = []
     include_controller_name = False
     include_model_name = False
 
@@ -175,7 +179,7 @@ def console_print_networkinterface_info(
 def console_print_machine_info(
     controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
 ) -> None:
-    machines: list[Any] = []
+    machines: list[Machine | Container] = []
     include_controller_name = False
     include_model_name = False
 
@@ -364,7 +368,7 @@ def filter_results(
 @click.command()
 @click.option("--application", default="", help="Show only the application with the specified name", metavar="<application name>")
 @click.option("--controller", default="", help="Show only the controller with the specified name", metavar="<controller name>")
-@click.option("--hide-scale-zero", "-h", default=False, is_flag=True, help="Hide applications with a scale of 0")
+@click.option("--hide-scale-zero", default=False, is_flag=True, help="Hide applications with a scale of 0")
 @click.option("--hide-subordinate-units", "-s", default=False, is_flag=True, help="Hide subordinate units")
 @click.option("--include-containers", "-c", default=False, is_flag=True, help="Include Container information")
 @click.option("--machine", default="", help="Show only the machine with the specified name", metavar="<machine name>")

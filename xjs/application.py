@@ -7,7 +7,11 @@ from datetime import datetime, timezone
 import re
 from .unit import Unit
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .model import Model
+    from .subordinateunit import SubordinateUnit
 
 
 class Application:
@@ -25,15 +29,15 @@ class Application:
         "Notes",
     ]
 
-    def __init__(self, appname: str, appinfo: dict[str, Any] | None = None, model: Any = "") -> None:
+    def __init__(self, appname: str, appinfo: dict[str, Any] | None = None, model: Model = "") -> None:
         appinfo = appinfo if isinstance(appinfo, dict) else {}
 
         self.notes: list[str | Text] = []
         self.units: dict[str, Unit] = {}
-        self.subordinates: dict[str, Any] = {}
+        self.subordinates: dict[str, SubordinateUnit] = {}
         self.version: str = ""
         self.message: str = ""
-        self.endpointbindings: dict[str, Any] = {}
+        self.endpointbindings: dict[str, str] = {}
         self.charmlatestrev: int = -1
         self.exposed: str = ""
 
@@ -125,10 +129,7 @@ class Application:
                 unit = Unit(unitname, unitinfo, self)
                 self.units[unitname] = unit
 
-    def to_dict(self) -> dict[str, Application]:
-        return {self.name: self}
-
-    def add_subordinate(self, subunit: Any) -> None:
+    def add_subordinate(self, subunit: SubordinateUnit) -> None:
         self.subordinates[subunit.name] = subunit
 
     def get_scale(self) -> int:

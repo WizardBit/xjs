@@ -6,7 +6,10 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from .networkinterface import NetworkInterface
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .model import Model
 
 
 class BasicMachine:
@@ -25,7 +28,7 @@ class BasicMachine:
         "Notes",
     ]
 
-    def __init__(self, name: str, info: dict[str, Any], model: Any) -> None:
+    def __init__(self, name: str, info: dict[str, Any], model: Model) -> None:
         self.notes: list[str | Text] = []
         self.networkinterfaces: dict[str, NetworkInterface] = {}
 
@@ -44,7 +47,7 @@ class BasicMachine:
         else:
             self.dnsname = "PENDING"
         if "ip-addresses" in info:
-            self.ipaddresses: Any = info["ip-addresses"]
+            self.ipaddresses: list[str] | str = info["ip-addresses"]
         else:
             self.ipaddresses = "NA"
         self.instanceid: str = info["instance-id"]
@@ -85,9 +88,6 @@ class BasicMachine:
         if "network-interfaces" in info:
             for interfacename, interfaceinfo in info["network-interfaces"].items():
                 self.networkinterfaces[interfacename] = NetworkInterface(interfacename, interfaceinfo, self, model)
-
-    def to_dict(self) -> dict[str, BasicMachine]:
-        return {self.name: self}
 
     def get_jujustatus_color(self) -> Text:
         if self.jujustatus == "started":

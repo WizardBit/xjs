@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import re
 from datetime import datetime, timezone
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .model import Model
 
 
 class Controller:
@@ -16,7 +19,7 @@ class Controller:
             controllerinfo = {}
 
         self.notes: list[str] = []
-        self.models: dict[str, Any] = {}
+        self.models: dict[str, Model] = {}
         self.name: str = controllername
 
         self.timestampprovided: bool = False
@@ -35,9 +38,6 @@ class Controller:
             else:
                 self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S")
 
-    def to_dict(self) -> dict[str, Controller]:
-        return {self.name: self}
-
     def update_timestamp(self, date: datetime) -> None:
         if self.timestampprovided:
             str_time = self.timestamp.strftime("%H:%M:%S%z")
@@ -49,7 +49,7 @@ class Controller:
             if date > self.timestamp:
                 self.timestamp = date
 
-    def add_model(self, model: Any) -> None:
+    def add_model(self, model: Model) -> None:
         self.models[model.name] = model
 
     def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:

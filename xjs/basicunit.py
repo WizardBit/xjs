@@ -5,7 +5,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from rich.text import Text
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .controller import Controller
 
 
 class BasicUnit:
@@ -20,10 +23,10 @@ class BasicUnit:
         "Notes",
     ]
 
-    def __init__(self, name: str, info: dict[str, Any], controller: Any) -> None:
+    def __init__(self, name: str, info: dict[str, Any], controller: Controller) -> None:
         self.notes: list[str | Text] = []
         self.openports: list[str] = []
-        self.subordinates: dict[str, Any] = {}
+        self.subordinates: dict[str, BasicUnit] = {}
         self.message: str = ""
         self.leader: bool = False
 
@@ -38,6 +41,8 @@ class BasicUnit:
         self.jujustatus: str = info[statuskey]["current"]
         if "version" in info[statuskey]:
             self.jujuversion: str = info[statuskey]["version"]
+        else:
+            self.jujuversion = "NA"
         if "public-address" in info:
             self.publicaddress: str = info["public-address"]
         else:
@@ -66,9 +71,6 @@ class BasicUnit:
             self.openports = info["open-ports"]
         if "leader" in info:
             self.leader = info["leader"]
-
-    def to_dict(self) -> dict[str, BasicUnit]:
-        return {self.name: self}
 
     def get_workloadstatus_color(self) -> Text:
         if self.workloadstatus == "active":

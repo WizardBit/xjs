@@ -29,7 +29,6 @@ parts:
       _XJS_COMPLETE=source ./xjs > ../xjs.bash-completion || echo "Built Bash Completion"
     source: .
     plugin: python
-    python-requirements: [ ./requirements.txt ]
 
 apps:
   xjs:
