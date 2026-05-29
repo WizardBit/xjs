@@ -1,95 +1,63 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 import re
-import pendulum
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .model import Model
 
 
 class Controller:
-    zerodate = pendulum.from_format("0", "x", tz="UTC")
+    zerodate: datetime = datetime.fromtimestamp(0, tz=timezone.utc)
 
-    def __init__(self, controllername, controllerinfo={}):
-        """
-        Create a Controller object with basic information from controller
-        object in a juju status output
-        """
-        # Default Values
-        self.notes = []
-        self.models = {}
-        self.name = controllername
+    def __init__(self, controller_name: str, controller_info: dict[str, Any] | None = None) -> None:
+        if controller_info is None:
+            controller_info = {}
 
-        # Required Variables
-        self.timestampprovided = False
-        self.timestamp = Controller.zerodate
+        self.notes: list[str] = []
+        self.models: dict[str, Model] = {}
+        self.name: str = controller_name
 
-        # Calculated Values
-        if "timestamp" in controllerinfo:
-            self.timestampprovided = True
-            if re.match(r"^\d\d:\d\d:\d\d", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = (
-                    "01 Jan 1970 " + controllerinfo["timestamp"]
-                )
-            if re.match(r".*Z$", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = re.sub(
-                    r"Z$", "", controllerinfo["timestamp"]
-                )
-                self.timestamp = pendulum.from_format(
-                    controllerinfo["timestamp"],
-                    "DD MMM YYYY HH:mm:ss",
-                    tz="UTC",
-                )
-            elif re.match(r".*[+-]\d\d:\d\d$", controllerinfo["timestamp"]):
-                self.timestamp = pendulum.from_format(
-                    controllerinfo["timestamp"],
-                    "DD MMM YYYY HH:mm:ssZ",
-                    tz="UTC",
-                )
+        self.timestamp_provided: bool = False
+        self.timestamp: datetime = Controller.zerodate
+
+        if "timestamp" in controller_info:
+            self.timestamp_provided = True
+            ts: str = controller_info["timestamp"]
+            if ts[:8].count(":") == 2 and ts[:2].isdigit():
+                ts = "01 Jan 1970 " + ts
+            if ts.endswith("Z"):
+                ts = ts[:-1]
+                self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+            elif re.match(r".*[+-]\d\d:\d\d$", ts):
+                self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S%z")
             else:
-                self.timestamp = pendulum.from_format(
-                    controllerinfo["timestamp"],
-                    "DD MMM YYYY HH:mm:ss",
-                )
+                self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S")
 
-    def to_dict(self):
-        return {self.name: self}
-
-    def update_timestamp(self, date):
-        """
-        Timestamps from juju status for controllers only contain a time but all
-        other timestamps in the juju status contain dates and times.  We need
-        to "guess" and get as close as possible to an accurate date for a
-        controller.  For some versions of juju there is no timestamp, so we
-        will "guess" at a time as well.
-        """
-        # if the timestamp was not provided use the latest date
-        # if it was provided we only have a time but no date, we should use
-        # the latest date from any other status gathered
-        if self.timestampprovided:
-            # Hard Case - Get the time from the existing timestamp:
-            # Goal Format %d %b %Y %H:%M:%S%z
-            str_time = self.timestamp.format("HH:mm:ssZ")
-            # Get the date from the passed in date
-            str_date = date.format("DD MMM YYYY")
-            # create a tempdate:
-            temp_date = pendulum.from_format(
-                str_date + " " + str_time, "DD MMM YYYY HH:mm:ssZ"
-            )
+    def update_timestamp(self, date: datetime) -> None:
+        if self.timestamp_provided:
+            str_time = self.timestamp.strftime("%H:%M:%S%z")
+            str_date = date.strftime("%d %b %Y")
+            temp_date = datetime.strptime(str_date + " " + str_time, "%d %b %Y %H:%M:%S%z")
             if temp_date > self.timestamp:
                 self.timestamp = temp_date
         else:
             if date > self.timestamp:
                 self.timestamp = date
 
-    def add_model(self, model):
-        """Add a model to a controller"""
+    def add_model(self, model: Model) -> None:
         self.models[model.name] = model
 
-    def filter_dictionary(self, dictionary, key_filter):
+    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()
             if key_filter in key
         }
 
-    def filter_models(self, model_filter):
+    def filter_models(self, model_filter: str) -> None:
         self.models = self.filter_dictionary(self.models, model_filter)

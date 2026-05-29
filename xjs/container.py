@@ -1,68 +1,64 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 from .basicmachine import BasicMachine
-from .colors import Color
+from rich.text import Text
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .machine import Machine
+    from .model import Model
 
 
 class Container(BasicMachine):
-    iscontainer = True
+    is_container: bool = True
 
-    def __init__(self, containername, containerinfo, machine, model):
-        """
-        Create a Container object with basic information from a container
-        object from a juju status output
-        """
-        # Setup the BasicMachine
-        BasicMachine.__init__(self, containername, containerinfo, model)
-
-        # Required Variables
+    def __init__(self, container_name: str, container_info: dict[str, Any], machine: Machine, model: Model) -> None:
+        BasicMachine.__init__(self, container_name, container_info, model)
         self.machine = machine
 
-    def get_machinemessage_color(self):
-        """
-        Return a message string with correct colors based on the machine status
-        """
-        if self.machinemessage == "Container started":
-            return Color.Fg.Green + self.machinemessage + Color.Reset
+    def get_machine_message_color(self) -> Text:
+        if self.machine_message == "Container started":
+            return Text(self.machine_message, style="green")
         else:
-            return Color.Fg.Yellow + self.machinemessage + Color.Reset
+            return Text(self.machine_message, style="yellow")
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-        row = []
-        notesstr = ", ".join(self.notes)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
+        notesstr = ", ".join(str(n) for n in self.notes)
 
         if color:
             row = [
                 self.name,
-                self.get_jujustatus_color(),
-                self.get_machinestatus_color(),
-                self.dnsname,
-                self.instanceid,
+                self.get_juju_status_color(),
+                self.get_machine_status_color(),
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 "",
                 "",
                 "",
                 "",
-                self.get_machinemessage_color(),
+                self.get_machine_message_color(),
                 notesstr,
             ]
         else:
             row = [
                 self.name,
-                self.jujustatus,
-                self.machinestatus,
-                self.dnsname,
-                self.instanceid,
+                self.juju_status,
+                self.machine_status,
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 "",
                 "",
                 "",
                 "",
-                self.machinemessage,
+                self.machine_message,
                 notesstr,
             ]
 

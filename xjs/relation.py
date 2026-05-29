@@ -1,43 +1,31 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 from .application import Application
+from .model import Model
 
 
 class Relation:
-    """
-    A Relation is a juju relation between 2 juju applications, juju status
-    does not provide much information.
-    """
-
-    column_names = [
+    column_names: list[str] = [
         "Application A",
         "Application B"
     ]
 
-    def __init__(self, model, name, partnername, applicationname):
-        """
-        Create a Relation object from a juju status output        """
+    def __init__(self, model: Model, name: str, partner_name: str | dict[str, str], application_name: str) -> None:
+        if isinstance(partner_name, dict):
+            partner_name = partner_name.get("related-application", "")
 
-        # Handle new Juju relation format
-        if isinstance(partnername, dict):
-            partnername = partnername.get("related-application")
-
-        # Default Values
-        self.name = name
-        self.application = model.get_application(applicationname)
-        if model.get_application(partnername):
-            self.partner = model.get_application(partnername)
-        else:
-            self.partner = Application(partnername)
-
-    def to_dict(self):
-        return {self.name: self}
+        self.name: str = name
+        app = model.get_application(application_name)
+        self.application: Application = app if app else Application(application_name)
+        partner = model.get_application(partner_name)
+        self.partner: Application = partner if partner else Application(partner_name)
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         row = [
             f"{self.application.name}:{self.name}",
             f"{self.partner.name}:{self.name}",
@@ -49,9 +37,8 @@ class Relation:
         return row
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")

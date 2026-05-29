@@ -1,98 +1,90 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 import json
 import sys
-import shutil
 from .application import Application
 import click
 from . import __version__
-from .colors import Color
 from .controller import Controller
 from .machine import Machine
 from .model import Model
 from .relation import Relation
-from prettytable import PrettyTable
+from .basicunit import BasicUnit
+from .container import Container
+from .networkinterface import NetworkInterface
+from rich.console import Console
+from rich.table import Table
+from rich.text import Text
 import yaml
+from typing import Any, TextIO
 
 
-def load_status_file(inputfile, controllers):
+def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> None:
     """Load a juju status file, inputfile is a yaml or json file"""
-    rawstatus = {}
+    rawstatus: dict[str, Any] = {}
+    content: str = inputfile.read()
 
     try:
-        rawstatus = json.loads(inputfile)
+        rawstatus = json.loads(content)
     except Exception:
         try:
-            rawstatus = yaml.safe_load(inputfile)
+            rawstatus = yaml.safe_load(content) or {}
         except Exception:
-            print(
-                Color.Fg.Red + "Error trying to load status file" + Color.Reset
-            )
+            console = Console()
+            console.print("[red]Error trying to load status file[/red]")
             sys.exit(1)
 
     if "model" not in rawstatus and "services" in rawstatus:
-        # Juju v1 File
-        controllername = "controller"
-        modelkey = "environment-status"
-        applicationkey = "services"
+        controller_name = "controller"
+        model_key = "environment-status"
+        application_key = "services"
     else:
-        # Juju v2 File
-        controllername = rawstatus["model"]["controller"]
-        modelkey = "model"
-        applicationkey = "applications"
+        controller_name = rawstatus["model"]["controller"]
+        model_key = "model"
+        application_key = "applications"
 
-    # If we already have a controller by the same name use it
-    if controllername in controllers:
-        controller = controllers[controllername]
+    if controller_name in controllers:
+        controller = controllers[controller_name]
     else:
-        # Parse the controller info from this status file
         if "controller" in rawstatus:
-            controller = Controller(controllername, rawstatus["controller"])
+            controller = Controller(controller_name, rawstatus["controller"])
         else:
-            controller = Controller(controllername)
-        controllers[controllername] = controller
+            controller = Controller(controller_name)
+        controllers[controller_name] = controller
 
-    model = Model(rawstatus[modelkey], controller)
+    model = Model(rawstatus[model_key], controller)
     if model.name in controller.models:
-        print(
-            "{}Error model {} already exists for controller {}{}".format(
-                Color.Fg.Red, model.name, controllername, Color.Reset
-            )
+        console = Console()
+        console.print(
+            f"[red]Error model {model.name} already exists for controller {controller_name}[/red]"
         )
         sys.exit(1)
     controller.add_model(model)
-    for machname, machinfo in rawstatus["machines"].items():
-        machine = Machine(machname, machinfo, model)
+    for machine_name, machine_info in rawstatus["machines"].items():
+        machine = Machine(machine_name, machine_info, model)
         model.add_machine(machine)
-    for appname, appinfo in rawstatus[applicationkey].items():
-        application = Application(appname, appinfo, model)
+    for app_name, app_info in rawstatus[application_key].items():
+        application = Application(app_name, app_info, model)
         model.add_application(application)
-    # There is a race conditions with subordinate units, they may exist
-    # before the parent application does so create all of the apps first
-    # then create the relationship to the parent application
-    for appname, appinfo in model.applications.items():
-        for unitname, unit in appinfo.units.items():
-            for subunitname, subunit in unit.subordinates.items():
+    for app_name, app_info in model.applications.items():
+        for unit_name, unit in app_info.units.items():
+            for subunit_name, subunit in unit.subordinates.items():
                 subunit.create_application_relation()
 
-    # Now we have all applications we need to collect all Relation info
-    for appname, appinfo in rawstatus[applicationkey].items():
-        if "relations" in appinfo:
-            for relationname, partnerapps in appinfo["relations"].items():
-                for partnerapp in partnerapps:
-                    relation = Relation(
-                        model, relationname, partnerapp, appname
-                    )
+    for app_name, app_info in rawstatus[application_key].items():
+        if "relations" in app_info:
+            for relation_name, partner_apps in app_info["relations"].items():
+                for partner_app in partner_apps:
+                    relation = Relation(model, relation_name, partner_app, app_name)
                     model.add_relation(relation)
 
 
-def console_print_model_info(controllers, color=True):
-    """Filter and sort model info to print in a table here"""
-    # TODO Handle Sort
-    # TODO Handle Filter
-    models = []
-    for controllername, controller in controllers.items():
+def console_print_model_info(controllers: dict[str, Controller], color: bool = True) -> None:
+    models: list[Model] = []
+    for controller_name, controller in controllers.items():
         for modelname, model in controller.models.items():
             models.append(model)
     if len(models) > 0:
@@ -100,24 +92,20 @@ def console_print_model_info(controllers, color=True):
 
 
 def console_print_application_info(
-    controllers, color=True, hide_scale_zero=False
-):
-    """Filter and sort application info to print in a table here"""
-    # TODO Handle Sort
-    # TODO Handle Filter
-    # TODO Handle Scale 0
-    apps = []
+    controllers: dict[str, Controller], color: bool = True, hide_scale_zero: bool = False
+) -> None:
+    apps: list[Application] = []
     include_controller_name = False
     include_model_name = False
 
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for appname, app in model.applications.items():
+            for app_name, app in model.applications.items():
                 if not hide_scale_zero or app.get_scale() > 0:
                     apps.append(app)
     if len(apps) > 0:
@@ -130,27 +118,24 @@ def console_print_application_info(
 
 
 def console_print_unit_info(
-    controllers, color=True, hide_subordinate_units=False
-):
-    """Filter and sort unit info to print in a table here"""
-    # TODO Handle Sort
-    # TODO Handle Filter
-    units = []
+    controllers: dict[str, Controller], color: bool = True, hide_subordinate_units: bool = False
+) -> None:
+    units: list[BasicUnit] = []
     include_controller_name = False
     include_model_name = False
 
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for appname, application in model.applications.items():
-                for unitname, unit in application.units.items():
+            for app_name, application in model.applications.items():
+                for unit_name, unit in application.units.items():
                     units.append(unit)
                     if not hide_subordinate_units:
-                        for subunitname, subunit in unit.subordinates.items():
+                        for subunit_name, subunit in unit.subordinates.items():
                             units.append(subunit)
     if len(units) > 0:
         console_print_object(
@@ -162,31 +147,25 @@ def console_print_unit_info(
 
 
 def console_print_networkinterface_info(
-    controllers, color=True, include_containers=True
-):
-    """Filter and sort network info to print in a table here"""
-    # TODO Handle Sort
-    # TODO Handle Filter
-    nics = []
+    controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
+) -> None:
+    nics: list[NetworkInterface] = []
     include_controller_name = False
     include_model_name = False
 
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
             for machinename, machine in model.machines.items():
-                for nicname, nic in machine.networkinterfaces.items():
+                for nicname, nic in machine.network_interfaces.items():
                     nics.append(nic)
                 if include_containers:
                     for containername, container in machine.containers.items():
-                        for (
-                            nicname,
-                            nic,
-                        ) in container.networkinterfaces.items():
+                        for nicname, nic in container.network_interfaces.items():
                             nics.append(nic)
     if len(nics) > 0:
         console_print_object(
@@ -198,19 +177,16 @@ def console_print_networkinterface_info(
 
 
 def console_print_machine_info(
-    controllers, color=True, include_containers=True
-):
-    """Filter and sort machine info to print in a table here"""
-    # TODO Handle Sort
-    # TODO Handle Filter
-    machines = []
+    controllers: dict[str, Controller], color: bool = True, include_containers: bool = True
+) -> None:
+    machines: list[Machine | Container] = []
     include_controller_name = False
     include_model_name = False
 
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
@@ -228,21 +204,20 @@ def console_print_machine_info(
         )
 
 
-def console_print_relations(controllers, color=True):
-    """Filter and sort relation info to print in a table here"""
-    relations = []
+def console_print_relations(controllers: dict[str, Controller], color: bool = True) -> None:
+    relations: list[Relation] = []
     include_controller_name = False
     include_model_name = False
 
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for relationname, relation in model.relations.items():
-                for singlerelation in model.relations[relationname]:
+            for relation_name, relation in model.relations.items():
+                for singlerelation in model.relations[relation_name]:
                     relations.append(singlerelation)
     if len(relations) > 0:
         console_print_object(
@@ -253,78 +228,63 @@ def console_print_relations(controllers, color=True):
         )
 
 
-# Handle console colors here
 def console_print_object(
-    print_what,
-    color=True,
-    include_controller_name=False,
-    include_model_name=False,
-):
+    print_what: list[Any],
+    color: bool = True,
+    include_controller_name: bool = False,
+    include_model_name: bool = False,
+) -> None:
     """Print a table formatted for the console and fit terminal width."""
-    table = PrettyTable()
-    table.field_names = print_what[0].get_column_names(
+    console = Console(no_color=not color)
+    table = Table(show_header=True, header_style="bold")
+    for col_name in print_what[0].get_column_names(
         include_controller_name, include_model_name
-    )
-    for row in print_what:
-        table.add_row(
-            row.get_row(color, include_controller_name, include_model_name)
-        )
-    table.align = "l"
+    ):
+        table.add_column(col_name)
 
-    # Always fit width
-    try:
-        width = shutil.get_terminal_size().columns
-    except Exception:
-        width = 80  # fallback
+    for i, row in enumerate(print_what):
+        row_data = row.get_row(color, include_controller_name, include_model_name)
+        table.add_row(*row_data, style="on grey7" if color and i % 2 == 0 else "")
 
-    num_cols = len(table.field_names)
-    # Ensure at least a min column width of 5
-    max_col_width = max(5, width // num_cols - 1)
-    for field in table.field_names:
-        table.max_width[field] = max_col_width
-
-    print(table)
+    console.print(table)
 
 
-def filter_dictionary(dictionary, key_filter):
+def filter_dictionary(dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
     return {
         key: value for (key, value) in dictionary.items() if key_filter in key
     }
 
 
 def filter_results(
-    controllers,
-    ctrl_filter="",
-    model_filter="",
-    app_filter="",
-    unit_filter="",
-    subunit_filter="",
-    machine_filter="",
-):
+    controllers: dict[str, Controller],
+    controller_filter: str = "",
+    model_filter: str = "",
+    app_filter: str = "",
+    unit_filter: str = "",
+    subunit_filter: str = "",
+    machine_filter: str = "",
+) -> None:
     """Filter the status"""
-    filtered_controllers = {}
+    filtered_controllers: dict[str, Controller] = {}
 
-    # Filter the Controllers
-    if ctrl_filter != "":
-        filtered_controllers = filter_dictionary(controllers, ctrl_filter)
+    if controller_filter != "":
+        filtered_controllers = filter_dictionary(controllers, controller_filter)
     else:
         filtered_controllers = controllers
 
-    # Filter the models
     if model_filter != "":
-        empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        empty_controllers: list[str] = []
+        for controller_name, controller in filtered_controllers.items():
             controller.filter_models(model_filter)
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
-    # Filter the Applications
     if app_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
-            empty_models = []
+        for controller_name, controller in filtered_controllers.items():
+            empty_models: list[str] = []
             for modelname, model in controller.models.items():
                 model.filter_applications(app_filter)
                 if len(model.applications) == 0:
@@ -332,66 +292,63 @@ def filter_results(
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
-    # Filter the Units
     if unit_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
-                empty_applications = []
-                for appname, application in model.applications.items():
+                empty_applications: list[str] = []
+                for app_name, application in model.applications.items():
                     application.filter_units(unit_filter)
                     if len(application.units) == 0:
-                        empty_applications.append(appname)
-                for appname in empty_applications:
-                    del model.applications[appname]
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
                 model.reset_machines()
                 if len(model.applications) == 0:
                     empty_models.append(modelname)
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
-    # Filter the subordinate units
     if subunit_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
                 empty_applications = []
-                for appname, application in model.applications.items():
-                    empty_units = []
-                    for unitname, unit in application.units.items():
+                for app_name, application in model.applications.items():
+                    empty_units: list[str] = []
+                    for unit_name, unit in application.units.items():
                         unit.filter_subordinates(subunit_filter)
                         if len(unit.subordinates) == 0:
-                            empty_units.append(unitname)
-                    for unitname in empty_units:
-                        del application.units[unitname]
+                            empty_units.append(unit_name)
+                    for unit_name in empty_units:
+                        del application.units[unit_name]
                     if len(application.units) == 0:
-                        empty_applications.append(appname)
-                for appname in empty_applications:
-                    del model.applications[appname]
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
                 model.reset_machines()
                 if len(model.applications) == 0:
                     empty_models.append(modelname)
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
-    # Filter the Machines
     if machine_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
                 model.filter_machines(machine_filter)
@@ -400,155 +357,56 @@ def filter_results(
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     controllers = filtered_controllers
 
 
 @click.version_option(__version__)
 @click.command()
-@click.option(
-    "--application",
-    default="",
-    help="Show only the application with the specified name",
-    metavar="<application name>",
-)
-@click.option(
-    "--controller",
-    default="",
-    help="Show only the controller with the specified name",
-    metavar="<controller name>",
-)
-@click.option(
-    "--hide-scale-zero",
-    "-h",
-    default=False,
-    is_flag=True,
-    help="Hide applications with a scale of 0",
-)
-@click.option(
-    "--hide-subordinate-units",
-    "-s",
-    default=False,
-    is_flag=True,
-    help="Hide subordinate units",
-)
-@click.option(
-    "--include-containers",
-    "-c",
-    default=False,
-    is_flag=True,
-    help="Include Container information",
-)
-@click.option(
-    "--machine",
-    default="",
-    help="Show only the machine with the specified name",
-    metavar="<machine name>",
-)
-@click.option(
-    "--model",
-    default="",
-    help="Show only the model with the specified name",
-    metavar="<model name>",
-)
-@click.option(
-    "--no-color", default=False, is_flag=True, help="Remove color from output"
-)
-@click.option(
-    "--show-apps",
-    "-a",
-    default=False,
-    is_flag=True,
-    help="Show application information",
-)
-@click.option(
-    "--show-machines",
-    "-m",
-    default=False,
-    is_flag=True,
-    help="Show machine information",
-)
-@click.option(
-    "--show-model",
-    "-d",
-    default=False,
-    is_flag=True,
-    help="Show model information",
-)
-@click.option(
-    "--show-net",
-    "-n",
-    default=False,
-    is_flag=True,
-    help="Show network interface information",
-)
-@click.option(
-    "--show-units",
-    "-u",
-    default=False,
-    is_flag=True,
-    help="Show unit information",
-)
-@click.option(
-    "--show-relations",
-    "-r",
-    default=False,
-    is_flag=True,
-    help="Show relation information",
-)
-@click.option(
-    "--subordinate",
-    default="",
-    help="Show only the subordinate unit with the specified name",
-    metavar="<subordinate name>",
-)
-@click.option(
-    "--unit",
-    default="",
-    help="Show only the unit with the specified name",
-    metavar="<unit name>",
-)
-@click.argument(
-    "statusfiles",
-    required=True,
-    type=click.File("r"),
-    nargs=-1,
-    metavar="<status files>",
-)
+@click.option("--application", default="", help="Show only the application with the specified name", metavar="<application name>")
+@click.option("--controller", default="", help="Show only the controller with the specified name", metavar="<controller name>")
+@click.option("--hide-scale-zero", default=False, is_flag=True, help="Hide applications with a scale of 0")
+@click.option("--hide-subordinate-units", "-s", default=False, is_flag=True, help="Hide subordinate units")
+@click.option("--include-containers", "-c", default=False, is_flag=True, help="Include Container information")
+@click.option("--machine", default="", help="Show only the machine with the specified name", metavar="<machine name>")
+@click.option("--model", default="", help="Show only the model with the specified name", metavar="<model name>")
+@click.option("--no-color", default=False, is_flag=True, help="Remove color from output")
+@click.option("--show-apps", "-a", default=False, is_flag=True, help="Show application information")
+@click.option("--show-machines", "-m", default=False, is_flag=True, help="Show machine information")
+@click.option("--show-model", "-d", default=False, is_flag=True, help="Show model information")
+@click.option("--show-net", "-n", default=False, is_flag=True, help="Show network interface information")
+@click.option("--show-units", "-u", default=False, is_flag=True, help="Show unit information")
+@click.option("--show-relations", "-r", default=False, is_flag=True, help="Show relation information")
+@click.option("--subordinate", default="", help="Show only the subordinate unit with the specified name", metavar="<subordinate name>")
+@click.option("--unit", default="", help="Show only the unit with the specified name", metavar="<unit name>")
+@click.argument("statusfiles", required=True, type=click.File("r"), nargs=-1, metavar="<status files>")
 def main(
-    statusfiles,
-    hide_scale_zero,
-    hide_subordinate_units,
-    show_apps,
-    show_units,
-    show_machines,
-    show_net,
-    show_model,
-    show_relations,
-    include_containers,
-    no_color,
-    controller,
-    application,
-    unit,
-    model,
-    machine,
-    subordinate,
-):
-    """
-    xjs parses a juju status yaml/json and displays the information
-    in a user friendly form highlighting specific fields of specific
-    interest.
-    """
-
+    statusfiles: tuple[TextIO, ...],
+    hide_scale_zero: bool,
+    hide_subordinate_units: bool,
+    show_apps: bool,
+    show_units: bool,
+    show_machines: bool,
+    show_net: bool,
+    show_model: bool,
+    show_relations: bool,
+    include_containers: bool,
+    no_color: bool,
+    controller: str,
+    application: str,
+    unit: str,
+    model: str,
+    machine: str,
+    subordinate: str,
+) -> None:
     color = not no_color
-    controllers = {}
+    controllers: dict[str, Controller] = {}
     for statusfile in statusfiles:
         load_status_file(statusfile, controllers)
 
-    # If no particular field was specified, show them all
     if (
         not show_apps
         and not show_units
@@ -566,17 +424,10 @@ def main(
         show_relations = True
         include_containers = True
 
-    if (
-        controller != ""
-        or model != ""
-        or application != ""
-        or unit != ""
-        or machine != ""
-        or subordinate != ""
-    ):
+    if controller != "" or model != "" or application != "" or unit != "" or machine != "" or subordinate != "":
         filter_results(
             controllers,
-            ctrl_filter=controller,
+            controller_filter=controller,
             model_filter=model,
             app_filter=application,
             unit_filter=unit,
@@ -597,9 +448,7 @@ def main(
         console_print_machine_info(controllers, color, include_containers)
         print("")
     if show_net:
-        console_print_networkinterface_info(
-            controllers, color, include_containers
-        )
+        console_print_networkinterface_info(controllers, color, include_containers)
         print("")
     if show_relations:
         console_print_relations(controllers, color)

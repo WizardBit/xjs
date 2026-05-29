@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
-from .colors import Color
+from __future__ import annotations
+
+from rich.text import Text
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .basicmachine import BasicMachine
+    from .model import Model
 
 
 class NetworkInterface:
-    column_names = [
+    column_names: list[str] = [
         "Machine",
         "Interface",
         "IP",
@@ -16,56 +23,44 @@ class NetworkInterface:
         "Notes",
     ]
 
-    def __init__(self, interfacename, interfaceinfo, parent, model):
-        """
-        Create a NetworkInterface object with basic information from a network
-        interface object from a juju status output
-        """
-        # Default Values
-        self.space = ""
-        self.notes = []
-        self.gateway = ""
+    def __init__(self, interface_name: str, interface_info: dict[str, Any], parent: BasicMachine, model: Model) -> None:
+        self.space: str = ""
+        self.notes: list[str | Text] = []
+        self.gateway: str = ""
 
-        # Required Variables
-        self.name = interfacename
+        self.name: str = interface_name
         self.parent = parent
-        self.ipaddresses = interfaceinfo["ip-addresses"]
-        self.macaddress = interfaceinfo["mac-address"]
-        self.up = interfaceinfo["is-up"]
+        self.ip_addresses: list[str] = interface_info["ip-addresses"]
+        self.mac_address: str = interface_info["mac-address"]
+        self.up: bool = interface_info["is-up"]
         self.model = model
 
-        # Optional Variables
-        if "space" in interfaceinfo:
-            self.space = interfaceinfo["space"]
-        if "gateway" in interfaceinfo:
-            self.gateway = interfaceinfo["gateway"]
+        if "space" in interface_info:
+            self.space = interface_info["space"]
+        if "gateway" in interface_info:
+            self.gateway = interface_info["gateway"]
 
-    def to_dict(self):
-        return {self.name: self}
-
-    def get_isup_color(self):
-        """Return a is up string with correct colors based on juju status"""
+    def get_is_up_color(self) -> Text:
         if self.up:
-            return Color.Fg.Green + str(self.up) + Color.Reset
+            return Text(str(self.up), style="green")
         else:
-            return Color.Fg.Red + str(self.up) + Color.Reset
+            return Text(str(self.up), style="red")
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-        row = []
-        notesstr = ", ".join(self.notes)
-        ipstr = ",".join(self.ipaddresses)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
+        notesstr = ", ".join(str(n) for n in self.notes)
+        ipstr = ",".join(self.ip_addresses)
         if color:
             row = [
                 self.parent.name,
                 self.name,
                 ipstr,
-                self.macaddress,
+                self.mac_address,
                 self.gateway,
                 self.space,
-                self.get_isup_color(),
+                self.get_is_up_color(),
                 notesstr,
             ]
         else:
@@ -73,7 +68,7 @@ class NetworkInterface:
                 self.parent.name,
                 self.name,
                 ipstr,
-                self.macaddress,
+                self.mac_address,
                 self.gateway,
                 self.space,
                 str(self.up),
@@ -87,9 +82,8 @@ class NetworkInterface:
         return row
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")

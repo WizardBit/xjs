@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
-import re
-from .colors import Color
-import pendulum
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from rich.text import Text
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .controller import Controller
 
 
 class BasicUnit:
-    """
-    A BasicMachine Object is inherited by Units and Subordinates so common
-    attributes and functions remain here
-    """
-
-    column_names = [
+    column_names: list[str] = [
         "Unit",
         "Workload",
         "Agent",
@@ -23,106 +23,80 @@ class BasicUnit:
         "Notes",
     ]
 
-    def __init__(self, name, info, controller):
-        """
-        Create a BasicUnit object with basic information from a unit or
-        subordinate object from a juju status output
-        """
-        # Default Values
-        self.notes = []
-        self.openports = []
-        self.subordinates = {}
-        self.message = ""
-        self.leader = False
+    def __init__(self, name: str, info: dict[str, Any], controller: Controller) -> None:
+        self.notes: list[str | Text] = []
+        self.open_ports: list[str] = []
+        self.subordinates: dict[str, BasicUnit] = {}
+        self.message: str = ""
+        self.leader: bool = False
 
-        # Required Variables
-        self.name = name
-        self.workloadstatus = info["workload-status"]["current"]
+        self.name: str = name
+        self.workload_status: str = info["workload-status"]["current"]
         if "juju-status" in info:
             statuskey = "juju-status"
         elif "agent-status" in info:
             statuskey = "agent-status"
         else:
             statuskey = "none"
-        self.jujustatus = info[statuskey]["current"]
+        self.juju_status: str = info[statuskey]["current"]
         if "version" in info[statuskey]:
-            self.jujuversion = info[statuskey]["version"]
-        if "public-address" in info:
-            self.publicaddress = info["public-address"]
+            self.juju_version: str = info[statuskey]["version"]
         else:
-            self.publicaddress = "PENDING"
+            self.juju_version = "NA"
+        if "public-address" in info:
+            self.public_address: str = info["public-address"]
+        else:
+            self.public_address = "PENDING"
         if "message" in info[statuskey]:
             self.notes.append(info[statuskey]["message"])
 
-        # Required Dates
-        if re.match(r".*Z$", info["workload-status"]["since"]):
-            info["workload-status"]["since"] = re.sub(
-                r"Z$", "", info["workload-status"]["since"]
-            )
-            self.workloadsince = pendulum.from_format(
-                info["workload-status"]["since"],
-                "DD MMM YYYY HH:mm:ss",
-                tz="UTC",
-            )
+        ws_since = info["workload-status"]["since"]
+        if ws_since.endswith("Z"):
+            ws_since = ws_since[:-1]
+            self.workload_since: datetime = datetime.strptime(ws_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
         else:
-            self.workloadsince = pendulum.from_format(
-                info["workload-status"]["since"], "DD MMM YYYY HH:mm:ssZ"
-            )
-        controller.update_timestamp(self.workloadsince)
-        if re.match(r".*Z$", info[statuskey]["since"]):
-            info[statuskey]["since"] = re.sub(
-                r"Z$", "", info[statuskey]["since"]
-            )
-            self.jujusince = pendulum.from_format(
-                info[statuskey]["since"], "DD MMM YYYY HH:mm:ss", tz="UTC"
-            )
+            self.workload_since = datetime.strptime(ws_since, "%d %b %Y %H:%M:%S%z")
+        controller.update_timestamp(self.workload_since)
+        js_since = info[statuskey]["since"]
+        if js_since.endswith("Z"):
+            js_since = js_since[:-1]
+            self.juju_since: datetime = datetime.strptime(js_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
         else:
-            self.jujusince = pendulum.from_format(
-                info[statuskey]["since"], "DD MMM YYYY HH:mm:ssZ"
-            )
-        controller.update_timestamp(self.jujusince)
+            self.juju_since = datetime.strptime(js_since, "%d %b %Y %H:%M:%S%z")
+        controller.update_timestamp(self.juju_since)
 
-        # Optional Variables
         if "message" in info["workload-status"]:
             self.message = info["workload-status"]["message"]
         if "open-ports" in info:
-            self.openports = info["open-ports"]
+            self.open_ports = info["open-ports"]
         if "leader" in info:
             self.leader = info["leader"]
 
-    def to_dict(self):
-        return {self.name: self}
-
-    def get_workloadstatus_color(self):
-        """
-        Return a status string with correct colors based on workload status
-        """
-        if self.workloadstatus == "active":
-            return Color.Fg.Green + self.workloadstatus + Color.Reset
-        elif self.workloadstatus in ("error", "blocked"):
-            return Color.Fg.Red + self.workloadstatus + Color.Reset
-        elif self.workloadstatus == "waiting":
-            return self.workloadstatus
-        elif self.workloadstatus == "maintenance":
-            return Color.Fg.Orange + self.workloadstatus + Color.Reset
+    def get_workload_status_color(self) -> Text:
+        if self.workload_status == "active":
+            return Text(self.workload_status, style="green")
+        elif self.workload_status in ("error", "blocked"):
+            return Text(self.workload_status, style="red")
+        elif self.workload_status == "waiting":
+            return Text(self.workload_status)
+        elif self.workload_status == "maintenance":
+            return Text(self.workload_status, style="orange3")
         else:
-            return Color.Fg.Yellow + self.workloadstatus + Color.Reset
+            return Text(self.workload_status, style="yellow")
 
-    def get_jujustatus_color(self):
-        """Return a status string with correct colors based on juju status"""
-        if self.jujustatus in ("idle", "executing"):
-            return Color.Fg.Green + self.jujustatus + Color.Reset
-        elif self.jujustatus == "allocating":
-            return Color.Fg.Orange + self.jujustatus + Color.Reset
-        elif self.jujustatus in ("error", "lost", "failed"):
-            return Color.Fg.Red + self.jujustatus + Color.Reset
+    def get_juju_status_color(self) -> Text:
+        if self.juju_status in ("idle", "executing"):
+            return Text(self.juju_status, style="green")
+        elif self.juju_status == "allocating":
+            return Text(self.juju_status, style="orange3")
+        elif self.juju_status in ("error", "lost", "failed"):
+            return Text(self.juju_status, style="red")
         else:
-            return Color.Fg.Yellow + self.jujustatus + Color.Reset
+            return Text(self.juju_status, style="yellow")
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")

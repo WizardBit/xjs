@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
+from datetime import datetime, timezone
 import re
-from .colors import Color
-import pendulum
 from .unit import Unit
+from rich.text import Text
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .model import Model
+    from .subordinateunit import SubordinateUnit
 
 
 class Application:
-    column_names = [
+    column_names: list[str] = [
         "App",
         "Version",
         "Status",
@@ -22,191 +29,151 @@ class Application:
         "Notes",
     ]
 
-    def __init__(self, appname, appinfo=None, model=""):
-        """
-        Create an Application object with basic information from an application
-        object from a juju status output
-        """
-        appinfo = appinfo if isinstance(appinfo, dict) else {}
+    def __init__(self, app_name: str, app_info: dict[str, Any] | None = None, model: Model = "") -> None:
+        app_info = app_info if isinstance(app_info, dict) else {}
 
-        # Default Values
-        self.notes = []
-        self.units = {}
-        self.subordinates = {}
-        self.version = ""
-        self.message = ""
-        self.endpointbindings = {}
-        self.charmlatestrev = -1
-        self.exposed = ""
+        self.notes: list[str | Text] = []
+        self.units: dict[str, Unit] = {}
+        self.subordinates: dict[str, SubordinateUnit] = {}
+        self.version: str = ""
+        self.message: str = ""
+        self.endpoint_bindings: dict[str, str] = {}
+        self.charm_latest_rev: int = -1
+        self.exposed: str = ""
 
-        # Required Variables
-        self.name = appname
+        self.name: str = app_name
         self.model = model
-        if "charm" in appinfo:
-            self.charm = appinfo["charm"]
+        if "charm" in app_info:
+            self.charm: str = app_info["charm"]
 
-        base = appinfo.get("base")
+        base = app_info.get("base")
         if isinstance(base, dict):
-            self.base = f"{base.get('name', '')}@{base.get('channel', '')}"
+            self.base: str = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base or "NA"
 
-        if "os" in appinfo:
-            self.os = appinfo["os"]
+        if "os" in app_info:
+            self.os: str = app_info["os"]
         else:
             self.os = "NA"
 
-        if "charm-origin" in appinfo:
-            self.charmorigin = appinfo["charm-origin"]
+        if "charm-origin" in app_info:
+            self.charm_origin: str = app_info["charm-origin"]
         else:
-            self.charmorigin = "NA"
+            self.charm_origin = "NA"
 
-        if "charm-name" in appinfo:
-            self.charmname = appinfo["charm-name"]
+        if "charm-name" in app_info:
+            self.charm_name: str = app_info["charm-name"]
         else:
-            self.charmname = "NA"
+            self.charm_name = "NA"
 
-        if "charm-rev" in appinfo:
-            self.charmrev = int(appinfo["charm-rev"])
+        if "charm-rev" in app_info:
+            self.charm_rev: int = int(app_info["charm-rev"])
         else:
-            self.charmrev = -1
+            self.charm_rev = -1
 
-        if "exposed" in appinfo:
-            self.exposed = appinfo["exposed"]
+        if "exposed" in app_info:
+            self.exposed = app_info["exposed"]
 
-        if "application-status" in appinfo:
+        if "application-status" in app_info:
             statuskey = "application-status"
-        elif "service-status" in appinfo:
+        elif "service-status" in app_info:
             statuskey = "service-status"
         else:
             statuskey = "none"
 
-        if statuskey in appinfo and "current" in appinfo[statuskey]:
-            self.status = appinfo[statuskey]["current"]
+        if statuskey in app_info and "current" in app_info[statuskey]:
+            self.status: str = app_info[statuskey]["current"]
         else:
             self.status = "NA"
 
-        # Required Dates
-
-        if statuskey in appinfo and "since" in appinfo[statuskey]:
-            if re.match(r".*Z$", appinfo[statuskey]["since"]):
-                appinfo[statuskey]["since"] = re.sub(
-                    r"Z$", "", appinfo[statuskey]["since"]
-                )
-                self.since = pendulum.from_format(
-                    appinfo[statuskey]["since"],
-                    "DD MMM YYYY HH:mm:ss",
-                    tz="UTC",
-                )
+        if statuskey in app_info and "since" in app_info[statuskey]:
+            since_str = app_info[statuskey]["since"]
+            if since_str.endswith("Z"):
+                since_str = since_str[:-1]
+                self.since: datetime = datetime.strptime(since_str, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.since = pendulum.from_format(
-                    appinfo[statuskey]["since"], "DD MMM YYYY HH:mm:ssZ"
-                )
+                self.since = datetime.strptime(since_str, "%d %b %Y %H:%M:%S%z")
             model.controller.update_timestamp(self.since)
 
-        # Optional Variables
-        if statuskey in appinfo:
-            if "message" in appinfo[statuskey]:
-                self.message = appinfo[statuskey]["message"]
-            if "version" in appinfo:
-                self.version = appinfo["version"]
-            if "endpoint-bindings" in appinfo:
-                self.endpointbindings = appinfo["endpoint-bindings"]
-            if "can-upgrade-to" in appinfo:
-                match = re.match(r"\D+(\d+)$", appinfo["can-upgrade-to"])
+        if statuskey in app_info:
+            if "message" in app_info[statuskey]:
+                self.message = app_info[statuskey]["message"]
+            if "version" in app_info:
+                self.version = app_info["version"]
+            if "endpoint-bindings" in app_info:
+                self.endpoint_bindings = app_info["endpoint-bindings"]
+            if "can-upgrade-to" in app_info:
+                match = re.match(r"\D+(\d+)$", app_info["can-upgrade-to"])
                 if match:
-                    self.charmlatestrev = int(match.group(1))
-                self.canupgradeto = appinfo["can-upgrade-to"]
+                    self.charm_latest_rev = int(match.group(1))
+                self.can_upgrade_to = app_info["can-upgrade-to"]
 
-        # Calculated Values
         if self.exposed:
             self.notes.append("exposed")
 
-        self.charmid = ""
-        if "charm" in appinfo:
+        self.charm_id: str = ""
+        if "charm" in app_info:
             match = re.match(r"(cs:~[^/]+)\/([^/]+/)*([^/]+)-\d+$", self.charm)
             if match:
-                self.charmid = (
-                    match.group(1) + "/" + self.base + "/" + match.group(3)
-                )
+                self.charm_id = match.group(1) + "/" + self.base + "/" + match.group(3)
             else:
                 match = re.match(r"cs:(.*)-\d+$", self.charm)
                 if match:
-                    self.charmid = "cs:" + self.base + "/" + match.group(1)
-            if self.charmorigin != "charmhub":
+                    self.charm_id = "cs:" + self.base + "/" + match.group(1)
+            if self.charm_origin != "charmhub":
                 self.notes.append("Not from Charm Store")
 
-        # Handle Units
-        if "units" in appinfo:
-            for unitname, unitinfo in appinfo["units"].items():
-                unit = Unit(unitname, unitinfo, self)
-                self.units[unitname] = unit
+        if "units" in app_info:
+            for unit_name, unit_info in app_info["units"].items():
+                unit = Unit(unit_name, unit_info, self)
+                self.units[unit_name] = unit
 
-    def to_dict(self):
-        return {self.name: self}
-
-    def add_subordinate(self, subunit):
-        """Add a subordinate relationship"""
+    def add_subordinate(self, subunit: SubordinateUnit) -> None:
         self.subordinates[subunit.name] = subunit
 
-    def get_scale(self):
-        """
-        Return the scale of an application which is the number of units and/or
-        subordinate units
-        """
+    def get_scale(self) -> int:
         return len(self.units) + len(self.subordinates)
 
-    # TODO These colors should return a color not a string
-    def get_status_color(self):
-        """Return a status string with correct colors based on status"""
+    def get_status_color(self) -> Text:
         if self.status == "active":
-            return Color.Fg.Green + self.status + Color.Reset
+            return Text(self.status, style="green")
         elif self.status in ("error", "blocked"):
-            return Color.Fg.Red + self.status + Color.Reset
+            return Text(self.status, style="red")
         elif self.status == "waiting":
-            return self.status
+            return Text(self.status)
         elif self.status == "maintenance":
-            return Color.Fg.Orange + self.status + Color.Reset
+            return Text(self.status, style="orange3")
         else:
-            return Color.Fg.Yellow + self.status + Color.Reset
+            return Text(self.status, style="yellow")
 
-    def get_scale_color(self):
-        """Return a scale string with correct colors based on scale"""
+    def get_scale_color(self) -> Text:
         scale = self.get_scale()
         if scale == 0:
-            return Color.Fg.Red + str(scale) + Color.Reset
+            return Text(str(scale), style="red")
         else:
-            return str(scale)
+            return Text(str(scale))
 
-    def get_charmrev_color(self):
-        """
-        Return a charm revision string with correct colors based on the
-        revision
-        """
-        if self.charmlatestrev == -1:
-            return str(self.charmrev)
-        if self.charmrev < self.charmlatestrev:
-            return Color.Fg.Yellow + str(self.charmrev) + Color.Reset
-        elif self.charmrev == self.charmlatestrev:
-            return Color.Fg.Green + str(self.charmrev) + Color.Reset
+    def get_charm_rev_color(self) -> Text:
+        if self.charm_latest_rev == -1:
+            return Text(str(self.charm_rev))
+        if self.charm_rev < self.charm_latest_rev:
+            return Text(str(self.charm_rev), style="yellow")
+        elif self.charm_rev == self.charm_latest_rev:
+            return Text(str(self.charm_rev), style="green")
         else:
-            return Color.Fg.Red + str(self.charmrev) + Color.Reset
+            return Text(str(self.charm_rev), style="red")
 
-    def get_charmorigin_color(self):
-        """
-        Return a charm origin string with correct colors based on the origin
-        """
-        if self.charmorigin != "charmhub":
-            return Color.Fg.Yellow + self.charmorigin + Color.Reset
+    def get_charm_origin_color(self) -> Text:
+        if self.charm_origin != "charmhub":
+            return Text(self.charm_origin, style="yellow")
         else:
-            return self.charmorigin
+            return Text(self.charm_origin)
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-
-        row = []
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
         if color:
             row = [
                 self.name,
@@ -214,12 +181,12 @@ class Application:
                 self.get_status_color(),
                 self.get_scale_color(),
                 self.charm,
-                self.get_charmorigin_color(),
-                self.get_charmrev_color(),
+                self.get_charm_origin_color(),
+                self.get_charm_rev_color(),
                 self.os,
                 self.base,
                 self.message,
-                ", ".join(self.notes),
+                ", ".join(str(n) for n in self.notes),
             ]
         else:
             row = [
@@ -228,12 +195,12 @@ class Application:
                 self.status,
                 str(self.get_scale()),
                 self.charm,
-                self.charmorigin,
-                str(self.charmrev),
+                self.charm_origin,
+                str(self.charm_rev),
                 self.os,
                 self.base,
                 self.message,
-                ", ".join(self.notes),
+                ", ".join(str(n) for n in self.notes),
             ]
         if include_model_name:
             row.insert(0, self.model.name)
@@ -242,9 +209,8 @@ class Application:
         return row
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")
@@ -252,12 +218,12 @@ class Application:
             fields.insert(0, "Controller")
         return fields
 
-    def filter_dictionary(self, dictionary, key_filter):
+    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()
             if key_filter in key
         }
 
-    def filter_units(self, unit_filter):
+    def filter_units(self, unit_filter: str) -> None:
         self.units = self.filter_dictionary(self.units, unit_filter)
