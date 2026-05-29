@@ -3,6 +3,7 @@
 
 from .colors import Color
 
+
 class NetworkInterface:
     column_names = [
         "Machine",

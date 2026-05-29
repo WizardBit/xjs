@@ -4,6 +4,7 @@
 from .basicmachine import BasicMachine
 from .container import Container
 
+
 class Machine(BasicMachine):
     iscontainer = False
 

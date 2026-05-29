@@ -6,6 +6,7 @@ from .colors import Color
 from packaging import version
 import pendulum
 
+
 class Model:
     # TODO get latest juju version dynamically
     latest_juju_version = version.parse("3.6.20")
@@ -73,9 +74,13 @@ class Model:
             self.sla = "NA"
 
         # Required Dates
-        if "model-status" in modelinfo and "since" in modelinfo["model-status"]:
+        if "model-status" in modelinfo and "since" in modelinfo[
+            "model-status"
+        ]:
             if re.match(r".*Z$", modelinfo["model-status"]["since"]):
-                modelinfo["model-status"]["since"] = re.sub(r"Z$", "", modelinfo["model-status"]["since"])
+                modelinfo["model-status"]["since"] = re.sub(
+                    r"Z$", "", modelinfo["model-status"]["since"]
+                )
                 self.since = pendulum.from_format(
                     modelinfo["model-status"]["since"],
                     "DD MMM YYYY HH:mm:ss",
@@ -110,22 +115,28 @@ class Model:
     def add_relation(self, relation):
         """Add a relation if it doesn't already exist"""
         if relation is not None:
-            if not relation.name in self.relations:
+            if relation.name not in self.relations:
                 self.relations[relation.name] = []
                 self.relations[relation.name].append(relation)
                 return
             else:
-                if not self.get_relation(relation.name, relation.application.name, 
-                    relation.partner.name):
+                if not self.get_relation(
+                    relation.name, relation.application.name,
+                    relation.partner.name,
+                ):
                     self.relations[relation.name].append(relation)
 
     def get_relation(self, name, app_name, partner_name):
         if name in self.relations:
             for relation in self.relations[name]:
-                if ((relation.application.name == app_name
-                        and relation.partner.name == partner_name) or
-                        (relation.partner.name == app_name and 
-                        relation.application.name == partner_name)):
+                if (
+                    (relation.application.name == app_name
+                     and relation.partner.name == partner_name)
+                    or (
+                        relation.partner.name == app_name
+                        and relation.application.name == partner_name
+                    )
+                ):
                     return relation
             return None
         else:

@@ -15,6 +15,7 @@ from .relation import Relation
 from prettytable import PrettyTable
 import yaml
 
+
 def load_status_file(inputfile, controllers):
     """Load a juju status file, inputfile is a yaml or json file"""
     rawstatus = {}
@@ -98,7 +99,9 @@ def console_print_model_info(controllers, color=True):
         console_print_object(print_what=models, color=color)
 
 
-def console_print_application_info(controllers, color=True, hide_scale_zero=False):
+def console_print_application_info(
+    controllers, color=True, hide_scale_zero=False
+):
     """Filter and sort application info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -126,7 +129,9 @@ def console_print_application_info(controllers, color=True, hide_scale_zero=Fals
         )
 
 
-def console_print_unit_info(controllers, color=True, hide_subordinate_units=False):
+def console_print_unit_info(
+    controllers, color=True, hide_subordinate_units=False
+):
     """Filter and sort unit info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -156,7 +161,9 @@ def console_print_unit_info(controllers, color=True, hide_subordinate_units=Fals
         )
 
 
-def console_print_networkinterface_info(controllers, color=True, include_containers=True):
+def console_print_networkinterface_info(
+    controllers, color=True, include_containers=True
+):
     """Filter and sort network info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -190,7 +197,9 @@ def console_print_networkinterface_info(controllers, color=True, include_contain
         )
 
 
-def console_print_machine_info(controllers, color=True, include_containers=True):
+def console_print_machine_info(
+    controllers, color=True, include_containers=True
+):
     """Filter and sort machine info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -572,7 +581,9 @@ def main(
         console_print_machine_info(controllers, color, include_containers)
         print("")
     if show_net:
-        console_print_networkinterface_info(controllers, color, include_containers)
+        console_print_networkinterface_info(
+            controllers, color, include_containers
+        )
         print("")
     if show_relations:
         console_print_relations(controllers, color)

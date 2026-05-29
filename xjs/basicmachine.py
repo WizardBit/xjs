@@ -6,6 +6,7 @@ from .colors import Color
 from .networkinterface import NetworkInterface
 import pendulum
 
+
 class BasicMachine:
     """
     A BasicMachine Object is inherited by Machines and Containers so common
@@ -65,10 +66,10 @@ class BasicMachine:
         else:
             self.machinestatus = "NA"
             self.machinemessage = ""
-        
+
         base = info.get("base")
         if isinstance(base, dict):
-            self.base = f"{base.get('name','')}@{base.get('channel','')}"
+            self.base = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base if base else "NA"
         self.model = model
@@ -76,7 +77,9 @@ class BasicMachine:
         # Required Dates
         if "juju-status" in info:
             if re.match(r".*Z$", info["juju-status"]["since"]):
-                info["juju-status"]["since"] = re.sub(r"Z$", "", info["juju-status"]["since"])
+                info["juju-status"]["since"] = re.sub(
+                    r"Z$", "", info["juju-status"]["since"]
+                )
                 self.jujusince = pendulum.from_format(
                     info["juju-status"]["since"],
                     "DD MMM YYYY HH:mm:ss",
@@ -89,7 +92,9 @@ class BasicMachine:
             model.controller.update_timestamp(self.jujusince)
         if "machine-status" in info:
             if re.match(r".*Z$", info["machine-status"]["since"]):
-                info["machine-status"]["since"] = re.sub(r"Z$", "", info["machine-status"]["since"])
+                info["machine-status"]["since"] = re.sub(
+                    r"Z$", "", info["machine-status"]["since"]
+                )
                 self.machinesince = pendulum.from_format(
                     info["machine-status"]["since"],
                     "DD MMM YYYY HH:mm:ss",

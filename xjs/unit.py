@@ -5,6 +5,7 @@ import re
 from .basicunit import BasicUnit
 from .subordinateunit import SubordinateUnit
 
+
 class Unit(BasicUnit):
     issubordinate = False
 
@@ -21,11 +22,17 @@ class Unit(BasicUnit):
         # Required Variables
         self.application = application
         if "machine" in unitinfo:
-            match = re.match(r"(\d+)\/(lx[cd]|kvm)\/(\d+)$", unitinfo["machine"])
+            match = re.match(
+                r"(\d+)\/(lx[cd]|kvm)\/(\d+)$", unitinfo["machine"]
+            )
             if match:
-                self.machine = application.model.get_container(unitinfo["machine"])
+                self.machine = application.model.get_container(
+                    unitinfo["machine"]
+                )
             else:
-                self.machine = application.model.get_machine(unitinfo["machine"])
+                self.machine = application.model.get_machine(
+                    unitinfo["machine"]
+                )
         else:
             self.machine = None
 

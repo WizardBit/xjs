@@ -3,6 +3,7 @@
 
 from .application import Application
 
+
 class Relation:
     """
     A Relation is a juju relation between 2 juju applications, juju status

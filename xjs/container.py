@@ -4,6 +4,7 @@
 from .basicmachine import BasicMachine
 from .colors import Color
 
+
 class Container(BasicMachine):
     iscontainer = True
 

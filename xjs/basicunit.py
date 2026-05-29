@@ -5,6 +5,7 @@ import re
 from .colors import Color
 import pendulum
 
+
 class BasicUnit:
     """
     A BasicMachine Object is inherited by Units and Subordinates so common
@@ -55,7 +56,9 @@ class BasicUnit:
 
         # Required Dates
         if re.match(r".*Z$", info["workload-status"]["since"]):
-            info["workload-status"]["since"] = re.sub(r"Z$", "", info["workload-status"]["since"])
+            info["workload-status"]["since"] = re.sub(
+                r"Z$", "", info["workload-status"]["since"]
+            )
             self.workloadsince = pendulum.from_format(
                 info["workload-status"]["since"],
                 "DD MMM YYYY HH:mm:ss",
@@ -67,7 +70,9 @@ class BasicUnit:
             )
         controller.update_timestamp(self.workloadsince)
         if re.match(r".*Z$", info[statuskey]["since"]):
-            info[statuskey]["since"] = re.sub(r"Z$", "", info[statuskey]["since"])
+            info[statuskey]["since"] = re.sub(
+                r"Z$", "", info[statuskey]["since"]
+            )
             self.jujusince = pendulum.from_format(
                 info[statuskey]["since"], "DD MMM YYYY HH:mm:ss", tz="UTC"
             )

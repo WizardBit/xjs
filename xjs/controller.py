@@ -4,6 +4,7 @@
 import re
 import pendulum
 
+
 class Controller:
     zerodate = pendulum.from_format("0", "x", tz="UTC")
 
@@ -25,9 +26,13 @@ class Controller:
         if "timestamp" in controllerinfo:
             self.timestampprovided = True
             if re.match(r"^\d\d:\d\d:\d\d", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = "01 Jan 1970 " + controllerinfo["timestamp"]
+                controllerinfo["timestamp"] = (
+                    "01 Jan 1970 " + controllerinfo["timestamp"]
+                )
             if re.match(r".*Z$", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = re.sub(r"Z$", "", controllerinfo["timestamp"])
+                controllerinfo["timestamp"] = re.sub(
+                    r"Z$", "", controllerinfo["timestamp"]
+                )
                 self.timestamp = pendulum.from_format(
                     controllerinfo["timestamp"],
                     "DD MMM YYYY HH:mm:ss",

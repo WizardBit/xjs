@@ -6,6 +6,7 @@ from .colors import Color
 import pendulum
 from .unit import Unit
 
+
 class Application:
     column_names = [
         "App",
@@ -27,7 +28,7 @@ class Application:
         object from a juju status output
         """
         appinfo = appinfo if isinstance(appinfo, dict) else {}
-        
+
         # Default Values
         self.notes = []
         self.units = {}
@@ -46,10 +47,9 @@ class Application:
 
         base = appinfo.get("base")
         if isinstance(base, dict):
-            self.base = f"{base.get('name','')}@{base.get('channel','')}"
+            self.base = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base or "NA"
-
 
         if "os" in appinfo:
             self.os = appinfo["os"]
@@ -90,7 +90,9 @@ class Application:
 
         if statuskey in appinfo and "since" in appinfo[statuskey]:
             if re.match(r".*Z$", appinfo[statuskey]["since"]):
-                appinfo[statuskey]["since"] = re.sub(r"Z$", "", appinfo[statuskey]["since"])
+                appinfo[statuskey]["since"] = re.sub(
+                    r"Z$", "", appinfo[statuskey]["since"]
+                )
                 self.since = pendulum.from_format(
                     appinfo[statuskey]["since"],
                     "DD MMM YYYY HH:mm:ss",

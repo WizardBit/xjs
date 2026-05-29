@@ -4,6 +4,7 @@
 import re
 from .basicunit import BasicUnit
 
+
 class SubordinateUnit(BasicUnit):
     issubordinate = True
 
@@ -20,7 +21,7 @@ class SubordinateUnit(BasicUnit):
         # Required Variables
         self.unit = unit
         # Not sure if required anymore but causes error
-        #self.upgradingfrom = subunitinfo["upgrading-from"]
+        # self.upgradingfrom = subunitinfo["upgrading-from"]
         self.machine = unit.machine
 
     def create_application_relation(self):
