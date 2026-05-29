@@ -6,6 +6,7 @@ import sys
 import shutil
 from .application import Application
 import click
+from . import __version__
 from .colors import Color
 from .controller import Controller
 from .machine import Machine
@@ -114,9 +115,7 @@ def console_print_application_info(controllers, color=True, hide_scale_zero=Fals
             include_model_name = True
         for modelname, model in controller.models.items():
             for appname, app in model.applications.items():
-                if hide_scale_zero and app.get_scale() > 0:
-                    apps.append(app)
-                elif not hide_scale_zero:
+                if not hide_scale_zero or app.get_scale() > 0:
                     apps.append(app)
     if len(apps) > 0:
         console_print_object(
@@ -148,14 +147,6 @@ def console_print_unit_info(controllers, color=True, hide_subordinate_units=Fals
                     if not hide_subordinate_units:
                         for subunitname, subunit in unit.subordinates.items():
                             units.append(subunit)
-    # Bad logic, if an application has 0 units it might only be
-    #  a subordinate app and not filtered
-    # if not hide_subordinate_units and len(application.units) == 0:
-    #     for (
-    #         subunitname,
-    #         subunit,
-    #     ) in application.subordinates.items():
-    #         units.append(subunit)
     if len(units) > 0:
         console_print_object(
             print_what=units,
@@ -391,6 +382,7 @@ def filter_results(
     controllers = filtered_controllers
 
 
+@click.version_option(__version__)
 @click.command()
 @click.option(
     "--application",

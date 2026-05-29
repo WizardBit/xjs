@@ -108,8 +108,8 @@ class Model:
         self.containers[container.name] = container
 
     def add_relation(self, relation):
+        """Add a relation if it doesn't already exist"""
         if relation is not None:
-            """Add a relation if it doesn't already exist"""
             if not relation.name in self.relations:
                 self.relations[relation.name] = []
                 self.relations[relation.name].append(relation)

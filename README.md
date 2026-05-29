@@ -57,9 +57,11 @@ Options:
   -d, --show-model                Show model information
   -n, --show-net                  Show network interface information
   -u, --show-units                Show unit information
+  -r, --show-relations            Show relation information
   --subordinate <subordinate name>
                                   Show only the subordinate unit with the
                                   specified name
   --unit <unit name>              Show only the unit with the specified name
+  --version                       Show the version and exit.
   --help                          Show this message and exit.
 ```

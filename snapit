@@ -22,9 +22,9 @@ snapcraft --debug
 snapcraft clean 
 
 # Install with:
-# sudo snap install supctl_0.1_amd64.snap --devmode --dangerous
+# sudo snap install xjs_0.1_amd64.snap --devmode --dangerous
 
 # OLD CMDS
 # source testit
-# snapcraft push --release=beta ./supctl_beta2_amd64.snap
-# ln supctl_beta2_amd64.snap ~/sp.snap
+# snapcraft push --release=beta ./xjs_beta2_amd64.snap
+# ln xjs_beta2_amd64.snap ~/sp.snap

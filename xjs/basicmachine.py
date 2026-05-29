@@ -51,7 +51,7 @@ class BasicMachine:
             self.dnsname = info["dns-name"]
         else:
             self.dnsname = "PENDING"
-        if "ipaddresses" in info:
+        if "ip-addresses" in info:
             self.ipaddresses = info["ip-addresses"]
         else:
             self.ipaddresses = "NA"
