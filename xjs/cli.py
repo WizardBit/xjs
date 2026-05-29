@@ -388,6 +388,22 @@ def filter_results(
         for controllername in empty_controllers:
             del filtered_controllers[controllername]
 
+    # Filter the Machines
+    if machine_filter != "":
+        empty_controllers = []
+        for controllername, controller in filtered_controllers.items():
+            empty_models = []
+            for modelname, model in controller.models.items():
+                model.filter_machines(machine_filter)
+                if len(model.machines) == 0:
+                    empty_models.append(modelname)
+            for modelname in empty_models:
+                del controller.models[modelname]
+            if len(controller.models) == 0:
+                empty_controllers.append(controllername)
+        for controllername in empty_controllers:
+            del filtered_controllers[controllername]
+
     controllers = filtered_controllers
 
 

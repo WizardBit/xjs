@@ -246,6 +246,16 @@ class Model:
         self.applications = {**apps, **parent_apps}
         self.reset_machines()
 
+    def filter_machines(self, machine_filter):
+        self.machines = {
+            key: value
+            for (key, value) in self.machines.items()
+            if key == machine_filter
+        }
+        self.containers = {}
+        for machine in self.machines.values():
+            self.containers.update(machine.containers)
+
     def reset_machines(self):
         machines = {}
         containers = {}
