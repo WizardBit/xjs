@@ -13,26 +13,26 @@ if TYPE_CHECKING:
 
 
 class Unit(BasicUnit):
-    issubordinate: bool = False
+    is_subordinate: bool = False
 
-    def __init__(self, unitname: str, unitinfo: dict[str, Any], application: Application) -> None:
-        BasicUnit.__init__(self, unitname, unitinfo, application.model.controller)
+    def __init__(self, unit_name: str, unit_info: dict[str, Any], application: Application) -> None:
+        BasicUnit.__init__(self, unit_name, unit_info, application.model.controller)
 
         self.application = application
-        if "machine" in unitinfo:
-            match = re.match(r"(\d+)\/(lx[cd]|kvm)\/(\d+)$", unitinfo["machine"])
+        if "machine" in unit_info:
+            match = re.match(r"(\d+)\/(lx[cd]|kvm)\/(\d+)$", unit_info["machine"])
             if match:
-                self.machine = application.model.get_container(unitinfo["machine"])
+                self.machine = application.model.get_container(unit_info["machine"])
             else:
-                self.machine = application.model.get_machine(unitinfo["machine"])
+                self.machine = application.model.get_machine(unit_info["machine"])
         else:
             self.machine = None
 
-        if "subordinates" in unitinfo:
+        if "subordinates" in unit_info:
             from .subordinateunit import SubordinateUnit
 
-            for subunitname, subunitinfo in unitinfo["subordinates"].items():
-                self.subordinates[subunitname] = SubordinateUnit(subunitname, subunitinfo, self)
+            for subunit_name, subunit_info in unit_info["subordinates"].items():
+                self.subordinates[subunit_name] = SubordinateUnit(subunit_name, subunit_info, self)
 
     def get_row(
         self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
@@ -40,7 +40,7 @@ class Unit(BasicUnit):
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)
         namestr = self.name
-        portsstr = ",".join(self.openports)
+        portsstr = ",".join(self.open_ports)
         if self.machine:
             machinename = self.machine.name
         else:
@@ -52,10 +52,10 @@ class Unit(BasicUnit):
         if color:
             row = [
                 namestr,
-                self.get_workloadstatus_color(),
-                self.get_jujustatus_color(),
+                self.get_workload_status_color(),
+                self.get_juju_status_color(),
                 machinename,
-                self.publicaddress,
+                self.public_address,
                 portsstr,
                 self.message,
                 notesstr,
@@ -63,10 +63,10 @@ class Unit(BasicUnit):
         else:
             row = [
                 namestr,
-                self.workloadstatus,
-                self.jujustatus,
+                self.workload_status,
+                self.juju_status,
                 machinename,
-                self.publicaddress,
+                self.public_address,
                 portsstr,
                 self.message,
                 notesstr,

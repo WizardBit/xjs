@@ -30,36 +30,36 @@ class BasicMachine:
 
     def __init__(self, name: str, info: dict[str, Any], model: Model) -> None:
         self.notes: list[str | Text] = []
-        self.networkinterfaces: dict[str, NetworkInterface] = {}
+        self.network_interfaces: dict[str, NetworkInterface] = {}
 
         self.name: str = name
         if "juju-status" in info:
-            self.jujustatus: str = info["juju-status"]["current"]
+            self.juju_status: str = info["juju-status"]["current"]
             if "version" in info["juju-status"]:
-                self.jujuversion: str = info["juju-status"]["version"]
+                self.juju_version: str = info["juju-status"]["version"]
             else:
-                self.jujuversion = "NA"
+                self.juju_version = "NA"
         else:
-            self.jujustatus = info["agent-state"]
-            self.jujuversion = info["agent-version"]
+            self.juju_status = info["agent-state"]
+            self.juju_version = info["agent-version"]
         if "dns-name" in info:
-            self.dnsname: str = info["dns-name"]
+            self.dns_name: str = info["dns-name"]
         else:
-            self.dnsname = "PENDING"
+            self.dns_name = "PENDING"
         if "ip-addresses" in info:
-            self.ipaddresses: list[str] | str = info["ip-addresses"]
+            self.ip_addresses: list[str] | str = info["ip-addresses"]
         else:
-            self.ipaddresses = "NA"
-        self.instanceid: str = info["instance-id"]
+            self.ip_addresses = "NA"
+        self.instance_id: str = info["instance-id"]
         if "machine-status" in info:
-            self.machinestatus: str = info["machine-status"]["current"]
+            self.machine_status: str = info["machine-status"]["current"]
             if "message" in info["machine-status"]:
-                self.machinemessage: str = info["machine-status"]["message"]
+                self.machine_message: str = info["machine-status"]["message"]
             else:
-                self.machinemessage = ""
+                self.machine_message = ""
         else:
-            self.machinestatus = "NA"
-            self.machinemessage = ""
+            self.machine_status = "NA"
+            self.machine_message = ""
 
         base = info.get("base")
         if isinstance(base, dict):
@@ -72,42 +72,42 @@ class BasicMachine:
             js_since = info["juju-status"]["since"]
             if js_since.endswith("Z"):
                 js_since = js_since[:-1]
-                self.jujusince: datetime = datetime.strptime(js_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+                self.juju_since: datetime = datetime.strptime(js_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.jujusince = datetime.strptime(js_since, "%d %b %Y %H:%M:%S%z")
-            model.controller.update_timestamp(self.jujusince)
+                self.juju_since = datetime.strptime(js_since, "%d %b %Y %H:%M:%S%z")
+            model.controller.update_timestamp(self.juju_since)
         if "machine-status" in info:
             ms_since = info["machine-status"]["since"]
             if ms_since.endswith("Z"):
                 ms_since = ms_since[:-1]
-                self.machinesince: datetime = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+                self.machine_since: datetime = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.machinesince = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S%z")
-            model.controller.update_timestamp(self.machinesince)
+                self.machine_since = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S%z")
+            model.controller.update_timestamp(self.machine_since)
 
         if "network-interfaces" in info:
-            for interfacename, interfaceinfo in info["network-interfaces"].items():
-                self.networkinterfaces[interfacename] = NetworkInterface(interfacename, interfaceinfo, self, model)
+            for interface_name, interface_info in info["network-interfaces"].items():
+                self.network_interfaces[interface_name] = NetworkInterface(interface_name, interface_info, self, model)
 
-    def get_jujustatus_color(self) -> Text:
-        if self.jujustatus == "started":
-            return Text(self.jujustatus, style="green")
-        elif self.jujustatus in ("error", "down"):
-            return Text(self.jujustatus, style="red")
-        elif self.jujustatus == "pending":
-            return Text(self.jujustatus, style="orange3")
+    def get_juju_status_color(self) -> Text:
+        if self.juju_status == "started":
+            return Text(self.juju_status, style="green")
+        elif self.juju_status in ("error", "down"):
+            return Text(self.juju_status, style="red")
+        elif self.juju_status == "pending":
+            return Text(self.juju_status, style="orange3")
         else:
-            return Text(self.jujustatus, style="yellow")
+            return Text(self.juju_status, style="yellow")
 
-    def get_machinestatus_color(self) -> Text:
-        if self.machinestatus == "running":
-            return Text(self.machinestatus, style="green")
-        elif self.machinestatus == "pending":
-            return Text(self.machinestatus, style="orange3")
-        elif self.machinestatus == "NA":
-            return Text(self.machinestatus)
+    def get_machine_status_color(self) -> Text:
+        if self.machine_status == "running":
+            return Text(self.machine_status, style="green")
+        elif self.machine_status == "pending":
+            return Text(self.machine_status, style="orange3")
+        elif self.machine_status == "NA":
+            return Text(self.machine_status)
         else:
-            return Text(self.machinestatus, style="yellow")
+            return Text(self.machine_status, style="yellow")
 
     def get_column_names(
         self, include_controller_name: bool = False, include_model_name: bool = False

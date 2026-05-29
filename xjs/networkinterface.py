@@ -23,24 +23,24 @@ class NetworkInterface:
         "Notes",
     ]
 
-    def __init__(self, interfacename: str, interfaceinfo: dict[str, Any], parent: BasicMachine, model: Model) -> None:
+    def __init__(self, interface_name: str, interface_info: dict[str, Any], parent: BasicMachine, model: Model) -> None:
         self.space: str = ""
         self.notes: list[str | Text] = []
         self.gateway: str = ""
 
-        self.name: str = interfacename
+        self.name: str = interface_name
         self.parent = parent
-        self.ipaddresses: list[str] = interfaceinfo["ip-addresses"]
-        self.macaddress: str = interfaceinfo["mac-address"]
-        self.up: bool = interfaceinfo["is-up"]
+        self.ip_addresses: list[str] = interface_info["ip-addresses"]
+        self.mac_address: str = interface_info["mac-address"]
+        self.up: bool = interface_info["is-up"]
         self.model = model
 
-        if "space" in interfaceinfo:
-            self.space = interfaceinfo["space"]
-        if "gateway" in interfaceinfo:
-            self.gateway = interfaceinfo["gateway"]
+        if "space" in interface_info:
+            self.space = interface_info["space"]
+        if "gateway" in interface_info:
+            self.gateway = interface_info["gateway"]
 
-    def get_isup_color(self) -> Text:
+    def get_is_up_color(self) -> Text:
         if self.up:
             return Text(str(self.up), style="green")
         else:
@@ -51,16 +51,16 @@ class NetworkInterface:
     ) -> list[str | Text]:
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)
-        ipstr = ",".join(self.ipaddresses)
+        ipstr = ",".join(self.ip_addresses)
         if color:
             row = [
                 self.parent.name,
                 self.name,
                 ipstr,
-                self.macaddress,
+                self.mac_address,
                 self.gateway,
                 self.space,
-                self.get_isup_color(),
+                self.get_is_up_color(),
                 notesstr,
             ]
         else:
@@ -68,7 +68,7 @@ class NetworkInterface:
                 self.parent.name,
                 self.name,
                 ipstr,
-                self.macaddress,
+                self.mac_address,
                 self.gateway,
                 self.space,
                 str(self.up),

@@ -29,66 +29,66 @@ class Application:
         "Notes",
     ]
 
-    def __init__(self, appname: str, appinfo: dict[str, Any] | None = None, model: Model = "") -> None:
-        appinfo = appinfo if isinstance(appinfo, dict) else {}
+    def __init__(self, app_name: str, app_info: dict[str, Any] | None = None, model: Model = "") -> None:
+        app_info = app_info if isinstance(app_info, dict) else {}
 
         self.notes: list[str | Text] = []
         self.units: dict[str, Unit] = {}
         self.subordinates: dict[str, SubordinateUnit] = {}
         self.version: str = ""
         self.message: str = ""
-        self.endpointbindings: dict[str, str] = {}
-        self.charmlatestrev: int = -1
+        self.endpoint_bindings: dict[str, str] = {}
+        self.charm_latest_rev: int = -1
         self.exposed: str = ""
 
-        self.name: str = appname
+        self.name: str = app_name
         self.model = model
-        if "charm" in appinfo:
-            self.charm: str = appinfo["charm"]
+        if "charm" in app_info:
+            self.charm: str = app_info["charm"]
 
-        base = appinfo.get("base")
+        base = app_info.get("base")
         if isinstance(base, dict):
             self.base: str = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base or "NA"
 
-        if "os" in appinfo:
-            self.os: str = appinfo["os"]
+        if "os" in app_info:
+            self.os: str = app_info["os"]
         else:
             self.os = "NA"
 
-        if "charm-origin" in appinfo:
-            self.charmorigin: str = appinfo["charm-origin"]
+        if "charm-origin" in app_info:
+            self.charm_origin: str = app_info["charm-origin"]
         else:
-            self.charmorigin = "NA"
+            self.charm_origin = "NA"
 
-        if "charm-name" in appinfo:
-            self.charmname: str = appinfo["charm-name"]
+        if "charm-name" in app_info:
+            self.charm_name: str = app_info["charm-name"]
         else:
-            self.charmname = "NA"
+            self.charm_name = "NA"
 
-        if "charm-rev" in appinfo:
-            self.charmrev: int = int(appinfo["charm-rev"])
+        if "charm-rev" in app_info:
+            self.charm_rev: int = int(app_info["charm-rev"])
         else:
-            self.charmrev = -1
+            self.charm_rev = -1
 
-        if "exposed" in appinfo:
-            self.exposed = appinfo["exposed"]
+        if "exposed" in app_info:
+            self.exposed = app_info["exposed"]
 
-        if "application-status" in appinfo:
+        if "application-status" in app_info:
             statuskey = "application-status"
-        elif "service-status" in appinfo:
+        elif "service-status" in app_info:
             statuskey = "service-status"
         else:
             statuskey = "none"
 
-        if statuskey in appinfo and "current" in appinfo[statuskey]:
-            self.status: str = appinfo[statuskey]["current"]
+        if statuskey in app_info and "current" in app_info[statuskey]:
+            self.status: str = app_info[statuskey]["current"]
         else:
             self.status = "NA"
 
-        if statuskey in appinfo and "since" in appinfo[statuskey]:
-            since_str = appinfo[statuskey]["since"]
+        if statuskey in app_info and "since" in app_info[statuskey]:
+            since_str = app_info[statuskey]["since"]
             if since_str.endswith("Z"):
                 since_str = since_str[:-1]
                 self.since: datetime = datetime.strptime(since_str, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
@@ -96,38 +96,38 @@ class Application:
                 self.since = datetime.strptime(since_str, "%d %b %Y %H:%M:%S%z")
             model.controller.update_timestamp(self.since)
 
-        if statuskey in appinfo:
-            if "message" in appinfo[statuskey]:
-                self.message = appinfo[statuskey]["message"]
-            if "version" in appinfo:
-                self.version = appinfo["version"]
-            if "endpoint-bindings" in appinfo:
-                self.endpointbindings = appinfo["endpoint-bindings"]
-            if "can-upgrade-to" in appinfo:
-                match = re.match(r"\D+(\d+)$", appinfo["can-upgrade-to"])
+        if statuskey in app_info:
+            if "message" in app_info[statuskey]:
+                self.message = app_info[statuskey]["message"]
+            if "version" in app_info:
+                self.version = app_info["version"]
+            if "endpoint-bindings" in app_info:
+                self.endpoint_bindings = app_info["endpoint-bindings"]
+            if "can-upgrade-to" in app_info:
+                match = re.match(r"\D+(\d+)$", app_info["can-upgrade-to"])
                 if match:
-                    self.charmlatestrev = int(match.group(1))
-                self.canupgradeto = appinfo["can-upgrade-to"]
+                    self.charm_latest_rev = int(match.group(1))
+                self.can_upgrade_to = app_info["can-upgrade-to"]
 
         if self.exposed:
             self.notes.append("exposed")
 
-        self.charmid: str = ""
-        if "charm" in appinfo:
+        self.charm_id: str = ""
+        if "charm" in app_info:
             match = re.match(r"(cs:~[^/]+)\/([^/]+/)*([^/]+)-\d+$", self.charm)
             if match:
-                self.charmid = match.group(1) + "/" + self.base + "/" + match.group(3)
+                self.charm_id = match.group(1) + "/" + self.base + "/" + match.group(3)
             else:
                 match = re.match(r"cs:(.*)-\d+$", self.charm)
                 if match:
-                    self.charmid = "cs:" + self.base + "/" + match.group(1)
-            if self.charmorigin != "charmhub":
+                    self.charm_id = "cs:" + self.base + "/" + match.group(1)
+            if self.charm_origin != "charmhub":
                 self.notes.append("Not from Charm Store")
 
-        if "units" in appinfo:
-            for unitname, unitinfo in appinfo["units"].items():
-                unit = Unit(unitname, unitinfo, self)
-                self.units[unitname] = unit
+        if "units" in app_info:
+            for unit_name, unit_info in app_info["units"].items():
+                unit = Unit(unit_name, unit_info, self)
+                self.units[unit_name] = unit
 
     def add_subordinate(self, subunit: SubordinateUnit) -> None:
         self.subordinates[subunit.name] = subunit
@@ -154,21 +154,21 @@ class Application:
         else:
             return Text(str(scale))
 
-    def get_charmrev_color(self) -> Text:
-        if self.charmlatestrev == -1:
-            return Text(str(self.charmrev))
-        if self.charmrev < self.charmlatestrev:
-            return Text(str(self.charmrev), style="yellow")
-        elif self.charmrev == self.charmlatestrev:
-            return Text(str(self.charmrev), style="green")
+    def get_charm_rev_color(self) -> Text:
+        if self.charm_latest_rev == -1:
+            return Text(str(self.charm_rev))
+        if self.charm_rev < self.charm_latest_rev:
+            return Text(str(self.charm_rev), style="yellow")
+        elif self.charm_rev == self.charm_latest_rev:
+            return Text(str(self.charm_rev), style="green")
         else:
-            return Text(str(self.charmrev), style="red")
+            return Text(str(self.charm_rev), style="red")
 
-    def get_charmorigin_color(self) -> Text:
-        if self.charmorigin != "charmhub":
-            return Text(self.charmorigin, style="yellow")
+    def get_charm_origin_color(self) -> Text:
+        if self.charm_origin != "charmhub":
+            return Text(self.charm_origin, style="yellow")
         else:
-            return Text(self.charmorigin)
+            return Text(self.charm_origin)
 
     def get_row(
         self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
@@ -181,8 +181,8 @@ class Application:
                 self.get_status_color(),
                 self.get_scale_color(),
                 self.charm,
-                self.get_charmorigin_color(),
-                self.get_charmrev_color(),
+                self.get_charm_origin_color(),
+                self.get_charm_rev_color(),
                 self.os,
                 self.base,
                 self.message,
@@ -195,8 +195,8 @@ class Application:
                 self.status,
                 str(self.get_scale()),
                 self.charm,
-                self.charmorigin,
-                str(self.charmrev),
+                self.charm_origin,
+                str(self.charm_rev),
                 self.os,
                 self.base,
                 self.message,

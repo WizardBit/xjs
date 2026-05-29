@@ -38,53 +38,53 @@ def load_status_file(inputfile: TextIO, controllers: dict[str, Controller]) -> N
             sys.exit(1)
 
     if "model" not in rawstatus and "services" in rawstatus:
-        controllername = "controller"
-        modelkey = "environment-status"
-        applicationkey = "services"
+        controller_name = "controller"
+        model_key = "environment-status"
+        application_key = "services"
     else:
-        controllername = rawstatus["model"]["controller"]
-        modelkey = "model"
-        applicationkey = "applications"
+        controller_name = rawstatus["model"]["controller"]
+        model_key = "model"
+        application_key = "applications"
 
-    if controllername in controllers:
-        controller = controllers[controllername]
+    if controller_name in controllers:
+        controller = controllers[controller_name]
     else:
         if "controller" in rawstatus:
-            controller = Controller(controllername, rawstatus["controller"])
+            controller = Controller(controller_name, rawstatus["controller"])
         else:
-            controller = Controller(controllername)
-        controllers[controllername] = controller
+            controller = Controller(controller_name)
+        controllers[controller_name] = controller
 
-    model = Model(rawstatus[modelkey], controller)
+    model = Model(rawstatus[model_key], controller)
     if model.name in controller.models:
         console = Console()
         console.print(
-            f"[red]Error model {model.name} already exists for controller {controllername}[/red]"
+            f"[red]Error model {model.name} already exists for controller {controller_name}[/red]"
         )
         sys.exit(1)
     controller.add_model(model)
-    for machname, machinfo in rawstatus["machines"].items():
-        machine = Machine(machname, machinfo, model)
+    for machine_name, machine_info in rawstatus["machines"].items():
+        machine = Machine(machine_name, machine_info, model)
         model.add_machine(machine)
-    for appname, appinfo in rawstatus[applicationkey].items():
-        application = Application(appname, appinfo, model)
+    for app_name, app_info in rawstatus[application_key].items():
+        application = Application(app_name, app_info, model)
         model.add_application(application)
-    for appname, appinfo in model.applications.items():
-        for unitname, unit in appinfo.units.items():
-            for subunitname, subunit in unit.subordinates.items():
+    for app_name, app_info in model.applications.items():
+        for unit_name, unit in app_info.units.items():
+            for subunit_name, subunit in unit.subordinates.items():
                 subunit.create_application_relation()
 
-    for appname, appinfo in rawstatus[applicationkey].items():
-        if "relations" in appinfo:
-            for relationname, partnerapps in appinfo["relations"].items():
-                for partnerapp in partnerapps:
-                    relation = Relation(model, relationname, partnerapp, appname)
+    for app_name, app_info in rawstatus[application_key].items():
+        if "relations" in app_info:
+            for relation_name, partner_apps in app_info["relations"].items():
+                for partner_app in partner_apps:
+                    relation = Relation(model, relation_name, partner_app, app_name)
                     model.add_relation(relation)
 
 
 def console_print_model_info(controllers: dict[str, Controller], color: bool = True) -> None:
     models: list[Model] = []
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         for modelname, model in controller.models.items():
             models.append(model)
     if len(models) > 0:
@@ -101,11 +101,11 @@ def console_print_application_info(
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for appname, app in model.applications.items():
+            for app_name, app in model.applications.items():
                 if not hide_scale_zero or app.get_scale() > 0:
                     apps.append(app)
     if len(apps) > 0:
@@ -127,15 +127,15 @@ def console_print_unit_info(
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for appname, application in model.applications.items():
-                for unitname, unit in application.units.items():
+            for app_name, application in model.applications.items():
+                for unit_name, unit in application.units.items():
                     units.append(unit)
                     if not hide_subordinate_units:
-                        for subunitname, subunit in unit.subordinates.items():
+                        for subunit_name, subunit in unit.subordinates.items():
                             units.append(subunit)
     if len(units) > 0:
         console_print_object(
@@ -156,16 +156,16 @@ def console_print_networkinterface_info(
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
             for machinename, machine in model.machines.items():
-                for nicname, nic in machine.networkinterfaces.items():
+                for nicname, nic in machine.network_interfaces.items():
                     nics.append(nic)
                 if include_containers:
                     for containername, container in machine.containers.items():
-                        for nicname, nic in container.networkinterfaces.items():
+                        for nicname, nic in container.network_interfaces.items():
                             nics.append(nic)
     if len(nics) > 0:
         console_print_object(
@@ -186,7 +186,7 @@ def console_print_machine_info(
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
@@ -212,12 +212,12 @@ def console_print_relations(controllers: dict[str, Controller], color: bool = Tr
     if len(controllers) > 1:
         include_controller_name = True
         include_model_name = True
-    for controllername, controller in controllers.items():
+    for controller_name, controller in controllers.items():
         if len(controller.models) > 1:
             include_model_name = True
         for modelname, model in controller.models.items():
-            for relationname, relation in model.relations.items():
-                for singlerelation in model.relations[relationname]:
+            for relation_name, relation in model.relations.items():
+                for singlerelation in model.relations[relation_name]:
                     relations.append(singlerelation)
     if len(relations) > 0:
         console_print_object(
@@ -257,7 +257,7 @@ def filter_dictionary(dictionary: dict[str, Any], key_filter: str) -> dict[str, 
 
 def filter_results(
     controllers: dict[str, Controller],
-    ctrl_filter: str = "",
+    controller_filter: str = "",
     model_filter: str = "",
     app_filter: str = "",
     unit_filter: str = "",
@@ -267,23 +267,23 @@ def filter_results(
     """Filter the status"""
     filtered_controllers: dict[str, Controller] = {}
 
-    if ctrl_filter != "":
-        filtered_controllers = filter_dictionary(controllers, ctrl_filter)
+    if controller_filter != "":
+        filtered_controllers = filter_dictionary(controllers, controller_filter)
     else:
         filtered_controllers = controllers
 
     if model_filter != "":
         empty_controllers: list[str] = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             controller.filter_models(model_filter)
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     if app_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models: list[str] = []
             for modelname, model in controller.models.items():
                 model.filter_applications(app_filter)
@@ -292,63 +292,63 @@ def filter_results(
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     if unit_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
                 empty_applications: list[str] = []
-                for appname, application in model.applications.items():
+                for app_name, application in model.applications.items():
                     application.filter_units(unit_filter)
                     if len(application.units) == 0:
-                        empty_applications.append(appname)
-                for appname in empty_applications:
-                    del model.applications[appname]
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
                 model.reset_machines()
                 if len(model.applications) == 0:
                     empty_models.append(modelname)
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     if subunit_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
                 empty_applications = []
-                for appname, application in model.applications.items():
+                for app_name, application in model.applications.items():
                     empty_units: list[str] = []
-                    for unitname, unit in application.units.items():
+                    for unit_name, unit in application.units.items():
                         unit.filter_subordinates(subunit_filter)
                         if len(unit.subordinates) == 0:
-                            empty_units.append(unitname)
-                    for unitname in empty_units:
-                        del application.units[unitname]
+                            empty_units.append(unit_name)
+                    for unit_name in empty_units:
+                        del application.units[unit_name]
                     if len(application.units) == 0:
-                        empty_applications.append(appname)
-                for appname in empty_applications:
-                    del model.applications[appname]
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
                 model.reset_machines()
                 if len(model.applications) == 0:
                     empty_models.append(modelname)
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     if machine_filter != "":
         empty_controllers = []
-        for controllername, controller in filtered_controllers.items():
+        for controller_name, controller in filtered_controllers.items():
             empty_models = []
             for modelname, model in controller.models.items():
                 model.filter_machines(machine_filter)
@@ -357,9 +357,9 @@ def filter_results(
             for modelname in empty_models:
                 del controller.models[modelname]
             if len(controller.models) == 0:
-                empty_controllers.append(controllername)
-        for controllername in empty_controllers:
-            del filtered_controllers[controllername]
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
 
     controllers = filtered_controllers
 
@@ -427,7 +427,7 @@ def main(
     if controller != "" or model != "" or application != "" or unit != "" or machine != "" or subordinate != "":
         filter_results(
             controllers,
-            ctrl_filter=controller,
+            controller_filter=controller,
             model_filter=model,
             app_filter=application,
             unit_filter=unit,

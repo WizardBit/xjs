@@ -13,17 +13,17 @@ if TYPE_CHECKING:
 
 
 class Container(BasicMachine):
-    iscontainer: bool = True
+    is_container: bool = True
 
-    def __init__(self, containername: str, containerinfo: dict[str, Any], machine: Machine, model: Model) -> None:
-        BasicMachine.__init__(self, containername, containerinfo, model)
+    def __init__(self, container_name: str, container_info: dict[str, Any], machine: Machine, model: Model) -> None:
+        BasicMachine.__init__(self, container_name, container_info, model)
         self.machine = machine
 
-    def get_machinemessage_color(self) -> Text:
-        if self.machinemessage == "Container started":
-            return Text(self.machinemessage, style="green")
+    def get_machine_message_color(self) -> Text:
+        if self.machine_message == "Container started":
+            return Text(self.machine_message, style="green")
         else:
-            return Text(self.machinemessage, style="yellow")
+            return Text(self.machine_message, style="yellow")
 
     def get_row(
         self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
@@ -34,31 +34,31 @@ class Container(BasicMachine):
         if color:
             row = [
                 self.name,
-                self.get_jujustatus_color(),
-                self.get_machinestatus_color(),
-                self.dnsname,
-                self.instanceid,
+                self.get_juju_status_color(),
+                self.get_machine_status_color(),
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 "",
                 "",
                 "",
                 "",
-                self.get_machinemessage_color(),
+                self.get_machine_message_color(),
                 notesstr,
             ]
         else:
             row = [
                 self.name,
-                self.jujustatus,
-                self.machinestatus,
-                self.dnsname,
-                self.instanceid,
+                self.juju_status,
+                self.machine_status,
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 "",
                 "",
                 "",
                 "",
-                self.machinemessage,
+                self.machine_message,
                 notesstr,
             ]
 

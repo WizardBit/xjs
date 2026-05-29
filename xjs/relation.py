@@ -13,15 +13,15 @@ class Relation:
         "Application B"
     ]
 
-    def __init__(self, model: Model, name: str, partnername: str | dict[str, str], applicationname: str) -> None:
-        if isinstance(partnername, dict):
-            partnername = partnername.get("related-application", "")
+    def __init__(self, model: Model, name: str, partner_name: str | dict[str, str], application_name: str) -> None:
+        if isinstance(partner_name, dict):
+            partner_name = partner_name.get("related-application", "")
 
         self.name: str = name
-        app = model.get_application(applicationname)
-        self.application: Application = app if app else Application(applicationname)
-        partner = model.get_application(partnername)
-        self.partner: Application = partner if partner else Application(partnername)
+        app = model.get_application(application_name)
+        self.application: Application = app if app else Application(application_name)
+        partner = model.get_application(partner_name)
+        self.partner: Application = partner if partner else Application(partner_name)
 
     def get_row(
         self, color: bool, include_controller_name: bool = False, include_model_name: bool = False

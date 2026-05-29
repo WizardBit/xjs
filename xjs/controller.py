@@ -14,20 +14,20 @@ if TYPE_CHECKING:
 class Controller:
     zerodate: datetime = datetime.fromtimestamp(0, tz=timezone.utc)
 
-    def __init__(self, controllername: str, controllerinfo: dict[str, Any] | None = None) -> None:
-        if controllerinfo is None:
-            controllerinfo = {}
+    def __init__(self, controller_name: str, controller_info: dict[str, Any] | None = None) -> None:
+        if controller_info is None:
+            controller_info = {}
 
         self.notes: list[str] = []
         self.models: dict[str, Model] = {}
-        self.name: str = controllername
+        self.name: str = controller_name
 
-        self.timestampprovided: bool = False
+        self.timestamp_provided: bool = False
         self.timestamp: datetime = Controller.zerodate
 
-        if "timestamp" in controllerinfo:
-            self.timestampprovided = True
-            ts: str = controllerinfo["timestamp"]
+        if "timestamp" in controller_info:
+            self.timestamp_provided = True
+            ts: str = controller_info["timestamp"]
             if ts[:8].count(":") == 2 and ts[:2].isdigit():
                 ts = "01 Jan 1970 " + ts
             if ts.endswith("Z"):
@@ -39,7 +39,7 @@ class Controller:
                 self.timestamp = datetime.strptime(ts, "%d %b %Y %H:%M:%S")
 
     def update_timestamp(self, date: datetime) -> None:
-        if self.timestampprovided:
+        if self.timestamp_provided:
             str_time = self.timestamp.strftime("%H:%M:%S%z")
             str_date = date.strftime("%d %b %Y")
             temp_date = datetime.strptime(str_date + " " + str_time, "%d %b %Y %H:%M:%S%z")

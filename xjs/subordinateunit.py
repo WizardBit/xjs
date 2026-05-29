@@ -14,17 +14,17 @@ if TYPE_CHECKING:
 
 
 class SubordinateUnit(BasicUnit):
-    issubordinate: bool = True
+    is_subordinate: bool = True
 
-    def __init__(self, subunitname: str, subunitinfo: dict, unit: Unit) -> None:
-        BasicUnit.__init__(self, subunitname, subunitinfo, unit.application.model.controller)
+    def __init__(self, subunit_name: str, subunit_info: dict, unit: Unit) -> None:
+        BasicUnit.__init__(self, subunit_name, subunit_info, unit.application.model.controller)
 
         self.unit = unit
         self.machine = unit.machine
 
     def create_application_relation(self) -> None:
-        appname = re.sub(r"\/\d+$", "", self.name)
-        self.application = self.unit.application.model.get_application(appname)
+        app_name = re.sub(r"\/\d+$", "", self.name)
+        self.application = self.unit.application.model.get_application(app_name)
         if self.application is not None:
             self.application.add_subordinate(self)
 
@@ -34,7 +34,7 @@ class SubordinateUnit(BasicUnit):
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)
         namestr = "  " + self.name
-        portsstr = ",".join(self.openports)
+        portsstr = ",".join(self.open_ports)
 
         if self.leader:
             namestr += "*"
@@ -42,10 +42,10 @@ class SubordinateUnit(BasicUnit):
         if color:
             row = [
                 namestr,
-                self.get_workloadstatus_color(),
-                self.get_jujustatus_color(),
+                self.get_workload_status_color(),
+                self.get_juju_status_color(),
                 "",
-                self.publicaddress,
+                self.public_address,
                 portsstr,
                 self.message,
                 notesstr,
@@ -53,10 +53,10 @@ class SubordinateUnit(BasicUnit):
         else:
             row = [
                 namestr,
-                self.workloadstatus,
-                self.jujustatus,
+                self.workload_status,
+                self.juju_status,
                 "",
-                self.publicaddress,
+                self.public_address,
                 portsstr,
                 self.message,
                 notesstr,

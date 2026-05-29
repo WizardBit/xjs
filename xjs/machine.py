@@ -11,10 +11,10 @@ from typing import Any
 
 
 class Machine(BasicMachine):
-    iscontainer: bool = False
+    is_container: bool = False
 
-    def __init__(self, machinename: str, machineinfo: dict[str, Any], model: Model) -> None:
-        BasicMachine.__init__(self, machinename, machineinfo, model)
+    def __init__(self, machine_name: str, machine_info: dict[str, Any], model: Model) -> None:
+        BasicMachine.__init__(self, machine_name, machine_info, model)
 
         self.containers: dict[str, Container] = {}
         self.constraints: str = ""
@@ -27,17 +27,17 @@ class Machine(BasicMachine):
 
         self.model = model
 
-        if "constraints" in machineinfo:
-            self.constraints = machineinfo["constraints"]
+        if "constraints" in machine_info:
+            self.constraints = machine_info["constraints"]
 
-        if "hardware" in machineinfo:
-            for hardwarepair in machineinfo["hardware"].split(" "):
+        if "hardware" in machine_info:
+            for hardwarepair in machine_info["hardware"].split(" "):
                 key, value = hardwarepair.split("=")
                 self.hardware[key] = value
 
-        if "containers" in machineinfo:
-            for containername, containerinfo in machineinfo["containers"].items():
-                container = Container(containername, containerinfo, self, model)
+        if "containers" in machine_info:
+            for container_name, container_info in machine_info["containers"].items():
+                container = Container(container_name, container_info, self, model)
                 model.add_container(container)
                 self.containers[container.name] = container
 
@@ -50,31 +50,31 @@ class Machine(BasicMachine):
         if color:
             row = [
                 self.name,
-                self.get_jujustatus_color(),
-                self.get_machinestatus_color(),
-                self.dnsname,
-                self.instanceid,
+                self.get_juju_status_color(),
+                self.get_machine_status_color(),
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 self.hardware["availability-zone"],
                 self.hardware["arch"],
                 self.hardware["cores"],
                 self.hardware["mem"],
-                self.machinemessage,
+                self.machine_message,
                 notesstr,
             ]
         else:
             row = [
                 self.name,
-                self.jujustatus,
-                self.machinestatus,
-                self.dnsname,
-                self.instanceid,
+                self.juju_status,
+                self.machine_status,
+                self.dns_name,
+                self.instance_id,
                 self.base,
                 self.hardware["availability-zone"],
                 self.hardware["arch"],
                 self.hardware["cores"],
                 self.hardware["mem"],
-                self.machinemessage,
+                self.machine_message,
                 notesstr,
             ]
 
