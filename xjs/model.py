@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import re
 from packaging import version
 from rich.text import Text
 from typing import TYPE_CHECKING, Any
@@ -31,7 +30,11 @@ class Model:
         "Notes",
     ]
 
-    def __init__(self, model_info: dict[str, Any], controller: Controller, juju1env: str | None = None) -> None:
+    def __init__(
+        self, model_info: dict[str, Any],
+        controller: Controller,
+        juju1env: str | None = None,
+    ) -> None:
         self.notes: list[str | Text] = []
         self.applications: dict[str, Application] = {}
         self.relations: dict[str, list[Relation]] = {}
@@ -76,13 +79,21 @@ class Model:
         else:
             self.sla = "NA"
 
-        if "model-status" in model_info and "since" in model_info["model-status"]:
+        if (
+            "model-status" in model_info
+            and "since" in model_info["model-status"]
+        ):
             since_str = model_info["model-status"]["since"]
             if since_str.endswith("Z"):
                 since_str = since_str[:-1]
-                self.since: datetime = datetime.strptime(since_str, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
+                self.since: datetime = (
+                    datetime.strptime(since_str, "%d %b %Y %H:%M:%S")
+                    .replace(tzinfo=timezone.utc)
+                )
             else:
-                self.since = datetime.strptime(since_str, "%d %b %Y %H:%M:%S%z")
+                self.since = datetime.strptime(
+                    since_str, "%d %b %Y %H:%M:%S%z",
+                )
             controller.update_timestamp(self.since)
 
         if "upgrade-available" in model_info:
@@ -105,15 +116,26 @@ class Model:
                 self.relations[relation.name].append(relation)
                 return
             else:
-                if not self.get_relation(relation.name, relation.application.name, relation.partner.name):
+                if not self.get_relation(
+                    relation.name, relation.application.name,
+                    relation.partner.name,
+                ):
                     self.relations[relation.name].append(relation)
 
-    def get_relation(self, name: str, app_name: str, partner_name: str) -> Relation | None:
+    def get_relation(
+        self, name: str, app_name: str, partner_name: str,
+    ) -> Relation | None:
         if name in self.relations:
             for relation in self.relations[name]:
                 if (
-                    (relation.application.name == app_name and relation.partner.name == partner_name)
-                    or (relation.partner.name == app_name and relation.application.name == partner_name)
+                    (
+                        relation.application.name == app_name
+                        and relation.partner.name == partner_name
+                    )
+                    or (
+                        relation.partner.name == app_name
+                        and relation.application.name == partner_name
+                    )
                 ):
                     return relation
             return None
@@ -140,7 +162,10 @@ class Model:
 
     def get_version_color(self) -> Text:
         model_version = version.parse(self.version)
-        if model_version < version.parse("3.0.0") or model_version > Model.latest_juju_version:
+        if (
+            model_version < version.parse("3.0.0")
+            or model_version > Model.latest_juju_version
+        ):
             return Text(self.version, style="red")
         elif model_version < Model.latest_juju_version:
             return Text(self.version, style="yellow")
@@ -154,11 +179,15 @@ class Model:
             return Text(self.model_status, style="red")
 
     def get_row(
-        self, color: bool, include_controller_name: bool = True, include_model_name: bool = True
+        self, color: bool,
+        include_controller_name: bool = True,
+        include_model_name: bool = True,
     ) -> list[str | Text]:
         if not self.controller.timestamp_provided:
             if color:
-                self.notes.append(Text("Guessing at timestamp", style="yellow"))
+                self.notes.append(
+                    Text("Guessing at timestamp", style="yellow"),
+                )
             else:
                 self.notes.append("Guessing at timestamp")
         notesstr = ", ".join(str(n) for n in self.notes)
@@ -189,11 +218,14 @@ class Model:
             ]
 
     def get_column_names(
-        self, include_controller_name: bool = True, include_model_name: bool = True
+        self, include_controller_name: bool = True,
+        include_model_name: bool = True,
     ) -> list[str]:
         return self.column_names
 
-    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
+    def filter_dictionary(
+        self, dictionary: dict[str, Any], key_filter: str,
+    ) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()
@@ -205,7 +237,9 @@ class Model:
         parent_apps: dict[str, Any] = {}
         for app_name, app_info in apps.items():
             for subname, subinfo in app_info.subordinates.items():
-                parent_apps[subinfo.unit.application.name] = subinfo.unit.application
+                parent_apps[
+                    subinfo.unit.application.name
+                ] = subinfo.unit.application
         self.applications = {**apps, **parent_apps}
         self.reset_machines()
 
@@ -225,16 +259,30 @@ class Model:
         for app_name, app_info in self.applications.items():
             for unit_name, unit_info in app_info.units.items():
                 if unit_info.machine.is_container:
-                    containers[unit_info.machine.name] = unit_info.machine
-                    machines[unit_info.machine.machine.name] = unit_info.machine.machine
+                    containers[
+                        unit_info.machine.name
+                    ] = unit_info.machine
+                    machines[
+                        unit_info.machine.machine.name
+                    ] = unit_info.machine.machine
                 else:
-                    machines[unit_info.machine.name] = unit_info.machine
-            for subunit_name, subunit_info in app_info.subordinates.items():
+                    machines[
+                        unit_info.machine.name
+                    ] = unit_info.machine
+            for subunit_name, subunit_info in (
+                app_info.subordinates.items()
+            ):
                 if subunit_info.machine.is_container:
-                    containers[subunit_info.machine.name] = subunit_info.machine
-                    machines[subunit_info.machine.machine.name] = subunit_info.machine.machine
+                    containers[
+                        subunit_info.machine.name
+                    ] = subunit_info.machine
+                    machines[
+                        subunit_info.machine.machine.name
+                    ] = subunit_info.machine.machine
                 else:
-                    machines[subunit_info.machine.name] = subunit_info.machine
+                    machines[
+                        subunit_info.machine.name
+                    ] = subunit_info.machine
         for machine_name, machine in machines.items():
             oldcontainers = machine.containers.keys() - containers.keys()
             for container_name in oldcontainers:

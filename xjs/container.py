@@ -15,7 +15,11 @@ if TYPE_CHECKING:
 class Container(BasicMachine):
     is_container: bool = True
 
-    def __init__(self, container_name: str, container_info: dict[str, Any], machine: Machine, model: Model) -> None:
+    def __init__(
+        self, container_name: str,
+        container_info: dict[str, Any], machine: Machine,
+        model: Model,
+    ) -> None:
         BasicMachine.__init__(self, container_name, container_info, model)
         self.machine = machine
 
@@ -26,7 +30,9 @@ class Container(BasicMachine):
             return Text(self.machine_message, style="yellow")
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str | Text]:
         row: list[str | Text] = []
         notesstr = ", ".join(str(n) for n in self.notes)

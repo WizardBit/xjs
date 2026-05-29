@@ -13,18 +13,28 @@ class Relation:
         "Application B"
     ]
 
-    def __init__(self, model: Model, name: str, partner_name: str | dict[str, str], application_name: str) -> None:
+    def __init__(
+        self, model: Model, name: str,
+        partner_name: str | dict[str, str],
+        application_name: str,
+    ) -> None:
         if isinstance(partner_name, dict):
             partner_name = partner_name.get("related-application", "")
 
         self.name: str = name
         app = model.get_application(application_name)
-        self.application: Application = app if app else Application(application_name)
+        self.application: Application = (
+            app if app else Application(application_name)
+        )
         partner = model.get_application(partner_name)
-        self.partner: Application = partner if partner else Application(partner_name)
+        self.partner: Application = (
+            partner if partner else Application(partner_name)
+        )
 
     def get_row(
-        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+        self, color: bool,
+        include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str]:
         row = [
             f"{self.application.name}:{self.name}",
@@ -37,7 +47,8 @@ class Relation:
         return row
 
     def get_column_names(
-        self, include_controller_name: bool = False, include_model_name: bool = False
+        self, include_controller_name: bool = False,
+        include_model_name: bool = False,
     ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
