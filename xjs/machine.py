@@ -1,62 +1,51 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 from .basicmachine import BasicMachine
 from .container import Container
+from .model import Model
+from rich.text import Text
+from typing import Any
 
 
 class Machine(BasicMachine):
-    iscontainer = False
+    iscontainer: bool = False
 
-    def __init__(self, machinename, machineinfo, model):
-        """
-        Create a Machine object with basic information from a machine object
-        from a juju status output
-        """
-        # Setup the BasicMachine
+    def __init__(self, machinename: str, machineinfo: dict[str, Any], model: Model) -> None:
         BasicMachine.__init__(self, machinename, machineinfo, model)
 
-        # Default Values
-        self.containers = {}
-        self.constraints = ""
-        self.hardware = {}
+        self.containers: dict[str, Container] = {}
+        self.constraints: str = ""
+        self.hardware: dict[str, str] = {}
         self.hardware["arch"] = ""
         self.hardware["cores"] = ""
         self.hardware["mem"] = ""
         self.hardware["root-disk"] = ""
         self.hardware["availability-zone"] = ""
 
-        # Required Variables
         self.model = model
 
-        # Optional Variables
         if "constraints" in machineinfo:
             self.constraints = machineinfo["constraints"]
 
-        # Calculated Values
         if "hardware" in machineinfo:
             for hardwarepair in machineinfo["hardware"].split(" "):
                 key, value = hardwarepair.split("=")
                 self.hardware[key] = value
 
-        # Handle Containers if any
         if "containers" in machineinfo:
-            for containername, containerinfo in machineinfo[
-                "containers"
-            ].items():
-                container = Container(
-                    containername, containerinfo, self, model
-                )
+            for containername, containerinfo in machineinfo["containers"].items():
+                container = Container(containername, containerinfo, self, model)
                 model.add_container(container)
                 self.containers[container.name] = container
 
-    # TODO: Shouldn't handle color logic at this level
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        row = []
-        """Return a list which can be used for a row in a table."""
-        notesstr = ", ".join(self.notes)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        notesstr = ", ".join(str(n) for n in self.notes)
+        row: list[str | Text] = []
 
         if color:
             row = [

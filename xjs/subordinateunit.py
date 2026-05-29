@@ -1,41 +1,38 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 import re
+from typing import TYPE_CHECKING
 from .basicunit import BasicUnit
+from rich.text import Text
+
+if TYPE_CHECKING:
+    from .unit import Unit
+    from .application import Application
 
 
 class SubordinateUnit(BasicUnit):
-    issubordinate = True
+    issubordinate: bool = True
 
-    def __init__(self, subunitname, subunitinfo, unit):
-        """
-        Create a SubordinateUnit object with basic information from a
-        subordinate unit object from a juju status output
-        """
-        # Setup the BasicUnit
-        BasicUnit.__init__(
-            self, subunitname, subunitinfo, unit.application.model.controller
-        )
+    def __init__(self, subunitname: str, subunitinfo: dict, unit: Unit) -> None:
+        BasicUnit.__init__(self, subunitname, subunitinfo, unit.application.model.controller)
 
-        # Required Variables
         self.unit = unit
-        # Not sure if required anymore but causes error
-        # self.upgradingfrom = subunitinfo["upgrading-from"]
         self.machine = unit.machine
 
-    def create_application_relation(self):
+    def create_application_relation(self) -> None:
         appname = re.sub(r"\/\d+$", "", self.name)
         self.application = self.unit.application.model.get_application(appname)
         if self.application is not None:
             self.application.add_subordinate(self)
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-        row = []
-        notesstr = ", ".join(self.notes)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
+        notesstr = ", ".join(str(n) for n in self.notes)
         namestr = "  " + self.name
         portsstr = ",".join(self.openports)
 

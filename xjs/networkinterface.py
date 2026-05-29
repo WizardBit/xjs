@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
-from .colors import Color
+from __future__ import annotations
+
+from rich.text import Text
+from typing import Any
 
 
 class NetworkInterface:
-    column_names = [
+    column_names: list[str] = [
         "Machine",
         "Interface",
         "IP",
@@ -16,46 +19,37 @@ class NetworkInterface:
         "Notes",
     ]
 
-    def __init__(self, interfacename, interfaceinfo, parent, model):
-        """
-        Create a NetworkInterface object with basic information from a network
-        interface object from a juju status output
-        """
-        # Default Values
-        self.space = ""
-        self.notes = []
-        self.gateway = ""
+    def __init__(self, interfacename: str, interfaceinfo: dict[str, Any], parent: Any, model: Any) -> None:
+        self.space: str = ""
+        self.notes: list[str | Text] = []
+        self.gateway: str = ""
 
-        # Required Variables
-        self.name = interfacename
+        self.name: str = interfacename
         self.parent = parent
-        self.ipaddresses = interfaceinfo["ip-addresses"]
-        self.macaddress = interfaceinfo["mac-address"]
-        self.up = interfaceinfo["is-up"]
+        self.ipaddresses: list[str] = interfaceinfo["ip-addresses"]
+        self.macaddress: str = interfaceinfo["mac-address"]
+        self.up: bool = interfaceinfo["is-up"]
         self.model = model
 
-        # Optional Variables
         if "space" in interfaceinfo:
             self.space = interfaceinfo["space"]
         if "gateway" in interfaceinfo:
             self.gateway = interfaceinfo["gateway"]
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, NetworkInterface]:
         return {self.name: self}
 
-    def get_isup_color(self):
-        """Return a is up string with correct colors based on juju status"""
+    def get_isup_color(self) -> Text:
         if self.up:
-            return Color.Fg.Green + str(self.up) + Color.Reset
+            return Text(str(self.up), style="green")
         else:
-            return Color.Fg.Red + str(self.up) + Color.Reset
+            return Text(str(self.up), style="red")
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-        row = []
-        notesstr = ", ".join(self.notes)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
+        notesstr = ", ".join(str(n) for n in self.notes)
         ipstr = ",".join(self.ipaddresses)
         if color:
             row = [
@@ -87,9 +81,8 @@ class NetworkInterface:
         return row
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")

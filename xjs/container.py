@@ -1,39 +1,31 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
 from .basicmachine import BasicMachine
-from .colors import Color
+from rich.text import Text
+from typing import Any
 
 
 class Container(BasicMachine):
-    iscontainer = True
+    iscontainer: bool = True
 
-    def __init__(self, containername, containerinfo, machine, model):
-        """
-        Create a Container object with basic information from a container
-        object from a juju status output
-        """
-        # Setup the BasicMachine
+    def __init__(self, containername: str, containerinfo: dict[str, Any], machine: Any, model: Any) -> None:
         BasicMachine.__init__(self, containername, containerinfo, model)
-
-        # Required Variables
         self.machine = machine
 
-    def get_machinemessage_color(self):
-        """
-        Return a message string with correct colors based on the machine status
-        """
+    def get_machinemessage_color(self) -> Text:
         if self.machinemessage == "Container started":
-            return Color.Fg.Green + self.machinemessage + Color.Reset
+            return Text(self.machinemessage, style="green")
         else:
-            return Color.Fg.Yellow + self.machinemessage + Color.Reset
+            return Text(self.machinemessage, style="yellow")
 
     def get_row(
-        self, color, include_controller_name=False, include_model_name=False
-    ):
-        """Return a list which can be used for a row in a table."""
-        row = []
-        notesstr = ", ".join(self.notes)
+        self, color: bool, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str | Text]:
+        row: list[str | Text] = []
+        notesstr = ", ".join(str(n) for n in self.notes)
 
         if color:
             row = [

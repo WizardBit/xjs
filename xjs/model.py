@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
+from __future__ import annotations
+
+from datetime import datetime, timezone
 import re
-from .colors import Color
 from packaging import version
-import pendulum
+from rich.text import Text
+from typing import Any
 
 
 class Model:
-    # TODO get latest juju version dynamically
     latest_juju_version = version.parse("3.6.20")
-    column_names = [
+    column_names: list[str] = [
         "Model",
         "Controller",
         "Cloud/Region",
@@ -22,28 +24,22 @@ class Model:
         "Notes",
     ]
 
-    def __init__(self, modelinfo, controller, juju1env=None):
-        """
-        Create a Model object with basic information from a model object
-        from a juju status output
-        """
-        # Default Values
-        self.notes = []
-        self.applications = {}
-        self.relations = {}
-        self.machines = {}
-        self.containers = {}
-        self.message = ""
-        self.upgradeavailable = ""
+    def __init__(self, modelinfo: dict[str, Any], controller: Any, juju1env: str | None = None) -> None:
+        self.notes: list[str | Text] = []
+        self.applications: dict[str, Any] = {}
+        self.relations: dict[str, list[Any]] = {}
+        self.machines: dict[str, Any] = {}
+        self.containers: dict[str, Any] = {}
+        self.message: str = ""
+        self.upgradeavailable: str = ""
 
-        # Required Variables
         if "name" in modelinfo:
-            self.name = modelinfo["name"]
+            self.name: str = modelinfo["name"]
         else:
             self.name = "NA"
 
         if "type" in modelinfo:
-            self.type = modelinfo["type"]
+            self.type: str = modelinfo["type"]
         else:
             self.type = "NA"
         self.controller = controller
@@ -52,150 +48,116 @@ class Model:
             self.controller.name = modelinfo["controller"]
 
         if "cloud" in modelinfo:
-            self.cloud = modelinfo["cloud"]
+            self.cloud: str = modelinfo["cloud"]
         elif juju1env:
             self.cloud = juju1env
         else:
             self.cloud = "NA"
 
         if "version" in modelinfo:
-            self.version = modelinfo["version"]
+            self.version: str = modelinfo["version"]
         else:
             self.version = "1.x.x"
 
         if "model-status" in modelinfo:
-            self.modelstatus = modelinfo["model-status"]["current"]
+            self.modelstatus: str = modelinfo["model-status"]["current"]
         else:
             self.modelstatus = "NA"
 
         if "sla" in modelinfo:
-            self.sla = modelinfo["sla"]
+            self.sla: str = modelinfo["sla"]
         else:
             self.sla = "NA"
 
-        # Required Dates
-        if "model-status" in modelinfo and "since" in modelinfo[
-            "model-status"
-        ]:
-            if re.match(r".*Z$", modelinfo["model-status"]["since"]):
-                modelinfo["model-status"]["since"] = re.sub(
-                    r"Z$", "", modelinfo["model-status"]["since"]
-                )
-                self.since = pendulum.from_format(
-                    modelinfo["model-status"]["since"],
-                    "DD MMM YYYY HH:mm:ss",
-                    tz="UTC",
-                )
+        if "model-status" in modelinfo and "since" in modelinfo["model-status"]:
+            since_str = modelinfo["model-status"]["since"]
+            if since_str.endswith("Z"):
+                since_str = since_str[:-1]
+                self.since: datetime = datetime.strptime(since_str, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.since = pendulum.from_format(
-                    modelinfo["model-status"]["since"], "DD MMM YYYY HH:mm:ssZ"
-                )
+                self.since = datetime.strptime(since_str, "%d %b %Y %H:%M:%S%z")
             controller.update_timestamp(self.since)
 
-        # Optional Variables
         if "upgrade-available" in modelinfo:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, Model]:
         return {self.name: self}
 
-    def add_application(self, application):
-        """Add an Application to this model"""
+    def add_application(self, application: Any) -> None:
         self.applications[application.name] = application
 
-    def add_machine(self, machine):
-        """Add a machine to this model"""
+    def add_machine(self, machine: Any) -> None:
         self.machines[machine.name] = machine
 
-    def add_container(self, container):
-        """Add a container to this model"""
+    def add_container(self, container: Any) -> None:
         self.containers[container.name] = container
 
-    def add_relation(self, relation):
-        """Add a relation if it doesn't already exist"""
+    def add_relation(self, relation: Any) -> None:
         if relation is not None:
             if relation.name not in self.relations:
                 self.relations[relation.name] = []
                 self.relations[relation.name].append(relation)
                 return
             else:
-                if not self.get_relation(
-                    relation.name, relation.application.name,
-                    relation.partner.name,
-                ):
+                if not self.get_relation(relation.name, relation.application.name, relation.partner.name):
                     self.relations[relation.name].append(relation)
 
-    def get_relation(self, name, app_name, partner_name):
+    def get_relation(self, name: str, app_name: str, partner_name: str) -> Any | None:
         if name in self.relations:
             for relation in self.relations[name]:
                 if (
-                    (relation.application.name == app_name
-                     and relation.partner.name == partner_name)
-                    or (
-                        relation.partner.name == app_name
-                        and relation.application.name == partner_name
-                    )
+                    (relation.application.name == app_name and relation.partner.name == partner_name)
+                    or (relation.partner.name == app_name and relation.application.name == partner_name)
                 ):
                     return relation
             return None
         else:
             return None
 
-    def get_application(self, searchappname):
-        """Get an Application by name"""
+    def get_application(self, searchappname: str) -> Any | None:
         for appname, application in self.applications.items():
             if appname == searchappname:
                 return application
         return None
 
-    def get_machine(self, machinename):
-        """Get a machine by name"""
+    def get_machine(self, machinename: str) -> Any | None:
         if machinename in self.machines:
             return self.machines[machinename]
         else:
             return None
 
-    def get_container(self, containername):
-        """Get a container by name"""
+    def get_container(self, containername: str) -> Any | None:
         if containername in self.containers:
             return self.containers[containername]
         else:
             return None
 
-    def get_version_color(self):
-        """Return a version string with correct colors based on version"""
+    def get_version_color(self) -> Text:
         model_version = version.parse(self.version)
-        if (
-            model_version < version.parse("3.0.0")
-            or model_version > Model.latest_juju_version
-        ):
-            return Color.Fg.Red + self.version + Color.Reset
+        if model_version < version.parse("3.0.0") or model_version > Model.latest_juju_version:
+            return Text(self.version, style="red")
         elif model_version < Model.latest_juju_version:
-            return Color.Fg.Yellow + self.version + Color.Reset
+            return Text(self.version, style="yellow")
         else:
-            return Color.Fg.Green + self.version + Color.Reset
+            return Text(self.version, style="green")
 
-    # TODO Figure out all possible values of all options and color accordingly
-    def get_modelstatus_color(self):
-        """Return a status string with correct colors based on status"""
+    def get_modelstatus_color(self) -> Text:
         if self.modelstatus == "available":
-            return Color.Fg.Green + self.modelstatus + Color.Reset
+            return Text(self.modelstatus, style="green")
         else:
-            return Color.Fg.Red + self.modelstatus + Color.Reset
+            return Text(self.modelstatus, style="red")
 
     def get_row(
-        self, color, include_controller_name=True, include_model_name=True
-    ):
-        """Return a list which can be used for a row in a table."""
+        self, color: bool, include_controller_name: bool = True, include_model_name: bool = True
+    ) -> list[str | Text]:
         if not self.controller.timestampprovided:
             if color:
-                self.notes.append(
-                    Color.Fg.Yellow + "Guessing at timestamp" + Color.Reset
-                )
+                self.notes.append(Text("Guessing at timestamp", style="yellow"))
             else:
                 self.notes.append("Guessing at timestamp")
-        notesstr = ", ".join(self.notes)
+        notesstr = ", ".join(str(n) for n in self.notes)
         timestampstr = self.controller.timestamp.strftime("%H:%M:%SZ")
         if color:
             return [
@@ -223,30 +185,27 @@ class Model:
             ]
 
     def get_column_names(
-        self, include_controller_name=True, include_model_name=True
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = True, include_model_name: bool = True
+    ) -> list[str]:
         return self.column_names
 
-    def filter_dictionary(self, dictionary, key_filter):
+    def filter_dictionary(self, dictionary: dict[str, Any], key_filter: str) -> dict[str, Any]:
         return {
             key: value
             for (key, value) in dictionary.items()
             if key_filter in key
         }
 
-    def filter_applications(self, app_filter):
+    def filter_applications(self, app_filter: str) -> None:
         apps = self.filter_dictionary(self.applications, app_filter)
-        parent_apps = {}
+        parent_apps: dict[str, Any] = {}
         for appname, appinfo in apps.items():
             for subname, subinfo in appinfo.subordinates.items():
-                parent_apps[
-                    subinfo.unit.application.name
-                ] = subinfo.unit.application
+                parent_apps[subinfo.unit.application.name] = subinfo.unit.application
         self.applications = {**apps, **parent_apps}
         self.reset_machines()
 
-    def filter_machines(self, machine_filter):
+    def filter_machines(self, machine_filter: str) -> None:
         self.machines = {
             key: value
             for (key, value) in self.machines.items()
@@ -256,24 +215,20 @@ class Model:
         for machine in self.machines.values():
             self.containers.update(machine.containers)
 
-    def reset_machines(self):
-        machines = {}
-        containers = {}
+    def reset_machines(self) -> None:
+        machines: dict[str, Any] = {}
+        containers: dict[str, Any] = {}
         for appname, appinfo in self.applications.items():
             for unitname, unitinfo in appinfo.units.items():
                 if unitinfo.machine.iscontainer:
                     containers[unitinfo.machine.name] = unitinfo.machine
-                    machines[
-                        unitinfo.machine.machine.name
-                    ] = unitinfo.machine.machine
+                    machines[unitinfo.machine.machine.name] = unitinfo.machine.machine
                 else:
                     machines[unitinfo.machine.name] = unitinfo.machine
             for subunitname, subunitinfo in appinfo.subordinates.items():
                 if subunitinfo.machine.iscontainer:
                     containers[subunitinfo.machine.name] = subunitinfo.machine
-                    machines[
-                        subunitinfo.machine.machine.name
-                    ] = subunitinfo.machine.machine
+                    machines[subunitinfo.machine.machine.name] = subunitinfo.machine.machine
                 else:
                     machines[subunitinfo.machine.name] = subunitinfo.machine
         for machinename, machine in machines.items():

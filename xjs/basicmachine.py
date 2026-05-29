@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-3.0-only
 
-import re
-from .colors import Color
+from __future__ import annotations
+
+from datetime import datetime, timezone
 from .networkinterface import NetworkInterface
-import pendulum
+from rich.text import Text
+from typing import Any
 
 
 class BasicMachine:
-    """
-    A BasicMachine Object is inherited by Machines and Containers so common
-    attributes and functions remain here
-    """
-
-    column_names = [
+    column_names: list[str] = [
         "Machine",
         "Agent",
         "Status",
@@ -28,39 +25,33 @@ class BasicMachine:
         "Notes",
     ]
 
-    def __init__(self, name, info, model):
-        """
-        Create a BasicMachine object with basic information from a machine or
-        container object from a juju status output
-        """
-        # Default Values
-        self.notes = []
-        self.networkinterfaces = {}
+    def __init__(self, name: str, info: dict[str, Any], model: Any) -> None:
+        self.notes: list[str | Text] = []
+        self.networkinterfaces: dict[str, NetworkInterface] = {}
 
-        # Required Variables
-        self.name = name
+        self.name: str = name
         if "juju-status" in info:
-            self.jujustatus = info["juju-status"]["current"]
+            self.jujustatus: str = info["juju-status"]["current"]
             if "version" in info["juju-status"]:
-                self.jujuversion = info["juju-status"]["version"]
+                self.jujuversion: str = info["juju-status"]["version"]
             else:
                 self.jujuversion = "NA"
         else:
             self.jujustatus = info["agent-state"]
             self.jujuversion = info["agent-version"]
         if "dns-name" in info:
-            self.dnsname = info["dns-name"]
+            self.dnsname: str = info["dns-name"]
         else:
             self.dnsname = "PENDING"
         if "ip-addresses" in info:
-            self.ipaddresses = info["ip-addresses"]
+            self.ipaddresses: Any = info["ip-addresses"]
         else:
             self.ipaddresses = "NA"
-        self.instanceid = info["instance-id"]
+        self.instanceid: str = info["instance-id"]
         if "machine-status" in info:
-            self.machinestatus = info["machine-status"]["current"]
+            self.machinestatus: str = info["machine-status"]["current"]
             if "message" in info["machine-status"]:
-                self.machinemessage = info["machine-status"]["message"]
+                self.machinemessage: str = info["machine-status"]["message"]
             else:
                 self.machinemessage = ""
         else:
@@ -69,83 +60,58 @@ class BasicMachine:
 
         base = info.get("base")
         if isinstance(base, dict):
-            self.base = f"{base.get('name', '')}@{base.get('channel', '')}"
+            self.base: str = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base if base else "NA"
         self.model = model
 
-        # Required Dates
         if "juju-status" in info:
-            if re.match(r".*Z$", info["juju-status"]["since"]):
-                info["juju-status"]["since"] = re.sub(
-                    r"Z$", "", info["juju-status"]["since"]
-                )
-                self.jujusince = pendulum.from_format(
-                    info["juju-status"]["since"],
-                    "DD MMM YYYY HH:mm:ss",
-                    tz="UTC",
-                )
+            js_since = info["juju-status"]["since"]
+            if js_since.endswith("Z"):
+                js_since = js_since[:-1]
+                self.jujusince: datetime = datetime.strptime(js_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.jujusince = pendulum.from_format(
-                    info["juju-status"]["since"], "DD MMM YYYY HH:mm:ssZ"
-                )
+                self.jujusince = datetime.strptime(js_since, "%d %b %Y %H:%M:%S%z")
             model.controller.update_timestamp(self.jujusince)
         if "machine-status" in info:
-            if re.match(r".*Z$", info["machine-status"]["since"]):
-                info["machine-status"]["since"] = re.sub(
-                    r"Z$", "", info["machine-status"]["since"]
-                )
-                self.machinesince = pendulum.from_format(
-                    info["machine-status"]["since"],
-                    "DD MMM YYYY HH:mm:ss",
-                    tz="UTC",
-                )
+            ms_since = info["machine-status"]["since"]
+            if ms_since.endswith("Z"):
+                ms_since = ms_since[:-1]
+                self.machinesince: datetime = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S").replace(tzinfo=timezone.utc)
             else:
-                self.machinesince = pendulum.from_format(
-                    info["machine-status"]["since"], "DD MMM YYYY HH:mm:ssZ"
-                )
+                self.machinesince = datetime.strptime(ms_since, "%d %b %Y %H:%M:%S%z")
             model.controller.update_timestamp(self.machinesince)
 
-        # Handle Network Interfaces
         if "network-interfaces" in info:
-            for interfacename, interfaceinfo in info[
-                "network-interfaces"
-            ].items():
-                self.networkinterfaces[interfacename] = NetworkInterface(
-                    interfacename, interfaceinfo, self, model
-                )
+            for interfacename, interfaceinfo in info["network-interfaces"].items():
+                self.networkinterfaces[interfacename] = NetworkInterface(interfacename, interfaceinfo, self, model)
 
-    def to_dict(self):
+    def to_dict(self) -> dict[str, BasicMachine]:
         return {self.name: self}
 
-    def get_jujustatus_color(self):
-        """Return a status string with correct colors based on juju status"""
+    def get_jujustatus_color(self) -> Text:
         if self.jujustatus == "started":
-            return Color.Fg.Green + self.jujustatus + Color.Reset
+            return Text(self.jujustatus, style="green")
         elif self.jujustatus in ("error", "down"):
-            return Color.Fg.Red + self.jujustatus + Color.Reset
+            return Text(self.jujustatus, style="red")
         elif self.jujustatus == "pending":
-            return Color.Fg.Orange + self.jujustatus + Color.Reset
+            return Text(self.jujustatus, style="orange3")
         else:
-            return Color.Fg.Yellow + self.jujustatus + Color.Reset
+            return Text(self.jujustatus, style="yellow")
 
-    def get_machinestatus_color(self):
-        """
-        Return a status string with correct colors based on machine status
-        """
+    def get_machinestatus_color(self) -> Text:
         if self.machinestatus == "running":
-            return Color.Fg.Green + self.machinestatus + Color.Reset
+            return Text(self.machinestatus, style="green")
         elif self.machinestatus == "pending":
-            return Color.Fg.Orange + self.machinestatus + Color.Reset
+            return Text(self.machinestatus, style="orange3")
         elif self.machinestatus == "NA":
-            return self.machinestatus
+            return Text(self.machinestatus)
         else:
-            return Color.Fg.Yellow + self.machinestatus + Color.Reset
+            return Text(self.machinestatus, style="yellow")
 
     def get_column_names(
-        self, include_controller_name=False, include_model_name=False
-    ):
-        """Append the controller name and/or model name as necessary"""
+        self, include_controller_name: bool = False, include_model_name: bool = False
+    ) -> list[str]:
         fields = list(self.column_names)
         if include_model_name:
             fields.insert(0, "Model")
