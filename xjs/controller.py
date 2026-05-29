@@ -1,23 +1,8 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
-
+# SPDX-License-Identifier: GPL-3.0-only
 
 import re
 import pendulum
-import requests
 
 
 class Controller:
@@ -41,9 +26,13 @@ class Controller:
         if "timestamp" in controllerinfo:
             self.timestampprovided = True
             if re.match(r"^\d\d:\d\d:\d\d", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = "01 Jan 1970 " + controllerinfo["timestamp"]
+                controllerinfo["timestamp"] = (
+                    "01 Jan 1970 " + controllerinfo["timestamp"]
+                )
             if re.match(r".*Z$", controllerinfo["timestamp"]):
-                controllerinfo["timestamp"] = re.sub(r"Z$", "", controllerinfo["timestamp"])
+                controllerinfo["timestamp"] = re.sub(
+                    r"Z$", "", controllerinfo["timestamp"]
+                )
                 self.timestamp = pendulum.from_format(
                     controllerinfo["timestamp"],
                     "DD MMM YYYY HH:mm:ss",
@@ -61,7 +50,7 @@ class Controller:
                     "DD MMM YYYY HH:mm:ss",
                 )
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def update_timestamp(self, date):

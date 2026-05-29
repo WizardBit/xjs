@@ -1,21 +1,8 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-License-Identifier: GPL-3.0-only
 
+from .application import Application
 
-from application import Application
 
 class Relation:
     """
@@ -44,7 +31,7 @@ class Relation:
         else:
             self.partner = Application(partnername)
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def get_row(
@@ -65,8 +52,9 @@ class Relation:
         self, include_controller_name=False, include_model_name=False
     ):
         """Append the controller name and/or model name as necessary"""
+        fields = list(self.column_names)
         if include_model_name:
-            self.column_names.insert(0, "Model")
+            fields.insert(0, "Model")
         if include_controller_name:
-            self.column_names.insert(0, "Controller")
-        return self.column_names
+            fields.insert(0, "Controller")
+        return fields

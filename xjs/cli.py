@@ -1,37 +1,22 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
-
+# SPDX-License-Identifier: GPL-3.0-only
 
 import json
 import sys
 import shutil
-from application import Application
+from .application import Application
 import click
-from colors import Color
-from controller import Controller
-from machine import Machine
-from model import Model
-from relation import Relation
+from . import __version__
+from .colors import Color
+from .controller import Controller
+from .machine import Machine
+from .model import Model
+from .relation import Relation
 from prettytable import PrettyTable
 import yaml
 
-controllers = {}
 
-
-def load_status_file(inputfile):
+def load_status_file(inputfile, controllers):
     """Load a juju status file, inputfile is a yaml or json file"""
     rawstatus = {}
 
@@ -95,14 +80,14 @@ def load_status_file(inputfile):
     for appname, appinfo in rawstatus[applicationkey].items():
         if "relations" in appinfo:
             for relationname, partnerapps in appinfo["relations"].items():
-                for parnerapp in partnerapps:
+                for partnerapp in partnerapps:
                     relation = Relation(
-                        model, relationname, parnerapp, appname
+                        model, relationname, partnerapp, appname
                     )
                     model.add_relation(relation)
 
 
-def console_print_model_info(color=True):
+def console_print_model_info(controllers, color=True):
     """Filter and sort model info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -114,7 +99,9 @@ def console_print_model_info(color=True):
         console_print_object(print_what=models, color=color)
 
 
-def console_print_application_info(color=True, hide_scale_zero=False):
+def console_print_application_info(
+    controllers, color=True, hide_scale_zero=False
+):
     """Filter and sort application info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -131,9 +118,7 @@ def console_print_application_info(color=True, hide_scale_zero=False):
             include_model_name = True
         for modelname, model in controller.models.items():
             for appname, app in model.applications.items():
-                if hide_scale_zero and app.get_scale() > 0:
-                    apps.append(app)
-                elif not hide_scale_zero:
+                if not hide_scale_zero or app.get_scale() > 0:
                     apps.append(app)
     if len(apps) > 0:
         console_print_object(
@@ -144,7 +129,9 @@ def console_print_application_info(color=True, hide_scale_zero=False):
         )
 
 
-def console_print_unit_info(color=True, hide_subordinate_units=False):
+def console_print_unit_info(
+    controllers, color=True, hide_subordinate_units=False
+):
     """Filter and sort unit info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -165,14 +152,6 @@ def console_print_unit_info(color=True, hide_subordinate_units=False):
                     if not hide_subordinate_units:
                         for subunitname, subunit in unit.subordinates.items():
                             units.append(subunit)
-    # Bad logic, if an application has 0 units it might only be
-    #  a subordinate app and not filtered
-    # if not hide_subordinate_units and len(application.units) == 0:
-    #     for (
-    #         subunitname,
-    #         subunit,
-    #     ) in application.subordinates.items():
-    #         units.append(subunit)
     if len(units) > 0:
         console_print_object(
             print_what=units,
@@ -182,7 +161,9 @@ def console_print_unit_info(color=True, hide_subordinate_units=False):
         )
 
 
-def console_print_networkinterface_info(color=True, include_containers=True):
+def console_print_networkinterface_info(
+    controllers, color=True, include_containers=True
+):
     """Filter and sort network info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -216,7 +197,9 @@ def console_print_networkinterface_info(color=True, include_containers=True):
         )
 
 
-def console_print_machine_info(color=True, include_containers=True):
+def console_print_machine_info(
+    controllers, color=True, include_containers=True
+):
     """Filter and sort machine info to print in a table here"""
     # TODO Handle Sort
     # TODO Handle Filter
@@ -245,7 +228,7 @@ def console_print_machine_info(color=True, include_containers=True):
         )
 
 
-def console_print_relations(color=True):
+def console_print_relations(controllers, color=True):
     """Filter and sort relation info to print in a table here"""
     relations = []
     include_controller_name = False
@@ -310,6 +293,7 @@ def filter_dictionary(dictionary, key_filter):
 
 
 def filter_results(
+    controllers,
     ctrl_filter="",
     model_filter="",
     app_filter="",
@@ -318,7 +302,6 @@ def filter_results(
     machine_filter="",
 ):
     """Filter the status"""
-    global controllers
     filtered_controllers = {}
 
     # Filter the Controllers
@@ -405,9 +388,26 @@ def filter_results(
         for controllername in empty_controllers:
             del filtered_controllers[controllername]
 
+    # Filter the Machines
+    if machine_filter != "":
+        empty_controllers = []
+        for controllername, controller in filtered_controllers.items():
+            empty_models = []
+            for modelname, model in controller.models.items():
+                model.filter_machines(machine_filter)
+                if len(model.machines) == 0:
+                    empty_models.append(modelname)
+            for modelname in empty_models:
+                del controller.models[modelname]
+            if len(controller.models) == 0:
+                empty_controllers.append(controllername)
+        for controllername in empty_controllers:
+            del filtered_controllers[controllername]
+
     controllers = filtered_controllers
 
 
+@click.version_option(__version__)
 @click.command()
 @click.option(
     "--application",
@@ -544,8 +544,9 @@ def main(
     """
 
     color = not no_color
+    controllers = {}
     for statusfile in statusfiles:
-        load_status_file(statusfile)
+        load_status_file(statusfile, controllers)
 
     # If no particular field was specified, show them all
     if (
@@ -574,6 +575,7 @@ def main(
         or subordinate != ""
     ):
         filter_results(
+            controllers,
             ctrl_filter=controller,
             model_filter=model,
             app_filter=application,
@@ -583,22 +585,24 @@ def main(
         )
 
     if show_model:
-        console_print_model_info(color)
+        console_print_model_info(controllers, color)
         print("")
     if show_apps:
-        console_print_application_info(color, hide_scale_zero)
+        console_print_application_info(controllers, color, hide_scale_zero)
         print("")
     if show_units:
-        console_print_unit_info(color, hide_subordinate_units)
+        console_print_unit_info(controllers, color, hide_subordinate_units)
         print("")
     if show_machines:
-        console_print_machine_info(color, include_containers)
+        console_print_machine_info(controllers, color, include_containers)
         print("")
     if show_net:
-        console_print_networkinterface_info(color, include_containers)
+        console_print_networkinterface_info(
+            controllers, color, include_containers
+        )
         print("")
     if show_relations:
-        console_print_relations(color)
+        console_print_relations(controllers, color)
         print("")
 
 

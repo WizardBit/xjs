@@ -1,23 +1,10 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-License-Identifier: GPL-3.0-only
 
 import re
-from colors import Color
+from .colors import Color
 import pendulum
-from unit import Unit
+from .unit import Unit
 
 
 class Application:
@@ -41,7 +28,7 @@ class Application:
         object from a juju status output
         """
         appinfo = appinfo if isinstance(appinfo, dict) else {}
-        
+
         # Default Values
         self.notes = []
         self.units = {}
@@ -60,10 +47,9 @@ class Application:
 
         base = appinfo.get("base")
         if isinstance(base, dict):
-            self.base = f"{base.get('name','')}@{base.get('channel','')}"
+            self.base = f"{base.get('name', '')}@{base.get('channel', '')}"
         else:
             self.base = base or "NA"
-
 
         if "os" in appinfo:
             self.os = appinfo["os"]
@@ -104,7 +90,9 @@ class Application:
 
         if statuskey in appinfo and "since" in appinfo[statuskey]:
             if re.match(r".*Z$", appinfo[statuskey]["since"]):
-                appinfo[statuskey]["since"] = re.sub(r"Z$", "", appinfo[statuskey]["since"])
+                appinfo[statuskey]["since"] = re.sub(
+                    r"Z$", "", appinfo[statuskey]["since"]
+                )
                 self.since = pendulum.from_format(
                     appinfo[statuskey]["since"],
                     "DD MMM YYYY HH:mm:ss",
@@ -154,7 +142,7 @@ class Application:
                 unit = Unit(unitname, unitinfo, self)
                 self.units[unitname] = unit
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def add_subordinate(self, subunit):
@@ -208,7 +196,7 @@ class Application:
         """
         Return a charm origin string with correct colors based on the origin
         """
-        if self.charmorigin != "jujucharms":
+        if self.charmorigin != "charmhub":
             return Color.Fg.Yellow + self.charmorigin + Color.Reset
         else:
             return self.charmorigin
@@ -257,11 +245,12 @@ class Application:
         self, include_controller_name=False, include_model_name=False
     ):
         """Append the controller name and/or model name as necessary"""
+        fields = list(self.column_names)
         if include_model_name:
-            self.column_names.insert(0, "Model")
+            fields.insert(0, "Model")
         if include_controller_name:
-            self.column_names.insert(0, "Controller")
-        return self.column_names
+            fields.insert(0, "Controller")
+        return fields
 
     def filter_dictionary(self, dictionary, key_filter):
         return {

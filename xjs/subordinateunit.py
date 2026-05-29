@@ -1,21 +1,8 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-License-Identifier: GPL-3.0-only
 
 import re
-from basicunit import BasicUnit
+from .basicunit import BasicUnit
 
 
 class SubordinateUnit(BasicUnit):
@@ -34,7 +21,7 @@ class SubordinateUnit(BasicUnit):
         # Required Variables
         self.unit = unit
         # Not sure if required anymore but causes error
-        #self.upgradingfrom = subunitinfo["upgrading-from"]
+        # self.upgradingfrom = subunitinfo["upgrading-from"]
         self.machine = unit.machine
 
     def create_application_relation(self):

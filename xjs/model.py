@@ -1,23 +1,11 @@
 #!/usr/bin/env python3
-# This file is part of xjs a tool used to disply offline juju status
-# Copyright 2019 Canonical Ltd.
-#
-# This program is free software: you can redistribute it and/or modify it under
-# the terms of the GNU General Public License version 3, as published by the
-# Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful, but WITHOUT
-# ANY WARRANTY; without even the implied warranties of MERCHANTABILITY,
-# SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License along with
-# this program.  If not, see <http://www.gnu.org/licenses/>.
+# SPDX-License-Identifier: GPL-3.0-only
 
 import re
-from colors import Color
+from .colors import Color
 from packaging import version
 import pendulum
+
 
 class Model:
     # TODO get latest juju version dynamically
@@ -86,9 +74,13 @@ class Model:
             self.sla = "NA"
 
         # Required Dates
-        if "model-status" in modelinfo and "since" in modelinfo["model-status"]:
+        if "model-status" in modelinfo and "since" in modelinfo[
+            "model-status"
+        ]:
             if re.match(r".*Z$", modelinfo["model-status"]["since"]):
-                modelinfo["model-status"]["since"] = re.sub(r"Z$", "", modelinfo["model-status"]["since"])
+                modelinfo["model-status"]["since"] = re.sub(
+                    r"Z$", "", modelinfo["model-status"]["since"]
+                )
                 self.since = pendulum.from_format(
                     modelinfo["model-status"]["since"],
                     "DD MMM YYYY HH:mm:ss",
@@ -105,7 +97,7 @@ class Model:
             self.upgradeavailable = modelinfo["upgrade-available"]
             self.notes.append("upgrade available: " + self.upgradeavailable)
 
-    def __dict__(self):
+    def to_dict(self):
         return {self.name: self}
 
     def add_application(self, application):
@@ -121,24 +113,30 @@ class Model:
         self.containers[container.name] = container
 
     def add_relation(self, relation):
+        """Add a relation if it doesn't already exist"""
         if relation is not None:
-            """Add a relation if it doesn't already exist"""
-            if not relation.name in self.relations:
+            if relation.name not in self.relations:
                 self.relations[relation.name] = []
                 self.relations[relation.name].append(relation)
                 return
             else:
-                if not self.get_relation(relation.name, relation.application.name, 
-                    relation.partner.name):
+                if not self.get_relation(
+                    relation.name, relation.application.name,
+                    relation.partner.name,
+                ):
                     self.relations[relation.name].append(relation)
 
     def get_relation(self, name, app_name, partner_name):
         if name in self.relations:
             for relation in self.relations[name]:
-                if ((relation.application.name == app_name
-                        and relation.partner.name == partner_name) or
-                        (relation.partner.name == app_name and 
-                        relation.application.name == partner_name)):
+                if (
+                    (relation.application.name == app_name
+                     and relation.partner.name == partner_name)
+                    or (
+                        relation.partner.name == app_name
+                        and relation.application.name == partner_name
+                    )
+                ):
                     return relation
             return None
         else:
@@ -247,6 +245,16 @@ class Model:
                 ] = subinfo.unit.application
         self.applications = {**apps, **parent_apps}
         self.reset_machines()
+
+    def filter_machines(self, machine_filter):
+        self.machines = {
+            key: value
+            for (key, value) in self.machines.items()
+            if key == machine_filter
+        }
+        self.containers = {}
+        for machine in self.machines.values():
+            self.containers.update(machine.containers)
 
     def reset_machines(self):
         machines = {}

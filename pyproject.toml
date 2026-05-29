@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xjs"
+version = "0.1"
+description = "A tool to parse and display offline juju status files"
+license = "GPL-3.0-only"
+requires-python = ">=3.12"
+dependencies = [
+    "PyYAML >= 6.0.3",
+    "prettytable >= 3.17.0",
+    "click >= 8.3.1",
+    "packaging >= 26.0",
+    "pendulum >= 3.2.0",
+]
+
+[project.urls]
+Source = "https://github.com/WizardBit/xjs/"
+
+[tool.setuptools.packages.find]
+include = ["xjs*"]
+exclude = ["snap*"]
+
+[project.scripts]
+xjs = "xjs.cli:main"
