@@ -805,7 +805,7 @@
       "units": {
         "cinder/0": {
           "workload-status": {
-            "current": "active",
+            "current": "waiting",
             "message": "Unit is ready",
             "since": "10 Mar 2026 17:19:07-05:00"
           },
@@ -977,7 +977,7 @@
       "units": {
         "glance/0": {
           "workload-status": {
-            "current": "active",
+            "current": "maintenance",
             "message": "Unit is ready",
             "since": "10 Mar 2026 17:11:16-05:00"
           },
@@ -1149,7 +1149,7 @@
             "since": "10 Mar 2026 17:36:29-05:00"
           },
           "juju-status": {
-            "current": "idle",
+            "current": "allocating",
             "since": "13 Mar 2026 14:10:05-05:00",
             "version": "3.6.14"
           },
@@ -1444,7 +1444,7 @@
             "since": "10 Mar 2026 17:13:45-05:00"
           },
           "juju-status": {
-            "current": "idle",
+            "current": "error",
             "since": "13 Mar 2026 11:57:40-05:00",
             "version": "3.6.14"
           },
@@ -2163,7 +2163,7 @@
       "units": {
         "placement/0": {
           "workload-status": {
-            "current": "active",
+            "current": "unknown",
             "message": "Unit is ready",
             "since": "10 Mar 2026 17:13:24-05:00"
           },
@@ -2311,7 +2311,7 @@
       "units": {
         "rabbitmq-server/0": {
           "workload-status": {
-            "current": "active",
+            "current": "terminated",
             "message": "Unit is ready",
             "since": "10 Mar 2026 16:58:34-05:00"
           },
@@ -2437,7 +2437,7 @@
             "since": "13 Mar 2026 12:12:09-05:00"
           },
           "juju-status": {
-            "current": "idle",
+            "current": "lost",
             "since": "13 Mar 2026 12:12:12-05:00",
             "version": "3.6.14"
           },
