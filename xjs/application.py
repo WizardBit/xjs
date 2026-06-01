@@ -290,3 +290,33 @@ class Application:
             n: s for n, s in self.subordinates.items()
             if s.juju_status in statuses
         }
+
+    def filter_units_unwanted(self) -> None:
+        filtered_units = {}
+        for unit_name, unit in self.units.items():
+            is_unwanted = (
+                unit.workload_status != "active"
+                or unit.juju_status != "idle"
+            )
+            if is_unwanted:
+                unit.subordinates = {
+                    n: s for n, s in unit.subordinates.items()
+                    if s.workload_status != "active"
+                    or s.juju_status != "idle"
+                }
+                filtered_units[unit_name] = unit
+            else:
+                filtered_subs = {
+                    n: s for n, s in unit.subordinates.items()
+                    if s.workload_status != "active"
+                    or s.juju_status != "idle"
+                }
+                if filtered_subs:
+                    unit.subordinates = filtered_subs
+                    filtered_units[unit_name] = unit
+        self.units = filtered_units
+        self.subordinates = {
+            n: s for n, s in self.subordinates.items()
+            if s.workload_status != "active"
+            or s.juju_status != "idle"
+        }

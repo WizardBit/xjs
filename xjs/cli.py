@@ -289,6 +289,7 @@ def filter_results(
     machine_filter: str = "",
     workload_status_filter: str = "",
     agent_status_filter: str = "",
+    unwanted: bool = False,
 ) -> None:
     """Filter the status"""
     filtered_controllers: dict[str, Controller] = {}
@@ -443,6 +444,84 @@ def filter_results(
         for controller_name in empty_controllers:
             del filtered_controllers[controller_name]
 
+    if unwanted:
+        empty_controllers = []
+        for controller_name, controller in filtered_controllers.items():
+            empty_models = []
+            for modelname, model in controller.models.items():
+                empty_applications = []
+                for app_name, application in model.applications.items():
+                    application.filter_units_unwanted()
+                    if len(application.units) == 0:
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
+                model.reset_machines()
+                if len(model.applications) == 0:
+                    empty_models.append(modelname)
+            for modelname in empty_models:
+                del controller.models[modelname]
+            if len(controller.models) == 0:
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
+
+    controllers = filtered_controllers
+
+    if workload_status_filter != "":
+        workload_statuses = set(
+            s.strip() for s in workload_status_filter.split(",")
+        )
+        empty_controllers = []
+        for controller_name, controller in filtered_controllers.items():
+            empty_models = []
+            for modelname, model in controller.models.items():
+                empty_applications = []
+                for app_name, application in model.applications.items():
+                    application.filter_units_by_workload_status(
+                        workload_statuses,
+                    )
+                    if len(application.units) == 0:
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
+                model.reset_machines()
+                if len(model.applications) == 0:
+                    empty_models.append(modelname)
+            for modelname in empty_models:
+                del controller.models[modelname]
+            if len(controller.models) == 0:
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
+
+    if agent_status_filter != "":
+        agent_statuses = set(
+            s.strip() for s in agent_status_filter.split(",")
+        )
+        empty_controllers = []
+        for controller_name, controller in filtered_controllers.items():
+            empty_models = []
+            for modelname, model in controller.models.items():
+                empty_applications = []
+                for app_name, application in model.applications.items():
+                    application.filter_units_by_agent_status(
+                        agent_statuses,
+                    )
+                    if len(application.units) == 0:
+                        empty_applications.append(app_name)
+                for app_name in empty_applications:
+                    del model.applications[app_name]
+                model.reset_machines()
+                if len(model.applications) == 0:
+                    empty_models.append(modelname)
+            for modelname in empty_models:
+                del controller.models[modelname]
+            if len(controller.models) == 0:
+                empty_controllers.append(controller_name)
+        for controller_name in empty_controllers:
+            del filtered_controllers[controller_name]
+
     controllers = filtered_controllers
 
 
@@ -528,6 +607,10 @@ def filter_results(
     help="Show only units with the specified agent status",
     metavar="<agent status>",
 )
+@click.option(
+    "--unwanted", default=False, is_flag=True,
+    help="Show only units with unwanted workload or agent status",
+)
 @click.argument(
     "statusfiles", required=True, type=click.File("r"),
     nargs=-1, metavar="<status files>",
@@ -552,6 +635,7 @@ def main(
     subordinate: str,
     workload_status: str,
     agent_status: str,
+    unwanted: bool,
 ) -> None:
     color = not no_color
     controllers: dict[str, Controller] = {}
@@ -578,7 +662,7 @@ def main(
     if (
         controller != "" or model != "" or application != ""
         or unit != "" or machine != "" or subordinate != ""
-        or workload_status != "" or agent_status != ""
+        or workload_status != "" or agent_status != "" or unwanted
     ):
         filter_results(
             controllers,
@@ -590,6 +674,7 @@ def main(
             machine_filter=machine,
             workload_status_filter=workload_status,
             agent_status_filter=agent_status,
+            unwanted=unwanted,
         )
 
     if show_model:

@@ -63,5 +63,12 @@ Options:
                                   specified name
   --unit <unit name>              Show only the unit with the specified name
   --version                       Show the version and exit.
+  --workload-status <workload status>
+                                  Show only units with the specified workload
+                                  status (comma-separated)
+  --agent-status <agent status>   Show only units with the specified agent
+                                  status (comma-separated)
+  --unwanted                      Show only units with unwanted workload or
+                                  agent status
   --help                          Show this message and exit.
 ```
