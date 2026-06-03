@@ -612,8 +612,8 @@ def filter_results(
     help="Show only units with unwanted workload or agent status",
 )
 @click.argument(
-    "statusfiles", required=True, type=click.File("r"),
-    nargs=-1, metavar="<status files>",
+    "statusfiles", required=False, type=click.File("r"),
+    nargs=-1, metavar="[status files]",
 )
 def main(
     statusfiles: tuple[TextIO, ...],
@@ -637,6 +637,16 @@ def main(
     agent_status: str,
     unwanted: bool,
 ) -> None:
+    if not statusfiles:
+        if sys.stdin.isatty():
+            console = Console()
+            console.print(
+                "[red]Error: no status files provided"
+                " and no data piped to stdin[/red]",
+            )
+            sys.exit(1)
+        statusfiles = (sys.stdin,)
+
     color = not no_color
     controllers: dict[str, Controller] = {}
     for statusfile in statusfiles:

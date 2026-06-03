@@ -17,18 +17,23 @@ sudo snap install xjs
 
 ## ⌨️ Usage
 
-With yaml:
+Read from a file (yaml or json):
 
 ```bash
 juju status --format yaml > juju-status.yaml
 xjs juju-status.yaml
 ```
 
-With json:
-
 ```bash
 juju status --format json > juju-status.json
 xjs juju-status.json
+```
+
+Pipe stdin directly:
+
+```bash
+juju status --format yaml | xjs --unwanted
+juju status --format json | xjs --show-units
 ```
 
 Options:
