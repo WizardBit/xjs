@@ -22,6 +22,7 @@ class Application:
         "Scale",
         "Charm",
         "Store",
+        "Channel",
         "Rev",
         "OS",
         "Base",
@@ -76,6 +77,11 @@ class Application:
             self.charm_rev: int = int(app_info["charm-rev"])
         else:
             self.charm_rev = -1
+
+        if "charm-channel" in app_info:
+            self.channel: str = app_info["charm-channel"]
+        else:
+            self.channel = "NA"
 
         if "exposed" in app_info:
             self.exposed = app_info["exposed"]
@@ -196,6 +202,7 @@ class Application:
                 self.get_scale_color(),
                 self.charm,
                 self.get_charm_origin_color(),
+                self.channel,
                 self.get_charm_rev_color(),
                 self.os,
                 self.base,
@@ -210,6 +217,7 @@ class Application:
                 str(self.get_scale()),
                 self.charm,
                 self.charm_origin,
+                self.channel,
                 str(self.charm_rev),
                 self.os,
                 self.base,
